@@ -1,17 +1,27 @@
-package graphql.java.generator.strategy;
+package graphql.java.generator.type.strategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Take the fully qualified name of the class of the object,
- * and abbreviates the package names, discarding any periods.
- * This strategy will lead to type-name collisions, but is easy to use.
+ * Take the fully qualified name of the given Class.class or object's class,
+ * and replace all dots with some other character, since dots
+ * in the graphql query are not valid.
+ * Default character is underscore (_)
  * @author dwinsor
  *
  */
-public class TypeName_AbbrevFQN  implements TypeNameStrategy<Object> {
-    private static Logger logger = LoggerFactory.getLogger(TypeName_AbbrevFQN.class);
+public class TypeName_FQNReplaceDotWithChar  implements TypeNameStrategy {
+    private static Logger logger = LoggerFactory.getLogger(
+            TypeName_FQNReplaceDotWithChar.class);
+    protected char newChar;
+    public TypeName_FQNReplaceDotWithChar() {
+        this('_');
+    }
+    public TypeName_FQNReplaceDotWithChar(char newChar) {
+        this.newChar = newChar;
+    }
+    
     @Override
     public String getTypeName(Object object) {
         if (object == null) {
@@ -29,10 +39,7 @@ public class TypeName_AbbrevFQN  implements TypeNameStrategy<Object> {
             return null;
         }
         
-        //TODO this is a temporary measure, it strips all packaging, which
-        //leads to type collisions
-        canonicalClassName = canonicalClassName.substring(
-                canonicalClassName.lastIndexOf(".") + 1);
+        canonicalClassName = canonicalClassName.replace('.', newChar);
         return canonicalClassName;
     }
 }

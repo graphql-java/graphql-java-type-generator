@@ -1,13 +1,18 @@
 package graphql.java.generator;
 
-import graphql.java.generator.strategy.TypeNameStrategy;
-import graphql.java.generator.strategy.TypeName_AbbrevFQN;
+import graphql.java.generator.field.FieldsGen_ReflectionBased;
+import graphql.java.generator.field.FieldsGenerator;
+import graphql.java.generator.type.TypeGen_ReflectionBased;
+import graphql.java.generator.type.TypeGenerator;
 
 public class BuildContext {
-    //TODO register all strategies, should this be a Builder, or should this
-    //be something that users can extend?
-    private TypeNameStrategy abbrevFQN = new TypeName_AbbrevFQN();
-    public TypeNameStrategy getTypeNameStrategy() {
-        return abbrevFQN;
+    public FieldsGenerator getFieldsGeneratorStrategy() {
+        // TODO Auto-generated method stub
+        return new FieldsGen_ReflectionBased();
+    }
+    
+    private TypeGenerator typeGenerator = new TypeGen_ReflectionBased();
+    public TypeGenerator getTypeGeneratorStrategy(Object object) {
+        return typeGenerator;
     }
 }

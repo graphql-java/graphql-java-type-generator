@@ -1,4 +1,4 @@
-package graphql.java.generator;
+package graphql.java.generator.type;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -7,12 +7,15 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
 import graphql.Scalars;
+import graphql.java.generator.ClassWithLists;
+import graphql.java.generator.RecursiveClass;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +28,19 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
-public class ReflectionBasedTypeGeneratorTest {
+public class TypeGen_ReflectionBasedTest {
     private static Logger logger = LoggerFactory.getLogger(
-            ReflectionBasedTypeGeneratorTest.class);
+            TypeGen_ReflectionBasedTest.class);
+    
+    @Before
+    public void before() {
+        TypeRepository.clear();
+    }
     
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        TypeGenerator<Class<?>> generator = new ReflectionBasedTypeGenerator();
+        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
         Object recursiveClass = generator.getOutputType(RecursiveClass.class);
         Assert.assertThat(recursiveClass, instanceOf(GraphQLOutputType.class));
         GraphQLObjectType queryType = newObject()
@@ -82,7 +90,7 @@ public class ReflectionBasedTypeGeneratorTest {
     @Test
     public void testList() {
         logger.debug("testList");
-        TypeGenerator<Class<?>> generator = new ReflectionBasedTypeGenerator();
+        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
         Object listType = generator.getOutputType(ClassWithLists.class);
         Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
         
@@ -125,14 +133,14 @@ public class ReflectionBasedTypeGeneratorTest {
     @Test
     public void testMaps() {
         logger.debug("testMaps");
-        TypeGenerator<Class<?>> generator = new ReflectionBasedTypeGenerator();
+        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
         //Assert.fail();
     }
     
     @Test
     public void testScalars() {
         logger.debug("testScalars");
-        TypeGenerator<Class<?>> generator = new ReflectionBasedTypeGenerator();
+        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
         Assert.assertThat(generator.getOutputType(Boolean.class),
                 instanceOf(GraphQLScalarType.class));
         Assert.assertThat((GraphQLScalarType)generator.getOutputType(Boolean.class),
