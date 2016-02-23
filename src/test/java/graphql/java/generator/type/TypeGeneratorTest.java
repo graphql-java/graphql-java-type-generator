@@ -28,9 +28,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
-public class TypeGen_ReflectionBasedTest {
+public class TypeGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
-            TypeGen_ReflectionBasedTest.class);
+            TypeGeneratorTest.class);
     
     @Before
     public void before() {
@@ -40,7 +40,7 @@ public class TypeGen_ReflectionBasedTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
+        TypeGenerator generator = new TypeGenerator();
         Object recursiveClass = generator.getOutputType(RecursiveClass.class);
         Assert.assertThat(recursiveClass, instanceOf(GraphQLOutputType.class));
         GraphQLObjectType queryType = newObject()
@@ -90,7 +90,7 @@ public class TypeGen_ReflectionBasedTest {
     @Test
     public void testList() {
         logger.debug("testList");
-        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
+        TypeGenerator generator = new TypeGenerator();
         Object listType = generator.getOutputType(ClassWithLists.class);
         Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
         
@@ -133,14 +133,14 @@ public class TypeGen_ReflectionBasedTest {
     @Test
     public void testMaps() {
         logger.debug("testMaps");
-        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
+        TypeGenerator generator = new TypeGenerator();
         //Assert.fail();
     }
     
     @Test
     public void testScalars() {
         logger.debug("testScalars");
-        TypeGenerator<Class<?>> generator = new TypeGen_ReflectionBased();
+        TypeGenerator generator = new TypeGenerator();
         Assert.assertThat(generator.getOutputType(Boolean.class),
                 instanceOf(GraphQLScalarType.class));
         Assert.assertThat((GraphQLScalarType)generator.getOutputType(Boolean.class),

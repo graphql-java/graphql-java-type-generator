@@ -2,7 +2,6 @@ package graphql.java.generator;
 
 import graphql.java.generator.field.FieldsGen_ReflectionBased;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.type.TypeGen_ReflectionBased;
 import graphql.java.generator.type.TypeGenerator;
 
 public class BuildContext {
@@ -11,7 +10,7 @@ public class BuildContext {
         return new FieldsGen_ReflectionBased();
     }
     
-    private TypeGenerator typeGenerator = new TypeGen_ReflectionBased();
+    private TypeGenerator typeGenerator = new TypeGenerator();
     public TypeGenerator getTypeGeneratorStrategy(Object object) {
         return typeGenerator;
     }
