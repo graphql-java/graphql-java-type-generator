@@ -1,4 +1,6 @@
-package graphql.java.generator.type.strategy;
+package graphql.java.generator.type;
+
+import graphql.java.generator.type.reflect.TypeName_FQNReplaceDotWithChar;
 
 public class TypeStrategies {
     //TODO register all strategies, should this be a Builder, or should this

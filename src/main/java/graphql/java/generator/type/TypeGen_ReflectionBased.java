@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.Scalars;
-import graphql.java.generator.type.strategy.TypeStrategies;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
@@ -19,6 +18,7 @@ import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLTypeReference;
 
 /**
+ * Given any object, decide how you wish the GraphQL type to be generated
  * Not yet certified with Interfaces, Enums, or arrays.
  * @author dwinsor
  *

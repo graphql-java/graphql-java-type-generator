@@ -1,4 +1,4 @@
-package graphql.java.generator.type.strategy;
+package graphql.java.generator.type;
 
 /**
  * Given any object, decide how you wish the GraphQL type to be named

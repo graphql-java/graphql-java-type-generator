@@ -1,7 +1,6 @@
 package graphql.java.generator.type;
 
 import graphql.java.generator.BuildContext;
-import graphql.java.generator.type.strategy.TypeStrategies;
 import graphql.schema.GraphQLOutputType;
 
 /**

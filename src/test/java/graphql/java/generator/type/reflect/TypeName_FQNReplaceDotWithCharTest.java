@@ -1,29 +1,30 @@
-package graphql.java.generator.type.strategy;
+package graphql.java.generator.type.reflect;
 
 import graphql.java.generator.ClassWithLists;
+import graphql.java.generator.type.TypeNameStrategy;
 
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-public class TypeName_AbbrevFQNTest {
+public class TypeName_FQNReplaceDotWithCharTest {
     @Test
     public void testObjects() {
-        TypeNameStrategy strategy = new TypeName_AbbrevFQN();
+        TypeNameStrategy strategy = new TypeName_FQNReplaceDotWithChar();
         String typeName = strategy.getTypeName(new Object());
-        assertThat(typeName, is("jlObject"));
+        assertThat(typeName, is("java_lang_Object"));
         typeName = strategy.getTypeName(new ClassWithLists());
-        assertThat(typeName, is("gjgClassWithLists"));
+        assertThat(typeName, is("graphql_java_generator_ClassWithLists"));
     }
     
     @Test
     public void testClasses() throws ClassNotFoundException {
-        TypeNameStrategy strategy = new TypeName_AbbrevFQN();
+        TypeNameStrategy strategy = new TypeName_FQNReplaceDotWithChar();
         String typeName = strategy.getTypeName(Object.class);
-        assertThat(typeName, is("jlObject"));
+        assertThat(typeName, is("java_lang_Object"));
         typeName = strategy.getTypeName(ClassWithLists.class);
-        assertThat(typeName, is("gjgClassWithLists"));
+        assertThat(typeName, is("graphql_java_generator_ClassWithLists"));
         typeName = strategy.getTypeName(Class.forName("DefaultPackageClass"));
         assertThat(typeName, is("DefaultPackageClass"));
     }

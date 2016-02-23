@@ -1,4 +1,6 @@
-package graphql.java.generator.type.strategy;
+package graphql.java.generator.type.reflect;
+
+import graphql.java.generator.type.TypeNameStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

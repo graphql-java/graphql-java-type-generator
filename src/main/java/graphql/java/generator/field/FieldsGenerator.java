@@ -14,5 +14,5 @@ import graphql.schema.GraphQLFieldDefinition;
 public interface FieldsGenerator<T> {
     List<GraphQLFieldDefinition> getFields(T object, BuildContext parentContext);
     List<GraphQLFieldDefinition> getFields(T object);
-    void setFieldsStrategies();
+    void setFieldsStrategies(FieldStrategies strategies);
 }
