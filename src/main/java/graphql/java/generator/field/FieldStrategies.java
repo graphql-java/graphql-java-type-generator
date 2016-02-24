@@ -1,21 +1,63 @@
 package graphql.java.generator.field;
 
-import graphql.java.generator.field.reflect.FieldName_ReflectionBased;
-import graphql.java.generator.field.reflect.FieldObjects_ReflectionClass;
-import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
-import graphql.java.generator.field.reflect.FieldDataFetcher_ReflectionBased;
-
 public class FieldStrategies {
-    public FieldDataFetcherStrategy getFieldDataFetcherStrategy() {
-        return new FieldDataFetcher_ReflectionBased();
-    }
-    public FieldNameStrategy getFieldNameStrategy() {
-        return new FieldName_ReflectionBased();
-    }
-    public FieldTypeStrategy getFieldTypeStrategy() {
-        return new FieldType_ReflectionBased();
-    }
+    private FieldObjectsStrategy fieldObjectsStrategy;
+    private FieldDataFetcherStrategy fieldDataFetcherStrategy;
+    private FieldNameStrategy fieldNameStrategy;
+    private FieldTypeStrategy fieldTypeStrategy;
+    
     public FieldObjectsStrategy getFieldObjectsStrategy() {
-        return new FieldObjects_ReflectionClass();
+        return fieldObjectsStrategy;
+    }
+
+    public FieldDataFetcherStrategy getFieldDataFetcherStrategy() {
+        return fieldDataFetcherStrategy;
+    }
+    
+    public FieldNameStrategy getFieldNameStrategy() {
+        return fieldNameStrategy;
+    }
+    
+    public FieldTypeStrategy getFieldTypeStrategy() {
+        return fieldTypeStrategy;
+    }
+    
+    
+    public static class Builder {
+        private FieldObjectsStrategy fieldObjectsStrategy;
+        private FieldDataFetcherStrategy fieldDataFetcherStrategy;
+        private FieldNameStrategy fieldNameStrategy;
+        private FieldTypeStrategy fieldTypeStrategy;
+        
+        public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
+            this.fieldObjectsStrategy = fieldObjectsStrategy;
+            return this;
+        }
+        
+        public Builder fieldDataFetcherStrategy(FieldDataFetcherStrategy fieldDataFetcherStrategy) {
+            this.fieldDataFetcherStrategy = fieldDataFetcherStrategy;
+            return this;
+        }
+        
+        public Builder fieldNameStrategy(FieldNameStrategy fieldNameStrategy) {
+            this.fieldNameStrategy = fieldNameStrategy;
+            return this;
+        }
+        
+        public Builder fieldTypeStrategy(FieldTypeStrategy fieldTypeStrategy) {
+            this.fieldTypeStrategy = fieldTypeStrategy;
+            return this;
+        }
+        
+        public FieldStrategies build() {
+            return new FieldStrategies(this);
+        }
+    }
+    
+    private FieldStrategies(Builder builder) {
+        this.fieldObjectsStrategy = builder.fieldObjectsStrategy;
+        this.fieldDataFetcherStrategy = builder.fieldDataFetcherStrategy;
+        this.fieldNameStrategy = builder.fieldNameStrategy;
+        this.fieldTypeStrategy = builder.fieldTypeStrategy;
     }
 }

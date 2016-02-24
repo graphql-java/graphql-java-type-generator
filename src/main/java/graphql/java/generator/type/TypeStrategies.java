@@ -1,16 +1,38 @@
 package graphql.java.generator.type;
 
-import graphql.java.generator.type.reflect.DefaultType_ScalarsLookup;
-import graphql.java.generator.type.reflect.TypeName_FQNReplaceDotWithChar;
-
 public class TypeStrategies {
-    //TODO another strat where TypeName from annotation
-    private TypeNameStrategy typeNameStrat = new TypeName_FQNReplaceDotWithChar();
+    private TypeNameStrategy typeNameStrategy;
+    private DefaultTypeStrategy defaultTypeStrategy;
+    
     public TypeNameStrategy getTypeNameStrategy() {
-        return typeNameStrat;
+        return typeNameStrategy;
     }
     
     public DefaultTypeStrategy getDefaultTypeStrategy() {
-        return new DefaultType_ScalarsLookup();
+        return defaultTypeStrategy;
+    }
+    
+    public static class Builder {
+        private TypeNameStrategy typeNameStrategy;
+        private DefaultTypeStrategy defaultTypeStrategy;
+        
+        public Builder typeNameStrategy(TypeNameStrategy typeNameStrategy) {
+            this.typeNameStrategy = typeNameStrategy;
+            return this;
+        }
+        
+        public Builder defaultTypeStrategy(DefaultTypeStrategy defaultTypeStrategy) {
+            this.defaultTypeStrategy = defaultTypeStrategy;
+            return this;
+        }
+        
+        public TypeStrategies build() {
+            return new TypeStrategies(this);
+        }
+    }
+    
+    private TypeStrategies(Builder builder) {
+        this.typeNameStrategy = builder.typeNameStrategy;
+        this.defaultTypeStrategy = builder.defaultTypeStrategy;
     }
 }

@@ -23,10 +23,14 @@ public class FieldsGenerator {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);
     
-    private FieldStrategies strategies = new FieldStrategies();
+    private FieldStrategies strategies;
+    
+    public FieldsGenerator(FieldStrategies strategies) {
+        this.strategies = strategies;
+    }
     
     public List<GraphQLFieldDefinition> getFields(Object object) {
-        return getFields(object, new BuildContext());
+        return getFields(object, BuildContext.defaultContext);
     }
     
     public List<GraphQLFieldDefinition> getFields(Object object, BuildContext parentContext) {
@@ -96,9 +100,5 @@ public class FieldsGenerator {
     }
     protected String getFieldName(final Object object) {
         return strategies.getFieldNameStrategy().getFieldName(object);
-    }
-
-    public void setFieldsStrategies(FieldStrategies strategies) {
-        this.strategies = strategies;
     }
 }

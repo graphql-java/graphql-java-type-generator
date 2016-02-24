@@ -21,15 +21,15 @@ import graphql.schema.GraphQLTypeReference;
  * @author dwinsor
  *
  */
-@SuppressWarnings({"unchecked"})
 public class TypeGenerator {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
     protected final Set<String> outputTypesBeingBuilt;
-    protected TypeStrategies strategies = new TypeStrategies();
+    protected TypeStrategies strategies;
     
-    public TypeGenerator() {
+    public TypeGenerator(TypeStrategies strategies) {
+        this.strategies = strategies;
         outputTypesBeingBuilt = TypeRepository.getOutputTypesBeingBuilt();
         generatedOutputTypes = TypeRepository.getGeneratedOutputTypes();
     }
@@ -40,8 +40,8 @@ public class TypeGenerator {
      * a {@link GraphQLOutputType}
      * @return
      */
-    public GraphQLOutputType getOutputType(Class<?> object) {
-        return getOutputType(object, new BuildContext());
+    public GraphQLOutputType getOutputType(Object object) {
+        return getOutputType(object, BuildContext.defaultContext);
     }
 
     /**
@@ -107,9 +107,5 @@ public class TypeGenerator {
                 currentContext.getFieldsGeneratorStrategy()
                         .getFields(object, currentContext);
         return definitions;
-    }
-
-    public void setTypeStrategies(TypeStrategies strategies) {
-        this.strategies = strategies;
     }
 }

@@ -31,9 +31,8 @@ public class FieldsGeneratorTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        BuildContext dummyContext = new BuildContext();
-        FieldsGenerator generator = new FieldsGenerator();
-        Object object = generator.getFields(RecursiveClass.class, dummyContext);
+        FieldsGenerator generator = BuildContext.defaultContext.getFieldsGeneratorStrategy();
+        Object object = generator.getFields(RecursiveClass.class);
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
         assertThat(recursiveFields.size(), is(2));

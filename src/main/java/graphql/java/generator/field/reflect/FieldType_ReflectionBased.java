@@ -32,8 +32,7 @@ public class FieldType_ReflectionBased implements FieldTypeStrategy {
                 if (listGenericType instanceof Class<?>) {
                     logger.debug("Field [{}] is a list of generic type [{}]",
                             field.getName(), listGenericType);
-                    TypeGenerator typeGen = currentContext
-                            .getTypeGeneratorStrategy((Class<?>)listGenericType);
+                    TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
                     return new GraphQLList(typeGen.getOutputType((Class<?>)listGenericType, currentContext));
                 }
             }
@@ -41,8 +40,7 @@ public class FieldType_ReflectionBased implements FieldTypeStrategy {
             //TODO test on raw List, should not work
         }
 
-        TypeGenerator typeGen = currentContext
-                .getTypeGeneratorStrategy(fieldClazz);
+        TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
         return typeGen.getOutputType(fieldClazz, currentContext);
     }
 }

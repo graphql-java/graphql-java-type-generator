@@ -7,6 +7,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
 import graphql.Scalars;
+import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.RecursiveClass;
 import graphql.schema.GraphQLObjectType;
@@ -40,7 +41,7 @@ public class TypeGeneratorTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        TypeGenerator generator = new TypeGenerator();
+        TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
         Object recursiveClass = generator.getOutputType(RecursiveClass.class);
         Assert.assertThat(recursiveClass, instanceOf(GraphQLOutputType.class));
         GraphQLObjectType queryType = newObject()
@@ -90,7 +91,7 @@ public class TypeGeneratorTest {
     @Test
     public void testList() {
         logger.debug("testList");
-        TypeGenerator generator = new TypeGenerator();
+        TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
         Object listType = generator.getOutputType(ClassWithLists.class);
         Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
         
@@ -133,14 +134,14 @@ public class TypeGeneratorTest {
     @Test
     public void testMaps() {
         logger.debug("testMaps");
-        TypeGenerator generator = new TypeGenerator();
+        TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
         //Assert.fail();
     }
     
     @Test
     public void testScalars() {
         logger.debug("testScalars");
-        TypeGenerator generator = new TypeGenerator();
+        TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
         Assert.assertThat(generator.getOutputType(Boolean.class),
                 instanceOf(GraphQLScalarType.class));
         Assert.assertThat((GraphQLScalarType)generator.getOutputType(Boolean.class),
