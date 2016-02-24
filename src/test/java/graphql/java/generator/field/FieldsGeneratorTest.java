@@ -19,9 +19,9 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
-public class FieldsGen_ReflectionBasedTest {
+public class FieldsGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldsGen_ReflectionBasedTest.class);
+            FieldsGeneratorTest.class);
     
     @Before
     public void before() {
@@ -32,7 +32,7 @@ public class FieldsGen_ReflectionBasedTest {
     public void testRecursion() {
         logger.debug("testRecursion");
         BuildContext dummyContext = new BuildContext();
-        FieldsGenerator<Class<?>> generator = new FieldsGen_ReflectionBased();
+        FieldsGenerator generator = new FieldsGenerator();
         Object object = generator.getFields(RecursiveClass.class, dummyContext);
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
