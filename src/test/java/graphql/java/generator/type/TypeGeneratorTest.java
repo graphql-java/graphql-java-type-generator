@@ -1,6 +1,7 @@
 package graphql.java.generator.type;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import graphql.ExecutionResult;
@@ -10,11 +11,15 @@ import graphql.Scalars;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.RecursiveClass;
+import graphql.schema.GraphQLEnumType;
+import graphql.schema.GraphQLEnumValueDefinition;
+import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 
+import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
@@ -36,6 +42,26 @@ public class TypeGeneratorTest {
     @Before
     public void before() {
         TypeRepository.clear();
+    }
+    
+    @Test
+    public void testEnum() {
+        logger.debug("testEnum");
+        TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
+        Object enumObj = generator.getOutputType(graphql.java.generator.Enum.class);
+        Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
+        assertThat(((GraphQLEnumType)enumObj).getValues(),
+                hasItems(HasPropertyWithValue.<GraphQLEnumValueDefinition>
+                        hasProperty("name", is("A")),
+                        hasProperty("name", is("B")),
+                        hasProperty("name", is("C"))
+        ));
+        enumObj = generator.getOutputType(graphql.java.generator.EmptyEnum.class);
+        Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
+        assertThat(((GraphQLEnumType)enumObj).getValues(),
+                instanceOf(List.class));
+        assertThat(((GraphQLEnumType)enumObj).getValues().size(),
+                is(0));
     }
     
     @Test

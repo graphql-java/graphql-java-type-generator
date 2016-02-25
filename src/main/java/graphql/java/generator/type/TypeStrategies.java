@@ -4,6 +4,7 @@ public class TypeStrategies {
     private final TypeNameStrategy typeNameStrategy;
     private final TypeDescriptionStrategy typeDescriptionStrategy;
     private final DefaultTypeStrategy defaultTypeStrategy;
+    private final EnumValuesStrategy enumValuesStrategy;
     
     public TypeNameStrategy getTypeNameStrategy() {
         return typeNameStrategy;
@@ -16,11 +17,15 @@ public class TypeStrategies {
     public DefaultTypeStrategy getDefaultTypeStrategy() {
         return defaultTypeStrategy;
     }
+    public EnumValuesStrategy getEnumValuesStrategy() {
+        return enumValuesStrategy;
+    }
     
     public static class Builder {
         private TypeNameStrategy typeNameStrategy;
         private TypeDescriptionStrategy typeDescriptionStrategy;
         private DefaultTypeStrategy defaultTypeStrategy;
+        private EnumValuesStrategy enumValuesStrategy;
         
         public Builder typeNameStrategy(TypeNameStrategy typeNameStrategy) {
             this.typeNameStrategy = typeNameStrategy;
@@ -37,6 +42,11 @@ public class TypeStrategies {
             return this;
         }
         
+        public Builder enumValuesStrategy(EnumValuesStrategy enumValuesStrategy) {
+            this.enumValuesStrategy = enumValuesStrategy;
+            return this;
+        }
+        
         public TypeStrategies build() {
             return new TypeStrategies(this);
         }
@@ -46,5 +56,6 @@ public class TypeStrategies {
         this.typeNameStrategy = builder.typeNameStrategy;
         this.typeDescriptionStrategy = builder.typeDescriptionStrategy;
         this.defaultTypeStrategy = builder.defaultTypeStrategy;
+        this.enumValuesStrategy = builder.enumValuesStrategy;
     }
 }

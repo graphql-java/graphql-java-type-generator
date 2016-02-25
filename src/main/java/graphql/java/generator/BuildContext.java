@@ -13,6 +13,7 @@ import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
 import graphql.java.generator.type.reflect.DefaultType_ScalarsLookup;
+import graphql.java.generator.type.reflect.EnumValues_ReflectionBased;
 import graphql.java.generator.type.reflect.TypeDescription_AutogenClass;
 import graphql.java.generator.type.reflect.TypeName_FQNReplaceDotWithChar;
 
@@ -22,6 +23,7 @@ public class BuildContext {
                     .defaultTypeStrategy(new DefaultType_ScalarsLookup())
                     .typeNameStrategy(new TypeName_FQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_AutogenClass())
+                    .enumValuesStrategy(new EnumValues_ReflectionBased())
                     .build()))
             .setFieldsGeneratorStrategy(new FieldsGenerator(new FieldStrategies.Builder()
                     .fieldObjectsStrategy(new FieldObjects_ReflectionClass())

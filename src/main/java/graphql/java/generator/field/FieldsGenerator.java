@@ -69,10 +69,10 @@ public class FieldsGenerator {
         if (fieldName == null || fieldType == null) {
             return null;
         }
-        
         Object fieldFetcher = getFieldFetcher(object);
         logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}]",
                 fieldType, fieldName, fieldFetcher);
+        
         GraphQLFieldDefinition.Builder fieldBuilder = newFieldDefinition()
                 .name(fieldName)
                 .type(fieldType);

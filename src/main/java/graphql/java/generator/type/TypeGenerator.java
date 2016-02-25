@@ -1,6 +1,7 @@
 package graphql.java.generator.type;
 
 import static graphql.schema.GraphQLObjectType.newObject;
+import static graphql.schema.GraphQLEnumType.newEnum;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
+import graphql.schema.GraphQLEnumType;
+import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
@@ -89,17 +92,25 @@ public class TypeGenerator {
         return type;
     }
     
-    protected GraphQLOutputType getDefaultOutputType(Object object) {
-        return strategies.getDefaultTypeStrategy().getDefaultOutputType(object);
-    }
-    
-    protected String getGraphQLTypeName(Object object) {
-        return strategies.getTypeNameStrategy().getTypeName(object);
-    }
-    
     protected GraphQLOutputType generateOutputType(Object object, BuildContext currentContext) {
-        GraphQLObjectType.Builder builder = newObject();
         String typeName = getGraphQLTypeName(object);
+        if (typeName == null) {
+            typeName = "Object_" + String.valueOf(System.identityHashCode(object));
+        }
+        
+        //An enum is a special case in both java and graphql
+        List<GraphQLEnumValueDefinition> enumValues = getEnumValues(object);
+        if (enumValues != null) {
+            GraphQLEnumType.Builder builder = newEnum();
+            builder.name(typeName);
+            builder.description(getTypeDescription(object));
+            for (GraphQLEnumValueDefinition value : enumValues) {
+                builder.value(value.getName(), value.getValue(), value.getDescription());
+            }
+            return builder.build();
+        }
+        
+        GraphQLObjectType.Builder builder = newObject();
         builder.name(typeName);
         builder.fields(getFieldDefinitions(object, currentContext));
         builder.description(getTypeDescription(object));
@@ -113,7 +124,19 @@ public class TypeGenerator {
         return definitions;
     }
     
+    protected GraphQLOutputType getDefaultOutputType(Object object) {
+        return strategies.getDefaultTypeStrategy().getDefaultOutputType(object);
+    }
+    
+    protected String getGraphQLTypeName(Object object) {
+        return strategies.getTypeNameStrategy().getTypeName(object);
+    }
+    
     protected String getTypeDescription(Object object) {
         return strategies.getTypeDescriptionStrategy().getTypeDescription(object);
+    }
+    
+    private List<GraphQLEnumValueDefinition> getEnumValues(Object object) {
+        return strategies.getEnumValuesStrategy().getEnumValueDefinitions(object);
     }
 }
