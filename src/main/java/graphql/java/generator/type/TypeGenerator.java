@@ -25,19 +25,17 @@ public class TypeGenerator {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
-    protected final Set<String> outputTypesBeingBuilt;
     protected TypeStrategies strategies;
     
     public TypeGenerator(TypeStrategies strategies) {
         this.strategies = strategies;
-        outputTypesBeingBuilt = TypeRepository.getOutputTypesBeingBuilt();
         generatedOutputTypes = TypeRepository.getGeneratedOutputTypes();
     }
     
     /**
      * Will use some default context if necessary
-     * @param object A representative object from which to construct
-     * a {@link GraphQLOutputType}
+     * @param object A representative "object" from which to construct
+     * a {@link GraphQLOutputType}, the exact type of which is contextual
      * @return
      */
     public GraphQLOutputType getOutputType(Object object) {
@@ -46,8 +44,8 @@ public class TypeGenerator {
 
     /**
      * 
-     * @param object A representative object from which to construct
-     * a {@link GraphQLOutputType}
+     * @param object A representative "object" from which to construct
+     * a {@link GraphQLOutputType}, the exact type of which is contextual
      * @param currentContext
      * @return
      */
@@ -70,18 +68,23 @@ public class TypeGenerator {
         
         //this check must come before generatedOutputTypes.get
         //necessary for synchronicity to avoid duplicate object creations
+        final Set<String> outputTypesBeingBuilt = currentContext.getOutputTypesBeingBuilt();
         if (outputTypesBeingBuilt.contains(typeName)) {
             logger.debug("Using a reference to: [{}]", typeName);
             return new GraphQLTypeReference(typeName);
         }
 
-        if (generatedOutputTypes.containsKey(typeName)) {
-            return generatedOutputTypes.get(typeName);
+        if (currentContext.isUsingTypeRepository()) {
+            if (generatedOutputTypes.containsKey(typeName)) {
+                return generatedOutputTypes.get(typeName);
+            }
         }
         
         outputTypesBeingBuilt.add(typeName);
         GraphQLOutputType type = generateOutputType(object, currentContext);
-        TypeRepository.registerType(typeName, type);
+        if (currentContext.isUsingTypeRepository()) {
+            TypeRepository.registerType(typeName, type);
+        }
         outputTypesBeingBuilt.remove(typeName);
         return type;
     }
@@ -99,6 +102,7 @@ public class TypeGenerator {
         String typeName = getGraphQLTypeName(object);
         builder.name(typeName);
         builder.fields(getFieldDefinitions(object, currentContext));
+        builder.description(getTypeDescription(object));
         return builder.build();
     }
     
@@ -107,5 +111,9 @@ public class TypeGenerator {
                 currentContext.getFieldsGeneratorStrategy()
                         .getFields(object, currentContext);
         return definitions;
+    }
+    
+    protected String getTypeDescription(Object object) {
+        return strategies.getTypeDescriptionStrategy().getTypeDescription(object);
     }
 }

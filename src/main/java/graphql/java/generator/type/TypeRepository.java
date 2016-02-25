@@ -2,16 +2,17 @@ package graphql.java.generator.type;
 
 import graphql.schema.GraphQLOutputType;
 
-import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The master place to store prebuilt, reusable GraphQL types.
+ * @author dwinsor
+ *
+ */
 public class TypeRepository {
     private static Map<String, GraphQLOutputType> generatedOutputTypes =
             new ConcurrentHashMap<String, GraphQLOutputType>();
-    private static Set<String> outputTypesBeingBuilt = Collections.newSetFromMap(
-            new ConcurrentHashMap<String, Boolean>());
     
     public static GraphQLOutputType registerType(String typeName,
             GraphQLOutputType graphQlOutputType) {
@@ -27,9 +28,6 @@ public class TypeRepository {
     public static Map<String, GraphQLOutputType> getGeneratedOutputTypes() {
         return generatedOutputTypes;
     }
-    public static Set<String> getOutputTypesBeingBuilt() {
-        return outputTypesBeingBuilt;
-    }
     
     /**
      * Resets the internal data of the TypeRepository to empty
@@ -39,7 +37,5 @@ public class TypeRepository {
         //their generatedOutputTypes .clear()ed out from under them. 
         generatedOutputTypes =
                 new ConcurrentHashMap<String, GraphQLOutputType>();
-        outputTypesBeingBuilt = Collections.newSetFromMap(
-                new ConcurrentHashMap<String, Boolean>());
     }
 }
