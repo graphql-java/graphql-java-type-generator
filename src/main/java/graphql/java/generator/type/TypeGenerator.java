@@ -20,7 +20,7 @@ import graphql.schema.GraphQLTypeReference;
 
 /**
  * Given any object, decide how you wish the GraphQL type to be generated
- * Not yet certified with Interfaces, Enums, or arrays.
+ * Not yet certified with InputTypes, Interfaces, or arrays.
  * @author dwinsor
  *
  */

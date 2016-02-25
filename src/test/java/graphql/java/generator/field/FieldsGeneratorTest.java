@@ -7,6 +7,7 @@ import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.type.TypeRepository;
 import graphql.schema.GraphQLFieldDefinition;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,9 +37,11 @@ public class FieldsGeneratorTest {
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
         assertThat(recursiveFields.size(), is(2));
-        assertThat(recursiveFields, hasItems(HasPropertyWithValue.<GraphQLFieldDefinition>
-                hasProperty("name", is("recursionLevel")),
-                hasProperty("name", is("recursive"))
-                ));
+        
+        Matcher<Iterable<GraphQLFieldDefinition>> hasItemsMatcher =
+                hasItems(
+                        hasProperty("name", is("recursionLevel")),
+                        hasProperty("name", is("recursive")));
+        assertThat(recursiveFields, hasItemsMatcher);
     }
 }

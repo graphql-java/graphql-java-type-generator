@@ -36,7 +36,6 @@ public class FieldType_ReflectionBased implements FieldTypeStrategy {
                     return new GraphQLList(typeGen.getOutputType((Class<?>)listGenericType, currentContext));
                 }
             }
-            //TODO test on List<?>, where ? is not an instanceof Class
             //TODO test on raw List, should not work
         }
 

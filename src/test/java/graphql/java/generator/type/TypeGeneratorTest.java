@@ -13,12 +13,12 @@ import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.RecursiveClass;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
-import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
 import org.junit.Before;
@@ -50,12 +50,14 @@ public class TypeGeneratorTest {
         TypeGenerator generator = BuildContext.defaultContext.getTypeGeneratorStrategy();
         Object enumObj = generator.getOutputType(graphql.java.generator.Enum.class);
         Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
-        assertThat(((GraphQLEnumType)enumObj).getValues(),
-                hasItems(HasPropertyWithValue.<GraphQLEnumValueDefinition>
+        Matcher<Iterable<GraphQLEnumValueDefinition>> hasItemsMatcher =
+                hasItems(
                         hasProperty("name", is("A")),
                         hasProperty("name", is("B")),
-                        hasProperty("name", is("C"))
-        ));
+                        hasProperty("name", is("C")));
+        assertThat(((GraphQLEnumType)enumObj).getValues(), hasItemsMatcher
+        );
+        
         enumObj = generator.getOutputType(graphql.java.generator.EmptyEnum.class);
         Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
         assertThat(((GraphQLEnumType)enumObj).getValues(),
