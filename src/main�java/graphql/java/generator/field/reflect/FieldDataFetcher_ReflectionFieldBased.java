@@ -9,10 +9,15 @@ import java.lang.reflect.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FieldDataFetcher_ReflectionBased implements FieldDataFetcherStrategy {
+/**
+ * For a given {@link java.lang.reflect.Field} return a
+ * @author dwinsor
+ *
+ */
+public class FieldDataFetcher_ReflectionFieldBased implements FieldDataFetcherStrategy {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldDataFetcher_ReflectionBased.class);
-    
+            FieldDataFetcher_ReflectionFieldBased.class);
+
     @Override
     public Object getFieldFetcher(Object object) {
         if (!(object instanceof Field)) {

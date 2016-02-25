@@ -1,10 +1,10 @@
 package graphql.java.generator.field;
 
 public class FieldStrategies {
-    private FieldObjectsStrategy fieldObjectsStrategy;
-    private FieldDataFetcherStrategy fieldDataFetcherStrategy;
-    private FieldNameStrategy fieldNameStrategy;
-    private FieldTypeStrategy fieldTypeStrategy;
+    private final FieldObjectsStrategy fieldObjectsStrategy;
+    private final FieldDataFetcherStrategy fieldDataFetcherStrategy;
+    private final FieldNameStrategy fieldNameStrategy;
+    private final FieldTypeStrategy fieldTypeStrategy;
     
     public FieldObjectsStrategy getFieldObjectsStrategy() {
         return fieldObjectsStrategy;
