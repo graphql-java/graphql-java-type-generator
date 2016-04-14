@@ -3,14 +3,33 @@ package graphql.java.generator.field.reflect;
 import graphql.java.generator.field.FieldNameStrategy;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class FieldName_ReflectionBased implements FieldNameStrategy {
 
     @Override
     public String getFieldName(Object object) {
-        if (!(object instanceof Field)) {
-            return null;
+        if (object instanceof Field) {
+            return getFieldNameFromField((Field)object);
         }
-        return ((Field)object).getName();
+        if (object instanceof Method) {
+            return getFieldNameFromMethod((Method)object);
+        }
+        return null;
+    }
+    
+    protected String getFieldNameFromField(Field field) {
+        return (field.getName());
+    }
+    
+    protected String getFieldNameFromMethod(Method method) {
+        String methodName = method.getName();
+        if (methodName.startsWith("get") && methodName.length() > 3) {
+            return methodName.substring(3);
+        }
+        if (methodName.startsWith("is") && methodName.length() > 2) {
+            return methodName.substring(2);
+        }
+        return methodName;
     }
 }

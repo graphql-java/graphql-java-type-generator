@@ -8,7 +8,6 @@ import graphql.java.generator.type.TypeRepository;
 import graphql.schema.GraphQLFieldDefinition;
 
 import org.hamcrest.Matcher;
-import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

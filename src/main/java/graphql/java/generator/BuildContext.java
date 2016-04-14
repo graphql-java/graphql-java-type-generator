@@ -8,7 +8,7 @@ import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_ReflectionFieldBased;
 import graphql.java.generator.field.reflect.FieldName_ReflectionBased;
-import graphql.java.generator.field.reflect.FieldObjects_ReflectionClass;
+import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
@@ -26,7 +26,7 @@ public class BuildContext {
                     .enumValuesStrategy(new EnumValues_ReflectionBased())
                     .build()))
             .setFieldsGeneratorStrategy(new FieldsGenerator(new FieldStrategies.Builder()
-                    .fieldObjectsStrategy(new FieldObjects_ReflectionClass())
+                    .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
                     .fieldNameStrategy(new FieldName_ReflectionBased())
                     .fieldTypeStrategy(new FieldType_ReflectionBased())
                     .fieldDataFetcherStrategy(new FieldDataFetcher_ReflectionFieldBased())

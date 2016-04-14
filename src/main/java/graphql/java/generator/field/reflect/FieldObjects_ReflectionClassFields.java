@@ -10,10 +10,12 @@ import graphql.java.generator.field.FieldObjectsStrategy;
  * A reflection based, java Field centric class for generating data
  * on GraphQL fields.  This is as opposed to a Method centric way of generating
  * the same fields.
+ * TODO re-merge into FieldObjects_ReflectionClass that combines the output
+ * of both FieldObjects_ReflectionClass (Fields&&Methods)
  * @author dwinsor
  *
  */
-public class FieldObjects_ReflectionClass implements FieldObjectsStrategy {
+public class FieldObjects_ReflectionClassFields implements FieldObjectsStrategy {
     
     /**
      * Loops through all classes in the class heirarchy.

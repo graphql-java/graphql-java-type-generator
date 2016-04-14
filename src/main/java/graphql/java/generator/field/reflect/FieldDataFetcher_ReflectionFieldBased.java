@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * For a given {@link java.lang.reflect.Field} return a
+ * For a given {@link java.lang.reflect.Field} or {@link java.lang.reflect.Method}
+ * return a DataFetcher that obtains data through that.
  * @author dwinsor
  *
  */
@@ -20,10 +21,16 @@ public class FieldDataFetcher_ReflectionFieldBased implements FieldDataFetcherSt
 
     @Override
     public Object getFieldFetcher(Object object) {
-        if (!(object instanceof Field)) {
-            return null;
+        if (object instanceof Field) {
+            return getFieldFetcherFromField((Field) object);
         }
-        Field field = (Field) object;
+        if (object instanceof Method) {
+            return getFieldFetcherFromMethod((Method) object);
+        }
+        return null;
+    }
+    
+    protected Object getFieldFetcherFromField(Field field) {
         Class<?> clazz = field.getDeclaringClass();
         Method getter = getGetterMethod(field, clazz);
         if (getter != null) {
@@ -43,6 +50,14 @@ public class FieldDataFetcher_ReflectionFieldBased implements FieldDataFetcherSt
         return null;
     }
     
+    protected Object getFieldFetcherFromMethod(Method method) {
+        //TODO by default, when not setting a DataFetcher, we'll use a PropertyDataFetcher
+        //that searches for a method matching the name, with camelcase, like getObject.
+        //Someday we may need to adjust the name a bit
+        //return new PropertyDataFetcher(method.getName() + "edit me"));
+        return null;
+    }
+    
     /**
      * @param field
      * @param clazzContainingField
@@ -59,7 +74,12 @@ public class FieldDataFetcher_ReflectionFieldBased implements FieldDataFetcherSt
             return getter;
         }
         catch (NoSuchMethodException e) {
-            return null;
         }
+        
+        //TODO Be more permissive in the name, allowing getobject() or isboolean()
+        //something like getterName = prefix + fieldName;
+        //this requires updated DataFetchers, so will not be done yet.
+        
+        return null;
     }
 }
