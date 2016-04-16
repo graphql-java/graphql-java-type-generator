@@ -8,7 +8,7 @@ import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_ReflectionFieldBased;
 import graphql.java.generator.field.reflect.FieldName_ReflectionBased;
-import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
+import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
 import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
@@ -18,19 +18,23 @@ import graphql.java.generator.type.reflect.TypeDescription_AutogenClass;
 import graphql.java.generator.type.reflect.TypeName_FQNReplaceDotWithChar;
 
 public class BuildContext {
-    public static final BuildContext defaultContext = new Builder()
-            .setTypeGeneratorStrategy(new TypeGenerator(new TypeStrategies.Builder()
+    public static final TypeGenerator defaultTypeGenerator = 
+            new TypeGenerator(new TypeStrategies.Builder()
                     .defaultTypeStrategy(new DefaultType_ScalarsLookup())
                     .typeNameStrategy(new TypeName_FQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_AutogenClass())
                     .enumValuesStrategy(new EnumValues_ReflectionBased())
-                    .build()))
-            .setFieldsGeneratorStrategy(new FieldsGenerator(new FieldStrategies.Builder()
-                    .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
+                    .build());
+    public static final FieldsGenerator defaultFieldsGenerator = 
+            new FieldsGenerator(new FieldStrategies.Builder()
+                    .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
                     .fieldNameStrategy(new FieldName_ReflectionBased())
                     .fieldTypeStrategy(new FieldType_ReflectionBased())
                     .fieldDataFetcherStrategy(new FieldDataFetcher_ReflectionFieldBased())
-                    .build()))
+                    .build());
+     public static final BuildContext defaultContext = new Builder()
+            .setTypeGeneratorStrategy(defaultTypeGenerator)
+            .setFieldsGeneratorStrategy(defaultFieldsGenerator)
             .usingTypeRepository(true)
             .build();
 

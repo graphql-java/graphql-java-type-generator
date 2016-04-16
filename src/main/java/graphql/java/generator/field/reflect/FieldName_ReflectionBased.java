@@ -25,10 +25,12 @@ public class FieldName_ReflectionBased implements FieldNameStrategy {
     protected String getFieldNameFromMethod(Method method) {
         String methodName = method.getName();
         if (methodName.startsWith("get") && methodName.length() > 3) {
-            return methodName.substring(3);
+            return methodName.substring(3, 4).toLowerCase()
+                    + methodName.substring(4);
         }
         if (methodName.startsWith("is") && methodName.length() > 2) {
-            return methodName.substring(2);
+            return methodName.substring(2, 3).toLowerCase()
+                    + methodName.substring(3);
         }
         return methodName;
     }

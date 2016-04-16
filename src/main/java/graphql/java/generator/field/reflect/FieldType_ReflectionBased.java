@@ -38,43 +38,36 @@ public class FieldType_ReflectionBased implements FieldTypeStrategy {
     protected GraphQLOutputType getOutputTypeOfFieldFromField(
             Field field, BuildContext currentContext) {
         Class<?> fieldClazz = field.getType();
-        if (List.class.isAssignableFrom(fieldClazz)) {
-            Type listType = field.getGenericType();
-            //TODO deduplicate logic
-            if (listType instanceof ParameterizedType) {
-                Type listGenericType = ((ParameterizedType) listType).getActualTypeArguments()[0];
-                if (listGenericType instanceof Class<?>) {
-                    logger.debug("Field [{}] is a list of generic type [{}]",
-                            field.getName(), listGenericType);
-                    TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
-                    return new GraphQLList(typeGen.getOutputType((Class<?>)listGenericType, currentContext));
-                }
-            }
-            //TODO test on raw List, should not work
-        }
-        TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
-        return typeGen.getOutputType(fieldClazz, currentContext);
+        Type genericType = field.getGenericType();
+        return getOutputTypeOfFieldFromSignature(
+                fieldClazz, genericType, field.toGenericString(), currentContext);
     }
     
     protected GraphQLOutputType getOutputTypeOfFieldFromMethod(
             Method method, BuildContext currentContext) {
-        Class<?> methodTypeClazz = method.getReturnType();
-        if (List.class.isAssignableFrom(methodTypeClazz)) {
-            Type listType = method.getGenericReturnType();
-            //TODO deduplicate logic
-            if (listType instanceof ParameterizedType) {
-                Type listGenericType = ((ParameterizedType) listType).getActualTypeArguments()[0];
+        Class<?> returnTypeClazz = method.getReturnType();
+        Type genericType = method.getGenericReturnType();
+        return getOutputTypeOfFieldFromSignature(
+                returnTypeClazz, genericType, method.toGenericString(), currentContext);
+    }
+    
+    protected GraphQLOutputType getOutputTypeOfFieldFromSignature(
+            Class<?> typeClazz, Type genericType,
+            String name, BuildContext currentContext) {
+        //attempt GraphQLList from types
+        if (List.class.isAssignableFrom(typeClazz)) {
+            if (genericType instanceof ParameterizedType) {
+                Type listGenericType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
                 if (listGenericType instanceof Class<?>) {
-                    logger.debug("Method [{}] is a list of generic type [{}]",
-                            method.getName(), listGenericType);
+                    logger.debug("this [{}] is a list of generic type [{}], and will be made a GraphQLList",
+                            name, listGenericType);
                     TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
                     return new GraphQLList(typeGen.getOutputType((Class<?>)listGenericType, currentContext));
                 }
             }
-            //TODO test on raw List, should not work
         }
 
         TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
-        return typeGen.getOutputType(methodTypeClazz, currentContext);
+        return typeGen.getOutputType(typeClazz, currentContext);
     }
 }

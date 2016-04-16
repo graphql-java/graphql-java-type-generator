@@ -35,12 +35,12 @@ public class FieldsGeneratorTest {
         Object object = generator.getFields(RecursiveClass.class);
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
-        assertThat(recursiveFields.size(), is(2));
         
         Matcher<Iterable<GraphQLFieldDefinition>> hasItemsMatcher =
                 hasItems(
                         hasProperty("name", is("recursionLevel")),
                         hasProperty("name", is("recursive")));
         assertThat(recursiveFields, hasItemsMatcher);
+        assertThat(recursiveFields.size(), is(2));
     }
 }

@@ -12,12 +12,12 @@ public class ClassWithLists {
 //    public List noTypeInfo = new ArrayList<Integer>() {{
 //        add(0);
 //    }};
-    public List<String> strings = new ArrayList<String>() {{
+    public ArrayList<String> strings = new ArrayList<String>() {{
         add("asdf");
         add("2");
         add("test");
     }};
-    public List<SimpleObject> objects = new LinkedList<SimpleObject>() {{
+    public LinkedList<SimpleObject> objects = new LinkedList<SimpleObject>() {{
         add(new SimpleObject());
         add(null);
         SimpleObject obj = new SimpleObject();
@@ -25,7 +25,7 @@ public class ClassWithLists {
         add(new SimpleObject());
         add(obj);
     }};
-    public List<String> getStrings() {
+    public ArrayList<String> getStrings() {
         return strings;
     }
     public List<SimpleObject> getObjects() {

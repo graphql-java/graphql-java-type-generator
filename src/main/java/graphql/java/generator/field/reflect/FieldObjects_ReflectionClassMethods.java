@@ -2,7 +2,9 @@ package graphql.java.generator.field.reflect;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import graphql.java.generator.field.FieldObjectsStrategy;
 
@@ -18,7 +20,6 @@ import graphql.java.generator.field.FieldObjectsStrategy;
 public class FieldObjects_ReflectionClassMethods implements FieldObjectsStrategy {
     
     /**
-     * Loops through all classes in the class heirarchy.
      * Looks at {@link java.lang.reflect.Method}s and returns those
      * which are suitable.
      */
@@ -29,24 +30,20 @@ public class FieldObjects_ReflectionClassMethods implements FieldObjectsStrategy
         }
         Class<?> clazz = (Class<?>) object;
         List<Object> fieldObjects = new ArrayList<Object>();
-        while (clazz != null && !clazz.isAssignableFrom(Object.class)) {
-            Method[] methods = clazz.getMethods();
-            for (int index = 0; index < methods.length; ++index) {
-                Method method = methods[index];
-                if (method.isSynthetic()) {
-                    continue;
-                }
-                if (!method.isAccessible()) {
-                    continue;
-                }
-                String methodName = method.getName();
-                if (!(methodName.startsWith("get") || methodName.startsWith("is"))) {
-                    continue;
-                }
-                fieldObjects.add(method);
+        Method[] methods = clazz.getMethods();
+        for (int index = 0; index < methods.length; ++index) {
+            Method method = methods[index];
+            if (method.isSynthetic()) {
+                continue;
             }
-            //we need to expose inherited fields
-            clazz = clazz.getSuperclass();
+            String methodName = method.getName();
+            if (!(methodName.startsWith("get") || methodName.startsWith("is"))) {
+                continue;
+            }
+            if (methodName.equals("getClass")) {
+                continue;
+            }
+            fieldObjects.add(method);
         }
         return fieldObjects;
     }
