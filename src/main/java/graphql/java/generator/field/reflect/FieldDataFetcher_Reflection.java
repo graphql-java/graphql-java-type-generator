@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
  * @author dwinsor
  *
  */
-public class FieldDataFetcher_ReflectionFieldBased implements FieldDataFetcherStrategy {
+public class FieldDataFetcher_Reflection implements FieldDataFetcherStrategy {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldDataFetcher_ReflectionFieldBased.class);
+            FieldDataFetcher_Reflection.class);
 
     @Override
     public Object getFieldFetcher(Object object) {

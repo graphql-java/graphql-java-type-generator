@@ -2,7 +2,7 @@ package graphql.java.generator.type.reflect;
 
 import graphql.java.generator.type.TypeDescriptionStrategy;
 
-public class TypeDescription_AutogenClass implements TypeDescriptionStrategy {
+public class TypeDescription_ReflectionAutogen implements TypeDescriptionStrategy {
 
     @Override
     public String getTypeDescription(Object object) {

@@ -8,10 +8,10 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-public class TypeName_FQNReplaceDotWithCharTest {
+public class TypeName_ReflectionFQNReplaceDotWithCharTest {
     @Test
     public void testObjects() {
-        TypeNameStrategy strategy = new TypeName_FQNReplaceDotWithChar();
+        TypeNameStrategy strategy = new TypeName_ReflectionFQNReplaceDotWithChar();
         String typeName = strategy.getTypeName(new Object());
         assertThat(typeName, is("java_lang_Object"));
         typeName = strategy.getTypeName(new ClassWithLists());
@@ -20,7 +20,7 @@ public class TypeName_FQNReplaceDotWithCharTest {
     
     @Test
     public void testClasses() throws ClassNotFoundException {
-        TypeNameStrategy strategy = new TypeName_FQNReplaceDotWithChar();
+        TypeNameStrategy strategy = new TypeName_ReflectionFQNReplaceDotWithChar();
         String typeName = strategy.getTypeName(Object.class);
         assertThat(typeName, is("java_lang_Object"));
         typeName = strategy.getTypeName(ClassWithLists.class);

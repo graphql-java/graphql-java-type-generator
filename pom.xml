@@ -6,7 +6,7 @@
     <groupId>graphql.java</groupId>
     <artifactId>graphql-java-type-generator</artifactId>
     <packaging>jar</packaging>
-    <version>0.1.5</version>
+    <version>0.1.6</version>
     <name>GraphQL Java Type Generator</name>
     <url>https://github.com/danielkwinsor/graphql-java-type-generator</url>
     

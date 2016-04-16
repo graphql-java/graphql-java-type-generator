@@ -8,10 +8,10 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
-public class TypeName_AbbrevFQNTest {
+public class TypeName_ReflectionAbbrevFQNTest {
     @Test
     public void testObjects() {
-        TypeNameStrategy strategy = new TypeName_AbbrevFQN();
+        TypeNameStrategy strategy = new TypeName_ReflectionAbbrevFQN();
         String typeName = strategy.getTypeName(new Object());
         assertThat(typeName, is("jlObject"));
         typeName = strategy.getTypeName(new ClassWithLists());
@@ -20,7 +20,7 @@ public class TypeName_AbbrevFQNTest {
     
     @Test
     public void testClasses() throws ClassNotFoundException {
-        TypeNameStrategy strategy = new TypeName_AbbrevFQN();
+        TypeNameStrategy strategy = new TypeName_ReflectionAbbrevFQN();
         String typeName = strategy.getTypeName(Object.class);
         assertThat(typeName, is("jlObject"));
         typeName = strategy.getTypeName(ClassWithLists.class);

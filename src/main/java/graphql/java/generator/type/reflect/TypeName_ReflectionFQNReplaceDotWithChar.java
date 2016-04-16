@@ -7,13 +7,23 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Take the fully qualified name of the given Class.class or object's class,
- * and abbreviates the package names, discarding any periods.
- * This strategy will lead to type-name collisions, but is easy to use.
+ * and replace all dots with some other character, since dots
+ * in the graphql query are not valid.
+ * Default character is underscore (_)
  * @author dwinsor
  *
  */
-public class TypeName_AbbrevFQN  implements TypeNameStrategy {
-    private static Logger logger = LoggerFactory.getLogger(TypeName_AbbrevFQN.class);
+public class TypeName_ReflectionFQNReplaceDotWithChar  implements TypeNameStrategy {
+    private static Logger logger = LoggerFactory.getLogger(
+            TypeName_ReflectionFQNReplaceDotWithChar.class);
+    protected char newChar;
+    public TypeName_ReflectionFQNReplaceDotWithChar() {
+        this('_');
+    }
+    public TypeName_ReflectionFQNReplaceDotWithChar(char newChar) {
+        this.newChar = newChar;
+    }
+    
     @Override
     public String getTypeName(Object object) {
         if (object == null) {
@@ -31,19 +41,7 @@ public class TypeName_AbbrevFQN  implements TypeNameStrategy {
             return null;
         }
         
-        String outputName = "";
-        int nextIndex = 0;
-        int fromIndex = 0;
-        while (nextIndex != -1) {
-            nextIndex = canonicalClassName.indexOf('.', fromIndex);
-            if (nextIndex == -1) {
-                outputName += canonicalClassName.substring(fromIndex);
-            }
-            else {
-                outputName += canonicalClassName.charAt(fromIndex);
-            }
-            fromIndex = nextIndex+1;
-        }
-        return outputName;
+        canonicalClassName = canonicalClassName.replace('.', newChar);
+        return canonicalClassName;
     }
 }

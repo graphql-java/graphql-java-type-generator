@@ -5,7 +5,7 @@ import graphql.java.generator.field.FieldNameStrategy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class FieldName_ReflectionBased implements FieldNameStrategy {
+public class FieldName_Reflection implements FieldNameStrategy {
 
     @Override
     public String getFieldName(Object object) {

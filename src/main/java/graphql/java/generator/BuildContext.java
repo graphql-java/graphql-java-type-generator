@@ -6,31 +6,31 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.field.reflect.FieldDataFetcher_ReflectionFieldBased;
-import graphql.java.generator.field.reflect.FieldName_ReflectionBased;
+import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
+import graphql.java.generator.field.reflect.FieldName_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
-import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
+import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
-import graphql.java.generator.type.reflect.DefaultType_ScalarsLookup;
-import graphql.java.generator.type.reflect.EnumValues_ReflectionBased;
-import graphql.java.generator.type.reflect.TypeDescription_AutogenClass;
-import graphql.java.generator.type.reflect.TypeName_FQNReplaceDotWithChar;
+import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
+import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
+import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
 
 public class BuildContext {
     public static final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
-                    .defaultTypeStrategy(new DefaultType_ScalarsLookup())
-                    .typeNameStrategy(new TypeName_FQNReplaceDotWithChar())
-                    .typeDescriptionStrategy(new TypeDescription_AutogenClass())
-                    .enumValuesStrategy(new EnumValues_ReflectionBased())
+                    .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
+                    .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
+                    .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
+                    .enumValuesStrategy(new EnumValues_Reflection())
                     .build());
     public static final FieldsGenerator defaultFieldsGenerator = 
             new FieldsGenerator(new FieldStrategies.Builder()
                     .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
-                    .fieldNameStrategy(new FieldName_ReflectionBased())
-                    .fieldTypeStrategy(new FieldType_ReflectionBased())
-                    .fieldDataFetcherStrategy(new FieldDataFetcher_ReflectionFieldBased())
+                    .fieldNameStrategy(new FieldName_Reflection())
+                    .fieldTypeStrategy(new FieldType_Reflection())
+                    .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                     .build());
      public static final BuildContext defaultContext = new Builder()
             .setTypeGeneratorStrategy(defaultTypeGenerator)

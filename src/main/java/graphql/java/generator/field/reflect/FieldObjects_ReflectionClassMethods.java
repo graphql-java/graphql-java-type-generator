@@ -2,9 +2,7 @@ package graphql.java.generator.field.reflect;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import graphql.java.generator.field.FieldObjectsStrategy;
 
@@ -12,8 +10,6 @@ import graphql.java.generator.field.FieldObjectsStrategy;
  * A reflection based, java Method centric class for generating data
  * on GraphQL fields.  This is as opposed to a Field centric way of generating
  * the same fields.
- * TODO re-merge into FieldObjects_ReflectionClass that combines the output
- * of both FieldObjects_ReflectionClass (Fields&&Methods)
  * @author dwinsor
  *
  */

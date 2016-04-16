@@ -4,7 +4,7 @@ import graphql.java.generator.Scalars;
 import graphql.java.generator.type.DefaultTypeStrategy;
 import graphql.schema.GraphQLOutputType;
 
-public class DefaultType_ScalarsLookup implements DefaultTypeStrategy {
+public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy {
 
     @Override
     public GraphQLOutputType getDefaultOutputType(Object object) {

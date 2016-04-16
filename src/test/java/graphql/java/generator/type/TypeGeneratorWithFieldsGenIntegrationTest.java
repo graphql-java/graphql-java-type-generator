@@ -7,7 +7,6 @@ import java.util.Map;
 
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.Scalars;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfList;
 import graphql.java.generator.ClassWithLists;
@@ -15,16 +14,16 @@ import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.field.reflect.FieldDataFetcher_ReflectionFieldBased;
-import graphql.java.generator.field.reflect.FieldName_ReflectionBased;
+import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
+import graphql.java.generator.field.reflect.FieldName_Reflection;
+import graphql.java.generator.field.reflect.FieldObjects_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
-import graphql.java.generator.field.reflect.FieldType_ReflectionBased;
+import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
-import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 
 import org.hamcrest.Matcher;
@@ -75,21 +74,29 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
-                        .fieldNameStrategy(new FieldName_ReflectionBased())
-                        .fieldTypeStrategy(new FieldType_ReflectionBased())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_ReflectionFieldBased())
+                        .fieldNameStrategy(new FieldName_Reflection())
+                        .fieldTypeStrategy(new FieldType_Reflection())
+                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .build());
         final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
-                        .fieldNameStrategy(new FieldName_ReflectionBased())
-                        .fieldTypeStrategy(new FieldType_ReflectionBased())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_ReflectionFieldBased())
+                        .fieldNameStrategy(new FieldName_Reflection())
+                        .fieldTypeStrategy(new FieldType_Reflection())
+                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
+                        .build());
+        final FieldsGenerator fieldsCombined = new FieldsGenerator(
+                new FieldStrategies.Builder()
+                        .fieldObjectsStrategy(new FieldObjects_Reflection())
+                        .fieldNameStrategy(new FieldName_Reflection())
+                        .fieldTypeStrategy(new FieldType_Reflection())
+                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .build());
         @SuppressWarnings("serial")
         ArrayList<Object[]> list = new ArrayList<Object[]>() {{
             add(new Object[] {fieldsByJavaMethods});
             add(new Object[] {fieldsByJavaFields});
+            add(new Object[] {fieldsCombined});
         }};
         return list;
     }

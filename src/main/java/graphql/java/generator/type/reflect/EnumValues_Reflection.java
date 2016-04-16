@@ -6,7 +6,7 @@ import java.util.List;
 import graphql.java.generator.type.EnumValuesStrategy;
 import graphql.schema.GraphQLEnumValueDefinition;
 
-public class EnumValues_ReflectionBased implements EnumValuesStrategy {
+public class EnumValues_Reflection implements EnumValuesStrategy {
     
     @Override
     public List<GraphQLEnumValueDefinition> getEnumValueDefinitions(Object object) {

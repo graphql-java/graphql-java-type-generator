@@ -15,9 +15,9 @@ import graphql.java.generator.type.TypeGenerator;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLOutputType;
 
-public class FieldType_ReflectionBased implements FieldTypeStrategy {
+public class FieldType_Reflection implements FieldTypeStrategy {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldType_ReflectionBased.class);
+            FieldType_Reflection.class);
     
     @Override
     public GraphQLOutputType getOutputTypeOfField(
