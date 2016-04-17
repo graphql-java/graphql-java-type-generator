@@ -70,12 +70,14 @@ public class FieldsGenerator {
             return null;
         }
         Object fieldFetcher = getFieldFetcher(object);
-        logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}]",
-                fieldType, fieldName, fieldFetcher);
+        String fieldDescription  = getFieldDescription(object);
+        logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}] with description [{}]",
+                fieldType, fieldName, fieldFetcher, fieldDescription);
         
         GraphQLFieldDefinition.Builder fieldBuilder = newFieldDefinition()
                 .name(fieldName)
-                .type(fieldType);
+                .type(fieldType)
+                .description(fieldDescription);
         if (fieldFetcher instanceof DataFetcher) {
             fieldBuilder.dataFetcher((DataFetcher)fieldFetcher);
         }
@@ -100,5 +102,8 @@ public class FieldsGenerator {
     }
     protected String getFieldName(final Object object) {
         return strategies.getFieldNameStrategy().getFieldName(object);
+    }
+    protected String getFieldDescription(final Object object) {
+        return strategies.getFieldDescriptionStrategy().getFieldDescription(object);
     }
 }

@@ -15,6 +15,7 @@ import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
+import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
@@ -77,6 +78,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldNameStrategy(new FieldName_Reflection())
                         .fieldTypeStrategy(new FieldType_Reflection())
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
+                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
         final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
@@ -84,6 +86,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldNameStrategy(new FieldName_Reflection())
                         .fieldTypeStrategy(new FieldType_Reflection())
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
+                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
         final FieldsGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
@@ -91,6 +94,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldNameStrategy(new FieldName_Reflection())
                         .fieldTypeStrategy(new FieldType_Reflection())
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
+                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
         @SuppressWarnings("serial")
         ArrayList<Object[]> list = new ArrayList<Object[]>() {{

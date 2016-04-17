@@ -1,7 +1,8 @@
 package graphql.java.generator.type;
 
 /**
- * Given any object, decide how you wish the GraphQL description to be.
+ * Given any type-representative object,
+ * decide how you wish the GraphQL description to be.
  * @author dwinsor
  *
  */
