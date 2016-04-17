@@ -37,10 +37,10 @@ public class FieldsGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGeneratorTest.class);
     
-    FieldsGenerator generator;
+    IContextualFieldGenerator generator;
     BuildContext testContext;
     
-    public FieldsGeneratorTest(FieldsGenerator fieldsGen) {
+    public FieldsGeneratorTest(IContextualFieldGenerator fieldsGen) {
         generator = fieldsGen;
         testContext = new Builder()
                 .setTypeGeneratorStrategy(BuildContext.defaultTypeGenerator)
@@ -55,7 +55,7 @@ public class FieldsGeneratorTest {
     
     @Parameters
     public static Collection<Object[]> data() {
-        final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -63,7 +63,7 @@ public class FieldsGeneratorTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -71,7 +71,7 @@ public class FieldsGeneratorTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final FieldsGenerator fieldsCombined = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_Reflection())
                         .fieldNameStrategy(new FieldName_Reflection())

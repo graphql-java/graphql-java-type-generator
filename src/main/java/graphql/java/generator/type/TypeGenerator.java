@@ -24,7 +24,7 @@ import graphql.schema.GraphQLTypeReference;
  * @author dwinsor
  *
  */
-public class TypeGenerator {
+public class TypeGenerator implements IContextualTypeGenerator {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
@@ -41,6 +41,7 @@ public class TypeGenerator {
      * a {@link GraphQLOutputType}, the exact type of which is contextual
      * @return
      */
+    @Override
     public GraphQLOutputType getOutputType(Object object) {
         return getOutputType(object, BuildContext.defaultContext);
     }

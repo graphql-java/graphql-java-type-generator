@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.field.FieldTypeStrategy;
-import graphql.java.generator.type.TypeGenerator;
+import graphql.java.generator.type.IContextualTypeGenerator;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLOutputType;
 
@@ -61,13 +61,13 @@ public class FieldType_Reflection implements FieldTypeStrategy {
                 if (listGenericType instanceof Class<?>) {
                     logger.debug("this [{}] is a list of generic type [{}], and will be made a GraphQLList",
                             name, listGenericType);
-                    TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
+                    IContextualTypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
                     return new GraphQLList(typeGen.getOutputType((Class<?>)listGenericType, currentContext));
                 }
             }
         }
 
-        TypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
+        IContextualTypeGenerator typeGen = currentContext.getTypeGeneratorStrategy();
         return typeGen.getOutputType(typeClazz, currentContext);
     }
 }

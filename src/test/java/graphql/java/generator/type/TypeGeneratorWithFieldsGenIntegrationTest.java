@@ -14,6 +14,7 @@ import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
+import graphql.java.generator.field.IContextualFieldGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
@@ -53,13 +54,11 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorWithFieldsGenIntegrationTest.class);
     
-    TypeGenerator generator;
     BuildContext testContext;
     
-    public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
-        generator = BuildContext.defaultTypeGenerator;
+    public TypeGeneratorWithFieldsGenIntegrationTest(IContextualFieldGenerator fieldsGen) {
         testContext = new Builder()
-                .setTypeGeneratorStrategy(generator)
+                .setTypeGeneratorStrategy(BuildContext.defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
                 .usingTypeRepository(true)
                 .build();
@@ -72,7 +71,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     @Parameters
     public static Collection<Object[]> data() {
-        final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -80,7 +79,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -88,7 +87,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final FieldsGenerator fieldsCombined = new FieldsGenerator(
+        final IContextualFieldGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_Reflection())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -108,7 +107,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     @Test
     public void testEnum() {
         logger.debug("testEnum");
-        Object enumObj = generator.getOutputType(graphql.java.generator.Enum.class, testContext);
+        Object enumObj = testContext.getOutputType(graphql.java.generator.Enum.class);
         Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
         Matcher<Iterable<GraphQLEnumValueDefinition>> hasItemsMatcher =
                 hasItems(
@@ -118,7 +117,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         assertThat(((GraphQLEnumType)enumObj).getValues(), hasItemsMatcher
         );
         
-        enumObj = generator.getOutputType(graphql.java.generator.EmptyEnum.class, testContext);
+        enumObj = testContext.getOutputType(graphql.java.generator.EmptyEnum.class);
         Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));
         assertThat(((GraphQLEnumType)enumObj).getValues(),
                 instanceOf(List.class));
@@ -129,7 +128,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        Object recursiveClass = generator.getOutputType(RecursiveClass.class, testContext);
+        Object recursiveClass = testContext.getOutputType(RecursiveClass.class);
         Assert.assertThat(recursiveClass, instanceOf(GraphQLOutputType.class));
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
@@ -179,7 +178,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     @Test
     public void testList() {
         logger.debug("testList");
-        Object listType = generator.getOutputType(ClassWithLists.class, testContext);
+        Object listType = testContext.getOutputType(ClassWithLists.class);
         Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()
@@ -222,7 +221,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     @Test
     public void testListOfList() {
         logger.debug("testListOfList");
-        Object listType = generator.getOutputType(ClassWithListOfList.class, testContext);
+        Object listType = testContext.getOutputType(ClassWithListOfList.class);
         Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()

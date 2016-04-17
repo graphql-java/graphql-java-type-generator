@@ -19,7 +19,7 @@ import graphql.schema.GraphQLOutputType;
  * @author dwinsor
  *
  */
-public class FieldsGenerator {
+public class FieldsGenerator implements IContextualFieldGenerator {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);
     
@@ -29,10 +29,18 @@ public class FieldsGenerator {
         this.strategies = strategies;
     }
     
+    /* (non-Javadoc)
+     * @see graphql.java.generator.field.IFieldGeneratorContextAware#getFields(java.lang.Object)
+     */
+    @Override
     public List<GraphQLFieldDefinition> getFields(Object object) {
         return getFields(object, BuildContext.defaultContext);
     }
     
+    /* (non-Javadoc)
+     * @see graphql.java.generator.field.IFieldGeneratorContextAware#getFields(java.lang.Object, graphql.java.generator.BuildContext)
+     */
+    @Override
     public List<GraphQLFieldDefinition> getFields(Object object, BuildContext parentContext) {
         List<GraphQLFieldDefinition> fieldDefs = new ArrayList<GraphQLFieldDefinition>();
         Set<String> fieldNames = new HashSet<String>();

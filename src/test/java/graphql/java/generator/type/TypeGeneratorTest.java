@@ -15,7 +15,7 @@ public class TypeGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorTest.class);
     
-    TypeGenerator generator = BuildContext.defaultTypeGenerator;
+    ITypeGenerator generator = BuildContext.defaultTypeGenerator;
     
     @Before
     public void before() {
