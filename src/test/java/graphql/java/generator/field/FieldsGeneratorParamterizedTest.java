@@ -33,14 +33,14 @@ import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
 @RunWith(Parameterized.class)
-public class FieldsGeneratorTest {
+public class FieldsGeneratorParamterizedTest {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldsGeneratorTest.class);
+            FieldsGeneratorParamterizedTest.class);
     
-    IContextualFieldGenerator generator;
+    FieldsGenerator generator;
     BuildContext testContext;
     
-    public FieldsGeneratorTest(IContextualFieldGenerator fieldsGen) {
+    public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {
         generator = fieldsGen;
         testContext = new Builder()
                 .setTypeGeneratorStrategy(BuildContext.defaultTypeGenerator)
@@ -55,7 +55,7 @@ public class FieldsGeneratorTest {
     
     @Parameters
     public static Collection<Object[]> data() {
-        final IContextualFieldGenerator fieldsByJavaMethods = new FieldsGenerator(
+        final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -63,7 +63,7 @@ public class FieldsGeneratorTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final IContextualFieldGenerator fieldsByJavaFields = new FieldsGenerator(
+        final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -71,7 +71,7 @@ public class FieldsGeneratorTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final IContextualFieldGenerator fieldsCombined = new FieldsGenerator(
+        final FieldsGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_Reflection())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -91,7 +91,7 @@ public class FieldsGeneratorTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        Object object = generator.getFields(RecursiveClass.class, testContext);
+        Object object = generator.getOutputFields(RecursiveClass.class, testContext);
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
         

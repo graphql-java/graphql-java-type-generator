@@ -1,6 +1,5 @@
 package graphql.java.generator.field.reflect;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

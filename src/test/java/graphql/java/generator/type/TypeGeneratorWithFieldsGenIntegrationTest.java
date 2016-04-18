@@ -14,7 +14,6 @@ import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.field.IContextualFieldGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
@@ -56,7 +55,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     BuildContext testContext;
     
-    public TypeGeneratorWithFieldsGenIntegrationTest(IContextualFieldGenerator fieldsGen) {
+    public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
         testContext = new Builder()
                 .setTypeGeneratorStrategy(BuildContext.defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
@@ -71,7 +70,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     @Parameters
     public static Collection<Object[]> data() {
-        final IContextualFieldGenerator fieldsByJavaMethods = new FieldsGenerator(
+        final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -79,7 +78,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final IContextualFieldGenerator fieldsByJavaFields = new FieldsGenerator(
+        final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
                         .fieldNameStrategy(new FieldName_Reflection())
@@ -87,7 +86,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                         .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                         .build());
-        final IContextualFieldGenerator fieldsCombined = new FieldsGenerator(
+        final FieldsGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_Reflection())
                         .fieldNameStrategy(new FieldName_Reflection())
