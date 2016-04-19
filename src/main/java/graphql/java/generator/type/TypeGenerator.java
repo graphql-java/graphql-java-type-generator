@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
+import graphql.java.generator.BuildContextAware;
+import graphql.java.generator.BuildContextStorer;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
@@ -27,7 +29,9 @@ import graphql.schema.GraphQLTypeReference;
  * @author dwinsor
  *
  */
-public class TypeGenerator implements IContextualTypeGenerator {
+public class TypeGenerator
+        extends BuildContextStorer
+        implements ITypeGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
@@ -41,35 +45,13 @@ public class TypeGenerator implements IContextualTypeGenerator {
     }
     
     /**
-     * Will use some default context if necessary
-     * @param object A representative "object" from which to construct
-     * a {@link GraphQLOutputType}, the exact type of which is contextual
-     * @return
-     */
-    @Override
-    public GraphQLOutputType getOutputType(Object object) {
-        return getOutputType(object, BuildContext.defaultContext);
-    }
-
-    /**
-     * Will use some default context if necessary
-     * @param object A representative "object" from which to construct
-     * a {@link GraphQLInputType}, the exact type of which is contextual
-     * @return
-     */
-    @Override
-    public GraphQLInputType getInputType(Object object) {
-        return getInputType(object, BuildContext.defaultContext);
-    }
-    
-    /**
      * 
      * @param object A representative "object" from which to construct
      * a {@link GraphQLOutputType}, the exact type of which is contextual
-     * @param currentContext
      * @return
      */
-    public final GraphQLOutputType getOutputType(Object object, BuildContext currentContext) {
+    @Override
+    public final GraphQLOutputType getOutputType(Object object) {
         logger.debug("output object is [{}]", object);
         //short circuit if it's a primitive type or some other user defined default
         GraphQLOutputType defaultType = getDefaultOutputType(object);
@@ -82,27 +64,27 @@ public class TypeGenerator implements IContextualTypeGenerator {
         if (typeName == null) {
             logger.debug("TypeName was null for object [{}]. "
                     + "Type will be built but not place in the TypeRepository", object);
-            return generateOutputType(object, currentContext);
+            return generateOutputType(object);
         }
         logger.debug("TypeName for object [{}]", typeName);
         
         //this check must come before generatedOutputTypes.get
         //necessary for synchronicity to avoid duplicate object creations
-        final Set<String> outputTypesBeingBuilt = currentContext.getOutputTypesBeingBuilt();
+        final Set<String> outputTypesBeingBuilt = getContext().getOutputTypesBeingBuilt();
         if (outputTypesBeingBuilt.contains(typeName)) {
             logger.debug("Using a reference to: [{}]", typeName);
             return new GraphQLTypeReference(typeName);
         }
 
-        if (currentContext.isUsingTypeRepository()) {
+        if (getContext().isUsingTypeRepository()) {
             if (generatedOutputTypes.containsKey(typeName)) {
                 return generatedOutputTypes.get(typeName);
             }
         }
         
         outputTypesBeingBuilt.add(typeName);
-        GraphQLOutputType type = generateOutputType(object, currentContext);
-        if (currentContext.isUsingTypeRepository()) {
+        GraphQLOutputType type = generateOutputType(object);
+        if (getContext().isUsingTypeRepository()) {
             TypeRepository.registerType(typeName, type);
         }
         outputTypesBeingBuilt.remove(typeName);
@@ -113,11 +95,11 @@ public class TypeGenerator implements IContextualTypeGenerator {
      * 
      * @param object A representative "object" from which to construct
      * a {@link GraphQLInputType}, the exact type of which is contextual
-     * @param currentContext
+     * @param getContext()
      * @return
      */
     @Override
-    public GraphQLInputType getInputType(Object object, BuildContext currentContext) {
+    public GraphQLInputType getInputType(Object object) {
         logger.debug("input object is [{}]", object);
         //short circuit if it's a primitive type or some other user defined default
         GraphQLInputType defaultType = getDefaultInputType(object);
@@ -130,35 +112,35 @@ public class TypeGenerator implements IContextualTypeGenerator {
         if (typeName == null) {
             logger.debug("TypeName was null for object [{}]. "
                     + "Type will be built but not place in the TypeRepository", object);
-            return generateInputType(object, currentContext);
+            return generateInputType(object);
         }
         logger.debug("TypeName for object [{}]", typeName);
         
         //this check must come before generatedInputTypes.get
         //necessary for synchronicity to avoid duplicate object creations
-        final Set<String> inputTypesBeingBuilt = currentContext.getInputTypesBeingBuilt();
+        final Set<String> inputTypesBeingBuilt = getContext().getInputTypesBeingBuilt();
         if (inputTypesBeingBuilt.contains(typeName)) {
             logger.error("While constructing input type, using a reference to: [{}]", typeName);
             throw new RuntimeException("Cannot put type-cycles into input types, "
                     + "there is no GraphQLTypeReference");
         }
 
-        if (currentContext.isUsingTypeRepository()) {
+        if (getContext().isUsingTypeRepository()) {
             if (generatedInputTypes.containsKey(typeName)) {
                 return generatedInputTypes.get(typeName);
             }
         }
         
         inputTypesBeingBuilt.add(typeName);
-        GraphQLInputType type = generateInputType(object, currentContext);
-        if (currentContext.isUsingTypeRepository()) {
+        GraphQLInputType type = generateInputType(object);
+        if (getContext().isUsingTypeRepository()) {
             TypeRepository.registerType(typeName, type);
         }
         inputTypesBeingBuilt.remove(typeName);
         return type;
     }
 
-    protected GraphQLOutputType generateOutputType(Object object, BuildContext currentContext) {
+    protected GraphQLOutputType generateOutputType(Object object) {
         String typeName = getGraphQLTypeName(object);
         if (typeName == null) {
             typeName = "Object_" + String.valueOf(System.identityHashCode(object));
@@ -171,12 +153,12 @@ public class TypeGenerator implements IContextualTypeGenerator {
         
         GraphQLObjectType.Builder builder = newObject();
         builder.name(typeName);
-        builder.fields(getOutputFieldDefinitions(object, currentContext));
+        builder.fields(getOutputFieldDefinitions(object));
         builder.description(getTypeDescription(object));
         return builder.build();
     }
     
-    protected GraphQLInputType generateInputType(Object object, BuildContext currentContext) {
+    protected GraphQLInputType generateInputType(Object object) {
         String typeName = getGraphQLTypeName(object);
         if (typeName == null) {
             typeName = "Object_" + String.valueOf(System.identityHashCode(object));
@@ -190,7 +172,7 @@ public class TypeGenerator implements IContextualTypeGenerator {
         
         GraphQLInputObjectType.Builder builder = new GraphQLInputObjectType.Builder();
         builder.name(typeName);
-        builder.fields(getInputFieldDefinitions(object, currentContext));
+        builder.fields(getInputFieldDefinitions(object));
         builder.description(getTypeDescription(object));
         return builder.build();
     }
@@ -209,17 +191,17 @@ public class TypeGenerator implements IContextualTypeGenerator {
         return builder.build();
     }
 
-    protected List<GraphQLFieldDefinition> getOutputFieldDefinitions(Object object, BuildContext currentContext) {
+    protected List<GraphQLFieldDefinition> getOutputFieldDefinitions(Object object) {
         List<GraphQLFieldDefinition> definitions = 
-                currentContext.getFieldsGeneratorStrategy()
-                        .getOutputFields(object, currentContext);
+                getContext().getFieldsGeneratorStrategy()
+                        .getOutputFields(object);
         return definitions;
     }
     
-    protected List<GraphQLInputObjectField> getInputFieldDefinitions(Object object, BuildContext currentContext) {
+    protected List<GraphQLInputObjectField> getInputFieldDefinitions(Object object) {
         List<GraphQLInputObjectField> definitions = 
-                currentContext.getFieldsGeneratorStrategy()
-                        .getInputFields(object, currentContext);
+                getContext().getFieldsGeneratorStrategy()
+                        .getInputFields(object);
         return definitions;
     }
     
@@ -241,5 +223,11 @@ public class TypeGenerator implements IContextualTypeGenerator {
     
     protected List<GraphQLEnumValueDefinition> getEnumValues(Object object) {
         return strategies.getEnumValuesStrategy().getEnumValueDefinitions(object);
+    }
+    
+    @Override
+    public void setContext(BuildContext context) {
+        super.setContext(context);
+        strategies.setContext(context);
     }
 }

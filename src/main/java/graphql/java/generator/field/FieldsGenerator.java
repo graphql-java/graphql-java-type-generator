@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
+import graphql.java.generator.BuildContextAware;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;
@@ -23,7 +24,7 @@ import graphql.schema.GraphQLOutputType;
  * @author dwinsor
  *
  */
-public class FieldsGenerator implements IContextualFieldsGenerator {
+public class FieldsGenerator implements IFieldsGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);
     
@@ -33,30 +34,14 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
         this.strategies = strategies;
     }
     
-    /* (non-Javadoc)
-     * @see graphql.java.generator.field.IFieldGeneratorContextAware#getFields(java.lang.Object)
-     */
     @Override
     public List<GraphQLFieldDefinition> getOutputFields(Object object) {
-        return getOutputFields(object, BuildContext.defaultContext);
-    }
-    
-    @Override
-    public List<GraphQLInputObjectField> getInputFields(Object object) {
-        return getInputFields(object, BuildContext.defaultContext);
-    }
-
-    /* (non-Javadoc)
-     * @see graphql.java.generator.field.IFieldGeneratorContextAware#getFields(java.lang.Object, graphql.java.generator.BuildContext)
-     */
-    @Override
-    public List<GraphQLFieldDefinition> getOutputFields(Object object, BuildContext parentContext) {
         List<GraphQLFieldDefinition> fieldDefs = new ArrayList<GraphQLFieldDefinition>();
         Set<String> fieldNames = new HashSet<String>();
         List<Object> fieldObjects = getFieldRepresentativeObjects(object);
         for (Object field : fieldObjects) {
             GraphQLFieldDefinition.Builder fieldBuilder =
-                    getOutputFieldDefinition(field, parentContext);
+                    getOutputFieldDefinition(field);
             if (fieldBuilder == null) {
                 continue;
             }
@@ -74,13 +59,13 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
     }
     
     @Override
-    public List<GraphQLInputObjectField> getInputFields(Object object, BuildContext parentContext) {
+    public List<GraphQLInputObjectField> getInputFields(Object object) {
         List<GraphQLInputObjectField> fieldDefs = new ArrayList<GraphQLInputObjectField>();
         Set<String> fieldNames = new HashSet<String>();
         List<Object> fieldObjects = getFieldRepresentativeObjects(object);
         for (Object field : fieldObjects) {
             GraphQLInputObjectField.Builder fieldBuilder =
-                    getInputFieldDefinition(field, parentContext);
+                    getInputFieldDefinition(field);
             if (fieldBuilder == null) {
                 continue;
             }
@@ -104,15 +89,15 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
      * @return
      */
     protected GraphQLFieldDefinition.Builder getOutputFieldDefinition(
-            final Object object, BuildContext currentContext) {
+            final Object object) {
         String fieldName = getFieldName(object);
-        GraphQLOutputType fieldType = getOutputTypeOfField(object, currentContext);
+        GraphQLOutputType fieldType = getOutputTypeOfField(object);
         if (fieldName == null || fieldType == null) {
             return null;
         }
         Object fieldFetcher = getFieldFetcher(object);
         String fieldDescription  = getFieldDescription(object);
-        List<GraphQLArgument> fieldArguments  = getFieldArguments(object, currentContext);
+        List<GraphQLArgument> fieldArguments  = getFieldArguments(object);
         logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}] with description [{}]",
                 fieldType, fieldName, fieldFetcher, fieldDescription);
         
@@ -139,9 +124,9 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
      * @return
      */
     protected GraphQLInputObjectField.Builder getInputFieldDefinition(
-            final Object object, BuildContext currentContext) {
+            final Object object) {
         String fieldName = getFieldName(object);
-        GraphQLInputType fieldType = getInputTypeOfField(object, currentContext);
+        GraphQLInputType fieldType = getInputTypeOfField(object);
         if (fieldName == null || fieldType == null) {
             return null;
         }
@@ -161,16 +146,12 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
                 .getFieldRepresentativeObjects(object);
     }
     
-    protected GraphQLOutputType getOutputTypeOfField(
-            final Object object, final BuildContext currentContext) {
-        return strategies.getFieldTypeStrategy()
-                .getOutputTypeOfField(object, currentContext);
+    protected GraphQLOutputType getOutputTypeOfField(final Object object) {
+        return strategies.getFieldTypeStrategy().getOutputTypeOfField(object);
     }
     
-    protected GraphQLInputType getInputTypeOfField(
-            final Object object, final BuildContext currentContext) {
-        return strategies.getFieldTypeStrategy()
-                .getInputTypeOfField(object, currentContext);
+    protected GraphQLInputType getInputTypeOfField(final Object object) {
+        return strategies.getFieldTypeStrategy().getInputTypeOfField(object);
     }
     
     protected Object getFieldFetcher(final Object object) {
@@ -182,7 +163,17 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
     protected String getFieldDescription(final Object object) {
         return strategies.getFieldDescriptionStrategy().getFieldDescription(object);
     }
-    protected List<GraphQLArgument> getFieldArguments(Object object, BuildContext currentContext) {
-        return strategies.getFieldArgumentsStrategy().getFieldArguments(object, currentContext);
+    protected List<GraphQLArgument> getFieldArguments(Object object) {
+        return strategies.getFieldArgumentsStrategy().getFieldArguments(object);
+    }
+
+    @Override
+    public BuildContext getContext() {
+        return null;
+    }
+
+    @Override
+    public void setContext(BuildContext context) {
+        strategies.setContext(context);
     }
 }

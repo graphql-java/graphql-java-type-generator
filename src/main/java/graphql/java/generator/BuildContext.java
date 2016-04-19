@@ -49,6 +49,12 @@ public class BuildContext implements ITypeGenerator {
         this.typeGenerator = typeGenerator;
         this.fieldsGenerator = fieldsGenerator;
         this.usingTypeRepository = usingTypeRepository;
+        if (typeGenerator instanceof BuildContextAware) {
+            ((BuildContextAware) typeGenerator).setContext(this);
+        }
+        if (fieldsGenerator instanceof BuildContextAware) {
+            ((BuildContextAware) fieldsGenerator).setContext(this);
+        }
     }
     
     private final TypeGenerator typeGenerator;
@@ -90,7 +96,7 @@ public class BuildContext implements ITypeGenerator {
      */
     @Override
     public GraphQLOutputType getOutputType(Object object) {
-        return getTypeGeneratorStrategy().getOutputType(object, this);
+        return getTypeGeneratorStrategy().getOutputType(object);
     }
     
     /**
@@ -102,7 +108,7 @@ public class BuildContext implements ITypeGenerator {
      */
     @Override
     public GraphQLInputType getInputType(Object object) {
-        return getTypeGeneratorStrategy().getInputType(object, this);
+        return getTypeGeneratorStrategy().getInputType(object);
     }
     
     

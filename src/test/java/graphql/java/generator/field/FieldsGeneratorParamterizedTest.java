@@ -15,7 +15,13 @@ import graphql.java.generator.field.reflect.FieldObjects_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
 import graphql.java.generator.field.reflect.FieldType_Reflection;
+import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeRepository;
+import graphql.java.generator.type.TypeStrategies;
+import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
+import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
+import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
 import graphql.schema.GraphQLFieldDefinition;
 
 import org.hamcrest.Matcher;
@@ -40,11 +46,18 @@ public class FieldsGeneratorParamterizedTest {
     
     FieldsGenerator generator;
     BuildContext testContext;
+    final TypeGenerator defaultTypeGenerator = 
+            new TypeGenerator(new TypeStrategies.Builder()
+                    .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
+                    .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
+                    .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
+                    .enumValuesStrategy(new EnumValues_Reflection())
+                    .build());
     
     public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {
         generator = fieldsGen;
         testContext = new Builder()
-                .setTypeGeneratorStrategy(BuildContext.defaultTypeGenerator)
+                .setTypeGeneratorStrategy(defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
                 .usingTypeRepository(true)
                 .build();
@@ -95,7 +108,7 @@ public class FieldsGeneratorParamterizedTest {
     @Test
     public void testRecursion() {
         logger.debug("testRecursion");
-        Object object = generator.getOutputFields(RecursiveClass.class, testContext);
+        Object object = generator.getOutputFields(RecursiveClass.class);
         Assert.assertThat(object, instanceOf(List.class));
         List<GraphQLFieldDefinition> recursiveFields = (List<GraphQLFieldDefinition>) object;
         

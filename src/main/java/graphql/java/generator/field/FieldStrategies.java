@@ -1,6 +1,9 @@
 package graphql.java.generator.field;
 
-public class FieldStrategies {
+import graphql.java.generator.BuildContext;
+import graphql.java.generator.BuildContextAware;
+
+public class FieldStrategies implements BuildContextAware {
     private final FieldObjectsStrategy fieldObjectsStrategy;
     private final FieldDataFetcherStrategy fieldDataFetcherStrategy;
     private final FieldNameStrategy fieldNameStrategy;
@@ -83,5 +86,32 @@ public class FieldStrategies {
         this.fieldTypeStrategy = builder.fieldTypeStrategy;
         this.fieldDescriptionStrategy = builder.fieldDescriptionStrategy;
         this.fieldArgumentsStrategy = builder.fieldArgumentsStrategy;
+    }
+
+    @Override
+    public BuildContext getContext() {
+        return null;
+    }
+
+    @Override
+    public void setContext(BuildContext context) {
+        if (fieldObjectsStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldObjectsStrategy).setContext(context);
+        }
+        if (fieldDataFetcherStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldDataFetcherStrategy).setContext(context);
+        }
+        if (fieldNameStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldNameStrategy).setContext(context);
+        }
+        if (fieldTypeStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldTypeStrategy).setContext(context);
+        }
+        if (fieldDescriptionStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldDescriptionStrategy).setContext(context);
+        }
+        if (fieldArgumentsStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) fieldArgumentsStrategy).setContext(context);
+        }
     }
 }

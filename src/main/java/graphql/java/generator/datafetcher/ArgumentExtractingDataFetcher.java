@@ -7,7 +7,7 @@ public class ArgumentExtractingDataFetcher extends ArgumentAwareDataFetcher {
     private ArgAwareDataFetcher nextFetcher;
 
     public ArgumentExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher) {
-        this(nextFetcher, new Object[0]);
+        this.setNextFetcher(nextFetcher);
     }
     
     public ArgumentExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher, final Object[] argNames) {

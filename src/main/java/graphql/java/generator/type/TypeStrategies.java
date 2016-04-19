@@ -1,6 +1,9 @@
 package graphql.java.generator.type;
 
-public class TypeStrategies {
+import graphql.java.generator.BuildContext;
+import graphql.java.generator.BuildContextAware;
+
+public class TypeStrategies implements BuildContextAware {
     private final TypeNameStrategy typeNameStrategy;
     private final TypeDescriptionStrategy typeDescriptionStrategy;
     private final DefaultTypeStrategy defaultTypeStrategy;
@@ -57,5 +60,26 @@ public class TypeStrategies {
         this.typeDescriptionStrategy = builder.typeDescriptionStrategy;
         this.defaultTypeStrategy = builder.defaultTypeStrategy;
         this.enumValuesStrategy = builder.enumValuesStrategy;
+    }
+    
+    @Override
+    public BuildContext getContext() {
+        return null;
+    }
+
+    @Override
+    public void setContext(BuildContext context) {
+        if (typeNameStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) typeNameStrategy).setContext(context);
+        }
+        if (typeDescriptionStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) typeDescriptionStrategy).setContext(context);
+        }
+        if (defaultTypeStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) defaultTypeStrategy).setContext(context);
+        }
+        if (enumValuesStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) enumValuesStrategy).setContext(context);
+        }
     }
 }
