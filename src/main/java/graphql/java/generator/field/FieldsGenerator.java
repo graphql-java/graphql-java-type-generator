@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
 import graphql.schema.DataFetcher;
+import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
 import graphql.schema.GraphQLInputType;
@@ -111,6 +112,7 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
         }
         Object fieldFetcher = getFieldFetcher(object);
         String fieldDescription  = getFieldDescription(object);
+        List<GraphQLArgument> fieldArguments  = getFieldArguments(object, currentContext);
         logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}] with description [{}]",
                 fieldType, fieldName, fieldFetcher, fieldDescription);
         
@@ -118,6 +120,9 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
                 .name(fieldName)
                 .type(fieldType)
                 .description(fieldDescription);
+        if (fieldArguments != null) {
+            fieldBuilder.argument(fieldArguments);
+        }
         if (fieldFetcher instanceof DataFetcher) {
             fieldBuilder.dataFetcher((DataFetcher)fieldFetcher);
         }
@@ -176,5 +181,8 @@ public class FieldsGenerator implements IContextualFieldsGenerator {
     }
     protected String getFieldDescription(final Object object) {
         return strategies.getFieldDescriptionStrategy().getFieldDescription(object);
+    }
+    protected List<GraphQLArgument> getFieldArguments(Object object, BuildContext currentContext) {
+        return strategies.getFieldArgumentsStrategy().getFieldArguments(object, currentContext);
     }
 }

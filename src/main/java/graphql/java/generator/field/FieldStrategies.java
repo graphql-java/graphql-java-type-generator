@@ -6,6 +6,7 @@ public class FieldStrategies {
     private final FieldNameStrategy fieldNameStrategy;
     private final FieldTypeStrategy fieldTypeStrategy;
     private final FieldDescriptionStrategy fieldDescriptionStrategy;
+    private final FieldArgumentsStrategy fieldArgumentsStrategy;
     
     public FieldObjectsStrategy getFieldObjectsStrategy() {
         return fieldObjectsStrategy;
@@ -27,6 +28,10 @@ public class FieldStrategies {
         return fieldDescriptionStrategy;
     }
     
+    public FieldArgumentsStrategy getFieldArgumentsStrategy() {
+        return fieldArgumentsStrategy;
+    }
+    
     
     public static class Builder {
         private FieldObjectsStrategy fieldObjectsStrategy;
@@ -34,6 +39,7 @@ public class FieldStrategies {
         private FieldNameStrategy fieldNameStrategy;
         private FieldTypeStrategy fieldTypeStrategy;
         private FieldDescriptionStrategy fieldDescriptionStrategy;
+        private FieldArgumentsStrategy fieldArgumentsStrategy;
         
         public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
             this.fieldObjectsStrategy = fieldObjectsStrategy;
@@ -60,6 +66,11 @@ public class FieldStrategies {
             return this;
         }
         
+        public Builder fieldArgumentsStrategy(FieldArgumentsStrategy fieldArgumentsStrategy) {
+            this.fieldArgumentsStrategy = fieldArgumentsStrategy;
+            return this;
+        }
+        
         public FieldStrategies build() {
             return new FieldStrategies(this);
         }
@@ -71,5 +82,6 @@ public class FieldStrategies {
         this.fieldNameStrategy = builder.fieldNameStrategy;
         this.fieldTypeStrategy = builder.fieldTypeStrategy;
         this.fieldDescriptionStrategy = builder.fieldDescriptionStrategy;
+        this.fieldArgumentsStrategy = builder.fieldArgumentsStrategy;
     }
 }

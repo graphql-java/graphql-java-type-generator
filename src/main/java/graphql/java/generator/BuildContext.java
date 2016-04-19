@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
+import graphql.java.generator.field.reflect.FieldArguments_Reflection;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
@@ -36,6 +37,7 @@ public class BuildContext implements ITypeGenerator {
                     .fieldTypeStrategy(new FieldType_Reflection())
                     .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                     .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
+                    .fieldArgumentsStrategy(new FieldArguments_Reflection())
                     .build());
      public static final BuildContext defaultContext = new Builder()
             .setTypeGeneratorStrategy(defaultTypeGenerator)

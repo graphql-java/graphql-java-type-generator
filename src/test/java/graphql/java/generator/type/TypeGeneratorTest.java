@@ -8,7 +8,6 @@ import graphql.schema.GraphQLInputObjectType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLType;
 
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
