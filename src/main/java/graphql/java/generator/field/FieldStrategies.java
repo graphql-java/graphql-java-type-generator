@@ -9,7 +9,6 @@ public class FieldStrategies implements BuildContextAware {
     private final FieldNameStrategy fieldNameStrategy;
     private final FieldTypeStrategy fieldTypeStrategy;
     private final FieldDescriptionStrategy fieldDescriptionStrategy;
-    private final FieldArgumentsStrategy fieldArgumentsStrategy;
     
     public FieldObjectsStrategy getFieldObjectsStrategy() {
         return fieldObjectsStrategy;
@@ -31,10 +30,6 @@ public class FieldStrategies implements BuildContextAware {
         return fieldDescriptionStrategy;
     }
     
-    public FieldArgumentsStrategy getFieldArgumentsStrategy() {
-        return fieldArgumentsStrategy;
-    }
-    
     
     public static class Builder {
         private FieldObjectsStrategy fieldObjectsStrategy;
@@ -42,7 +37,6 @@ public class FieldStrategies implements BuildContextAware {
         private FieldNameStrategy fieldNameStrategy;
         private FieldTypeStrategy fieldTypeStrategy;
         private FieldDescriptionStrategy fieldDescriptionStrategy;
-        private FieldArgumentsStrategy fieldArgumentsStrategy;
         
         public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
             this.fieldObjectsStrategy = fieldObjectsStrategy;
@@ -69,11 +63,6 @@ public class FieldStrategies implements BuildContextAware {
             return this;
         }
         
-        public Builder fieldArgumentsStrategy(FieldArgumentsStrategy fieldArgumentsStrategy) {
-            this.fieldArgumentsStrategy = fieldArgumentsStrategy;
-            return this;
-        }
-        
         public FieldStrategies build() {
             return new FieldStrategies(this);
         }
@@ -85,7 +74,6 @@ public class FieldStrategies implements BuildContextAware {
         this.fieldNameStrategy = builder.fieldNameStrategy;
         this.fieldTypeStrategy = builder.fieldTypeStrategy;
         this.fieldDescriptionStrategy = builder.fieldDescriptionStrategy;
-        this.fieldArgumentsStrategy = builder.fieldArgumentsStrategy;
     }
 
     @Override
@@ -109,9 +97,6 @@ public class FieldStrategies implements BuildContextAware {
         }
         if (fieldDescriptionStrategy instanceof BuildContextAware) {
             ((BuildContextAware) fieldDescriptionStrategy).setContext(context);
-        }
-        if (fieldArgumentsStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldArgumentsStrategy).setContext(context);
         }
     }
 }

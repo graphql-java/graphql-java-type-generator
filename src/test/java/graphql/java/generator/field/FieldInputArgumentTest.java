@@ -33,7 +33,7 @@ public class FieldInputArgumentTest {
         TypeRepository.clear();
     }
     
-    @SuppressWarnings({"unchecked", "serial"})
+    @SuppressWarnings({"unchecked"})
     @Test
     public void testArgument() {
         logger.debug("testArgument");
@@ -52,7 +52,7 @@ public class FieldInputArgumentTest {
                 .query(queryType)
                 .build();
         
-        String query = ""
+        String querySchema = ""
         + "query testSchema {"
         + "  __schema {"
         + "    types {"
@@ -72,12 +72,13 @@ public class FieldInputArgumentTest {
         String queryString = 
         "{"
         + "  testObj {"
-        + "    number (int: 100)"
+        + "    number (Int: 100)"
         + "  }"
         + "}";
         ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
+        logger.debug("testArgument resultMap is {}", resultMap);
 //        assertThat(((Map<String, Object>)resultMap.get("testObj")),
 //                equalTo((Map<String, Object>) new HashMap<String, Object>() {{
 //                    put("number", 100);

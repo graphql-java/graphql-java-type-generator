@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextAware;
+import graphql.java.generator.BuildContextStorer;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;
@@ -24,7 +24,9 @@ import graphql.schema.GraphQLOutputType;
  * @author dwinsor
  *
  */
-public class FieldsGenerator implements IFieldsGenerator, BuildContextAware {
+public class FieldsGenerator
+        extends BuildContextStorer
+        implements IFieldsGenerator {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);
     
@@ -164,16 +166,12 @@ public class FieldsGenerator implements IFieldsGenerator, BuildContextAware {
         return strategies.getFieldDescriptionStrategy().getFieldDescription(object);
     }
     protected List<GraphQLArgument> getFieldArguments(Object object) {
-        return strategies.getFieldArgumentsStrategy().getFieldArguments(object);
-    }
-
-    @Override
-    public BuildContext getContext() {
-        return null;
+        return getContext().getArgumentsGeneratorStrategy().getArguments(object);
     }
 
     @Override
     public void setContext(BuildContext context) {
+        super.setContext(context);
         strategies.setContext(context);
     }
 }

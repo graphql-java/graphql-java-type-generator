@@ -4,9 +4,15 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import graphql.java.generator.argument.ArgumentStrategies;
+import graphql.java.generator.argument.ArgumentsGenerator;
+import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
+import graphql.java.generator.argument.reflection.ArgumentName_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentObjects_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.field.reflect.FieldArguments_Reflection;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
@@ -22,7 +28,7 @@ import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithC
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLOutputType;
 
-public class BuildContext implements ITypeGenerator {
+public class BuildContext implements ITypeGenerator, BuildContextAware {
     public static final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
                     .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
@@ -37,29 +43,35 @@ public class BuildContext implements ITypeGenerator {
                     .fieldTypeStrategy(new FieldType_Reflection())
                     .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
                     .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                    .fieldArgumentsStrategy(new FieldArguments_Reflection())
+                    .build());
+    public static final ArgumentsGenerator defaultArgumentsGenerator = 
+            new ArgumentsGenerator(new ArgumentStrategies.Builder()
+                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
+                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
+                    .argumentNameStrategy(new ArgumentName_Reflection())
+                    .argumentObjectsStrategy(new ArgumentObjects_Reflection())
+                    .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
      public static final BuildContext defaultContext = new Builder()
             .setTypeGeneratorStrategy(defaultTypeGenerator)
             .setFieldsGeneratorStrategy(defaultFieldsGenerator)
+            .setArgumentsGeneratorStrategy(defaultArgumentsGenerator)
             .usingTypeRepository(true)
             .build();
 
-    BuildContext(TypeGenerator typeGenerator, FieldsGenerator fieldsGenerator, boolean usingTypeRepository) {
+    BuildContext(TypeGenerator typeGenerator, FieldsGenerator fieldsGenerator,
+            ArgumentsGenerator argumentsGenerator, boolean usingTypeRepository) {
         this.typeGenerator = typeGenerator;
         this.fieldsGenerator = fieldsGenerator;
+        this.argumentsGenerator = argumentsGenerator;
         this.usingTypeRepository = usingTypeRepository;
-        if (typeGenerator instanceof BuildContextAware) {
-            ((BuildContextAware) typeGenerator).setContext(this);
-        }
-        if (fieldsGenerator instanceof BuildContextAware) {
-            ((BuildContextAware) fieldsGenerator).setContext(this);
-        }
+        setContext(this);
     }
     
     private final TypeGenerator typeGenerator;
     private final FieldsGenerator fieldsGenerator;
     private final boolean usingTypeRepository;
+    private final ArgumentsGenerator argumentsGenerator;
 
     private final Set<String> outputTypesBeingBuilt = Collections.newSetFromMap(
             new ConcurrentHashMap<String, Boolean>());
@@ -72,6 +84,9 @@ public class BuildContext implements ITypeGenerator {
     }
     public FieldsGenerator getFieldsGeneratorStrategy() {
         return fieldsGenerator;
+    }
+    public ArgumentsGenerator getArgumentsGeneratorStrategy() {
+        return argumentsGenerator;
     }
 
     public Set<String> getOutputTypesBeingBuilt() {
@@ -115,6 +130,7 @@ public class BuildContext implements ITypeGenerator {
     public static class Builder {
         private TypeGenerator typeGenerator;
         private FieldsGenerator fieldsGenerator;
+        private ArgumentsGenerator argumentsGenerator;
         private boolean usingTypeRepository;
         
         public Builder setTypeGeneratorStrategy(TypeGenerator defaulttypegenerator) {
@@ -129,8 +145,31 @@ public class BuildContext implements ITypeGenerator {
             this.fieldsGenerator = fieldsGenerator;
             return this;
         }
+        public Builder setArgumentsGeneratorStrategy(ArgumentsGenerator argumentsGenerator) {
+            this.argumentsGenerator = argumentsGenerator;
+            return this;
+        }
         public BuildContext build() {
-            return new BuildContext(typeGenerator, fieldsGenerator, usingTypeRepository);
+            return new BuildContext(typeGenerator, fieldsGenerator,
+                    argumentsGenerator, usingTypeRepository);
+        }
+    }
+
+
+    @Override
+    public BuildContext getContext() {
+        return this;
+    }
+    @Override
+    public void setContext(BuildContext ignored) {
+        if (typeGenerator instanceof BuildContextAware) {
+            ((BuildContextAware) typeGenerator).setContext(this);
+        }
+        if (fieldsGenerator instanceof BuildContextAware) {
+            ((BuildContextAware) fieldsGenerator).setContext(this);
+        }
+        if (argumentsGenerator instanceof BuildContextAware) {
+            ((BuildContextAware) argumentsGenerator).setContext(this);
         }
     }
 }
