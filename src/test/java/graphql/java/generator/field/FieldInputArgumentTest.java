@@ -75,6 +75,8 @@ public class FieldInputArgumentTest {
         + "  testObj {"
         + "    number (Int: 100)"
         + "    number2Args (Int: 20, Boolean: false)"
+        //next line test shows we need to rethink the input argument names
+        //+ "    stringConcat (String: \"abc\", String: \"def\")"
         + "  }"
         + "}";
         ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
@@ -85,6 +87,7 @@ public class FieldInputArgumentTest {
                 equalTo((Map<String, Object>) new HashMap<String, Object>() {{
                     put("number", 100);
                     put("number2Args", 20);
+                    //put("stringConcat", "abcdef");
                 }}));
     }
 }

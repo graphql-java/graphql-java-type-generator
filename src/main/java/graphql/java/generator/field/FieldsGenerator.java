@@ -99,6 +99,7 @@ public class FieldsGenerator
         }
         Object fieldFetcher = getFieldFetcher(object);
         String fieldDescription  = getFieldDescription(object);
+        String fieldDeprecation  = getFieldDeprecation(object);
         List<GraphQLArgument> fieldArguments  = getFieldArguments(object);
         logger.debug("GraphQL field will be of type [{}] and name [{}] and fetcher [{}] with description [{}]",
                 fieldType, fieldName, fieldFetcher, fieldDescription);
@@ -106,7 +107,8 @@ public class FieldsGenerator
         GraphQLFieldDefinition.Builder fieldBuilder = newFieldDefinition()
                 .name(fieldName)
                 .type(fieldType)
-                .description(fieldDescription);
+                .description(fieldDescription)
+                .deprecate(fieldDeprecation);
         if (fieldArguments != null) {
             fieldBuilder.argument(fieldArguments);
         }
@@ -133,13 +135,15 @@ public class FieldsGenerator
             return null;
         }
         String fieldDescription  = getFieldDescription(object);
+        String fieldDefaultValue  = getFieldDefaultValue(object);
         logger.debug("GraphQL field will be of type [{}] and name [{}] with description [{}]",
                 fieldType, fieldName, fieldDescription);
         
         GraphQLInputObjectField.Builder fieldBuilder = newInputObjectField()
                 .name(fieldName)
                 .type(fieldType)
-                .description(fieldDescription);
+                .description(fieldDescription)
+                .defaultValue(fieldDefaultValue);
         return fieldBuilder;
     }
     
@@ -164,6 +168,12 @@ public class FieldsGenerator
     }
     protected String getFieldDescription(final Object object) {
         return getStrategies().getFieldDescriptionStrategy().getFieldDescription(object);
+    }
+    protected String getFieldDeprecation(Object object) {
+        return getStrategies().getFieldDeprecationStrategy().getFieldDeprecation(object);
+    }
+    protected String getFieldDefaultValue(Object object) {
+        return getStrategies().getFieldDefaultValueStrategy().getFieldDefaultValue(object);
     }
     protected List<GraphQLArgument> getFieldArguments(Object object) {
         return getContext().getArgumentsGeneratorStrategy().getArguments(object);
