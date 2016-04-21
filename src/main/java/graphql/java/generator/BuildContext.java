@@ -62,14 +62,14 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
                     .argumentObjectsStrategy(new ArgumentObjects_Reflection())
                     .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
-     public static final BuildContext defaultContext = new Builder()
+    public static final BuildContext defaultContext = new Builder()
             .setTypeGeneratorStrategy(defaultTypeGenerator)
             .setFieldsGeneratorStrategy(defaultFieldsGenerator)
             .setArgumentsGeneratorStrategy(defaultArgumentsGenerator)
             .usingTypeRepository(true)
             .build();
 
-    BuildContext(TypeGenerator typeGenerator, FieldsGenerator fieldsGenerator,
+    protected BuildContext(TypeGenerator typeGenerator, FieldsGenerator fieldsGenerator,
             ArgumentsGenerator argumentsGenerator, boolean usingTypeRepository) {
         this.typeGenerator = typeGenerator;
         this.fieldsGenerator = fieldsGenerator;
@@ -143,10 +143,10 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
 
     
     public static class Builder {
-        private TypeGenerator typeGenerator;
-        private FieldsGenerator fieldsGenerator;
-        private ArgumentsGenerator argumentsGenerator;
-        private boolean usingTypeRepository;
+        protected TypeGenerator typeGenerator;
+        protected FieldsGenerator fieldsGenerator;
+        protected ArgumentsGenerator argumentsGenerator;
+        protected boolean usingTypeRepository;
         
         public Builder setTypeGeneratorStrategy(TypeGenerator defaulttypegenerator) {
             this.typeGenerator = defaulttypegenerator;

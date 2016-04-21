@@ -44,7 +44,7 @@ public class Interfaces_Reflection
                 interfaceMap.put(intf, iType);
             }
             getInterfaces(interfaceMap, intf);
-       }
+        }
         Class<?> superClazz = clazz.getSuperclass();
         if (superClazz != null && superClazz != Object.class) {
             getInterfaces(interfaceMap, superClazz);

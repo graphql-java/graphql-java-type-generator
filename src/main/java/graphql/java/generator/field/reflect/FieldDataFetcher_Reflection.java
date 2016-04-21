@@ -3,7 +3,7 @@ package graphql.java.generator.field.reflect;
 import graphql.java.generator.BuildContextStorer;
 import graphql.java.generator.datafetcher.ArgAwareDataFetcher;
 import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
-import graphql.java.generator.datafetcher.GraphQLInputExtractingDataFetcher;
+import graphql.java.generator.datafetcher.GraphQLInputAwareDataFetcher;
 import graphql.java.generator.datafetcher.MethodInvokingDataFetcher;
 import graphql.java.generator.field.FieldDataFetcherStrategy;
 import graphql.schema.DataFetcher;
@@ -67,7 +67,7 @@ public class FieldDataFetcher_Reflection
         if (arguments == null || arguments.isEmpty()) {
             return methodInvoker;
         }
-        return new GraphQLInputExtractingDataFetcher(
+        return new GraphQLInputAwareDataFetcher(
                 new ArgumentExtractingDataFetcher(methodInvoker), arguments);
     }
     

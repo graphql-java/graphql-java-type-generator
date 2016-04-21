@@ -6,16 +6,16 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLArgument;
 
-public class GraphQLInputExtractingDataFetcher implements DataFetcher {
+public class GraphQLInputAwareDataFetcher implements DataFetcher {
     
     private ArgAwareDataFetcher nextFetcher;
     private List<GraphQLArgument> arguments;
 
-    public GraphQLInputExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher) {
+    public GraphQLInputAwareDataFetcher(final ArgAwareDataFetcher nextFetcher) {
         this.setNextFetcher(nextFetcher);
     }
     
-    public GraphQLInputExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher,
+    public GraphQLInputAwareDataFetcher(final ArgAwareDataFetcher nextFetcher,
             final List<GraphQLArgument> arguments) {
         this.setNextFetcher(nextFetcher);
         this.setArguments(arguments);
@@ -25,12 +25,9 @@ public class GraphQLInputExtractingDataFetcher implements DataFetcher {
     public Object get(DataFetchingEnvironment environment) {
         if (getArguments() != null) {
             String[] originalArgNames = new String[getArguments().size()];
-            Object[] extractedArgs = new Object[originalArgNames.length];
             for (int index = 0; index < originalArgNames.length; ++index) {
                 originalArgNames[index] = getArguments().get(index).getName();
-                extractedArgs[index] = environment.getArgument(originalArgNames[index]);
             }
-            getNextFetcher().setArgValues(extractedArgs);
             getNextFetcher().setArgNames(originalArgNames);
         }
         return getNextFetcher().get(environment);
