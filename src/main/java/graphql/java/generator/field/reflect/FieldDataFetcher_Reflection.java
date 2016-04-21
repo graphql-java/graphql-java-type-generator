@@ -1,10 +1,18 @@
 package graphql.java.generator.field.reflect;
 
+import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.datafetcher.ArgAwareDataFetcher;
+import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
+import graphql.java.generator.datafetcher.GraphQLInputExtractingDataFetcher;
+import graphql.java.generator.datafetcher.MethodInvokingDataFetcher;
 import graphql.java.generator.field.FieldDataFetcherStrategy;
+import graphql.schema.DataFetcher;
 import graphql.schema.FieldDataFetcher;
+import graphql.schema.GraphQLArgument;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +23,9 @@ import org.slf4j.LoggerFactory;
  * @author dwinsor
  *
  */
-public class FieldDataFetcher_Reflection implements FieldDataFetcherStrategy {
+public class FieldDataFetcher_Reflection
+        extends BuildContextStorer
+        implements FieldDataFetcherStrategy {
     private static Logger logger = LoggerFactory.getLogger(
             FieldDataFetcher_Reflection.class);
 
@@ -51,11 +61,14 @@ public class FieldDataFetcher_Reflection implements FieldDataFetcherStrategy {
     }
     
     protected Object getFieldFetcherFromMethod(Method method) {
-        //TODO by default, when not setting a DataFetcher, we'll use a PropertyDataFetcher
-        //that searches for a method matching the name, with camelcase, like getObject.
-        //Someday we may need to adjust the name a bit
-        //return new PropertyDataFetcher(method.getName() + "edit me"));
-        return null;
+        ArgAwareDataFetcher methodInvoker = new MethodInvokingDataFetcher(method);
+        List<GraphQLArgument> arguments = getContext()
+                .getArgumentsGeneratorStrategy().getArguments(method);
+        if (arguments == null || arguments.isEmpty()) {
+            return methodInvoker;
+        }
+        return new GraphQLInputExtractingDataFetcher(
+                new ArgumentExtractingDataFetcher(methodInvoker), arguments);
     }
     
     /**

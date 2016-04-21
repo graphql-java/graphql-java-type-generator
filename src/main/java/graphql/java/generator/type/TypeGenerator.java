@@ -36,10 +36,10 @@ public class TypeGenerator
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
     protected final Map<String, GraphQLInputType> generatedInputTypes;
-    protected TypeStrategies strategies;
+    private TypeStrategies strategies;
     
     public TypeGenerator(TypeStrategies strategies) {
-        this.strategies = strategies;
+        this.setStrategies(strategies);
         generatedOutputTypes = TypeRepository.getGeneratedOutputTypes();
         generatedInputTypes = TypeRepository.getGeneratedInputTypes();
     }
@@ -206,28 +206,37 @@ public class TypeGenerator
     }
     
     protected GraphQLOutputType getDefaultOutputType(Object object) {
-        return strategies.getDefaultTypeStrategy().getDefaultOutputType(object);
+        return getStrategies().getDefaultTypeStrategy().getDefaultOutputType(object);
     }
     
     protected GraphQLInputType getDefaultInputType(Object object) {
-        return strategies.getDefaultTypeStrategy().getDefaultInputType(object);
+        return getStrategies().getDefaultTypeStrategy().getDefaultInputType(object);
     }
     
     protected String getGraphQLTypeName(Object object) {
-        return strategies.getTypeNameStrategy().getTypeName(object);
+        return getStrategies().getTypeNameStrategy().getTypeName(object);
     }
     
     protected String getTypeDescription(Object object) {
-        return strategies.getTypeDescriptionStrategy().getTypeDescription(object);
+        return getStrategies().getTypeDescriptionStrategy().getTypeDescription(object);
     }
     
     protected List<GraphQLEnumValueDefinition> getEnumValues(Object object) {
-        return strategies.getEnumValuesStrategy().getEnumValueDefinitions(object);
+        return getStrategies().getEnumValuesStrategy().getEnumValueDefinitions(object);
     }
     
     @Override
     public void setContext(BuildContext context) {
         super.setContext(context);
-        strategies.setContext(context);
+        getStrategies().setContext(context);
+    }
+
+    @Override
+    public TypeStrategies getStrategies() {
+        return strategies;
+    }
+
+    protected void setStrategies(TypeStrategies strategies) {
+        this.strategies = strategies;
     }
 }

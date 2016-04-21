@@ -2,6 +2,7 @@ package graphql.java.generator.datafetcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import graphql.schema.DataFetchingEnvironment;
 

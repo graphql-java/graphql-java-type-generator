@@ -10,14 +10,15 @@ import graphql.java.generator.BuildContextAware;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLInputType;
 
-public class ArgumentsGenerator implements BuildContextAware {
+public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerator {
     
     private ArgumentStrategies strategies;
 
     public ArgumentsGenerator(ArgumentStrategies strategies) {
-        this.strategies = strategies;
+        this.setStrategies(strategies);
     }
 
+    @Override
     public List<GraphQLArgument> getArguments(Object object) {
         List<GraphQLArgument> arguments = new ArrayList<GraphQLArgument>();
         List<Object> argObjects = getArgRepresentativeObjects(object);
@@ -43,14 +44,14 @@ public class ArgumentsGenerator implements BuildContextAware {
     }
     
     protected GraphQLArgument.Builder getArgument(Object argObject) {
-        String name = strategies.getArgumentNameStrategy().getArgumentName(argObject);
-        GraphQLInputType type = strategies.getArgumentTypeStrategy().getArgumentType(argObject);
+        String name = getStrategies().getArgumentNameStrategy().getArgumentName(argObject);
+        GraphQLInputType type = getStrategies().getArgumentTypeStrategy().getArgumentType(argObject);
         if (name == null || type == null) {
             return null;
         }
         
-        String description = strategies.getArgumentDescriptionStrategy().getArgumentDescription(argObject);
-        Object defaultValue = strategies.getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject);
+        String description = getStrategies().getArgumentDescriptionStrategy().getArgumentDescription(argObject);
+        Object defaultValue = getStrategies().getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject);
         GraphQLArgument.Builder builder = GraphQLArgument.newArgument()
                 .name(name)
                 .type(type)
@@ -60,7 +61,7 @@ public class ArgumentsGenerator implements BuildContextAware {
     }
 
     protected List<Object> getArgRepresentativeObjects(Object object) {
-        return strategies.getArgumentObjectsStrategy()
+        return getStrategies().getArgumentObjectsStrategy()
                 .getArgumentRepresentativeObjects(object);
     }
 
@@ -71,6 +72,15 @@ public class ArgumentsGenerator implements BuildContextAware {
 
     @Override
     public void setContext(BuildContext context) {
-        strategies.setContext(context);
+        getStrategies().setContext(context);
+    }
+
+    @Override
+    public ArgumentStrategies getStrategies() {
+        return strategies;
+    }
+
+    private void setStrategies(ArgumentStrategies strategies) {
+        this.strategies = strategies;
     }    
 }

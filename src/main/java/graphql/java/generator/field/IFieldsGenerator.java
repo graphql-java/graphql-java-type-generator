@@ -7,6 +7,8 @@ import graphql.schema.GraphQLInputObjectField;
 
 public interface IFieldsGenerator {
     
+    FieldStrategies getStrategies();
+    
     List<GraphQLFieldDefinition> getOutputFields(Object object);
     
     List<GraphQLInputObjectField> getInputFields(Object object);

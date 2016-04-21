@@ -33,7 +33,7 @@ public class FieldsGenerator
     private FieldStrategies strategies;
     
     public FieldsGenerator(FieldStrategies strategies) {
-        this.strategies = strategies;
+        this.setStrategies(strategies);
     }
     
     @Override
@@ -144,26 +144,26 @@ public class FieldsGenerator
     }
     
     protected List<Object> getFieldRepresentativeObjects(Object object) {
-        return strategies.getFieldObjectsStrategy()
+        return getStrategies().getFieldObjectsStrategy()
                 .getFieldRepresentativeObjects(object);
     }
     
     protected GraphQLOutputType getOutputTypeOfField(final Object object) {
-        return strategies.getFieldTypeStrategy().getOutputTypeOfField(object);
+        return getStrategies().getFieldTypeStrategy().getOutputTypeOfField(object);
     }
     
     protected GraphQLInputType getInputTypeOfField(final Object object) {
-        return strategies.getFieldTypeStrategy().getInputTypeOfField(object);
+        return getStrategies().getFieldTypeStrategy().getInputTypeOfField(object);
     }
     
     protected Object getFieldFetcher(final Object object) {
-        return strategies.getFieldDataFetcherStrategy().getFieldFetcher(object);
+        return getStrategies().getFieldDataFetcherStrategy().getFieldFetcher(object);
     }
     protected String getFieldName(final Object object) {
-        return strategies.getFieldNameStrategy().getFieldName(object);
+        return getStrategies().getFieldNameStrategy().getFieldName(object);
     }
     protected String getFieldDescription(final Object object) {
-        return strategies.getFieldDescriptionStrategy().getFieldDescription(object);
+        return getStrategies().getFieldDescriptionStrategy().getFieldDescription(object);
     }
     protected List<GraphQLArgument> getFieldArguments(Object object) {
         return getContext().getArgumentsGeneratorStrategy().getArguments(object);
@@ -172,6 +172,15 @@ public class FieldsGenerator
     @Override
     public void setContext(BuildContext context) {
         super.setContext(context);
-        strategies.setContext(context);
+        getStrategies().setContext(context);
+    }
+
+    @Override
+    public FieldStrategies getStrategies() {
+        return strategies;
+    }
+
+    private void setStrategies(FieldStrategies strategies) {
+        this.strategies = strategies;
     }
 }

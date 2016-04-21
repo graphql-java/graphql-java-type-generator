@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
+import graphql.java.generator.argument.IArgumentsGenerator;
 import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
 import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
 import graphql.java.generator.argument.reflection.ArgumentName_Reflection;
@@ -13,6 +14,7 @@ import graphql.java.generator.argument.reflection.ArgumentObjects_Reflection;
 import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
+import graphql.java.generator.field.IFieldsGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
 import graphql.java.generator.field.reflect.FieldName_Reflection;
@@ -79,13 +81,13 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
     private final Set<String> inputTypesBeingBuilt = Collections.newSetFromMap(
             new ConcurrentHashMap<String, Boolean>());
     
-    public TypeGenerator getTypeGeneratorStrategy() {
+    public ITypeGenerator getTypeGeneratorStrategy() {
         return typeGenerator;
     }
-    public FieldsGenerator getFieldsGeneratorStrategy() {
+    public IFieldsGenerator getFieldsGeneratorStrategy() {
         return fieldsGenerator;
     }
-    public ArgumentsGenerator getArgumentsGeneratorStrategy() {
+    public IArgumentsGenerator getArgumentsGeneratorStrategy() {
         return argumentsGenerator;
     }
 
@@ -126,6 +128,11 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
         return getTypeGeneratorStrategy().getInputType(object);
     }
     
+    @Override
+    public TypeStrategies getStrategies() {
+        return getTypeGeneratorStrategy().getStrategies();
+    }
+
     
     public static class Builder {
         private TypeGenerator typeGenerator;

@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertThat;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class FieldInputArgumentTest {
@@ -73,15 +74,17 @@ public class FieldInputArgumentTest {
         "{"
         + "  testObj {"
         + "    number (Int: 100)"
+        + "    number2Args (Int: 20, Boolean: false)"
         + "  }"
         + "}";
         ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
         logger.debug("testArgument resultMap is {}", resultMap);
-//        assertThat(((Map<String, Object>)resultMap.get("testObj")),
-//                equalTo((Map<String, Object>) new HashMap<String, Object>() {{
-//                    put("number", 100);
-//                }}));
+        assertThat(((Map<String, Object>)resultMap.get("testObj")),
+                equalTo((Map<String, Object>) new HashMap<String, Object>() {{
+                    put("number", 100);
+                    put("number2Args", 20);
+                }}));
     }
 }
