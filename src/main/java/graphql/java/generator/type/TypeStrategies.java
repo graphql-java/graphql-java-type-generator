@@ -8,20 +8,26 @@ public class TypeStrategies implements BuildContextAware {
     private final TypeDescriptionStrategy typeDescriptionStrategy;
     private final DefaultTypeStrategy defaultTypeStrategy;
     private final EnumValuesStrategy enumValuesStrategy;
+    private final InterfacesStrategy interfacesStrategy;
+    private final TypeResolverStrategy typeResolverStrategy;
     
     public TypeNameStrategy getTypeNameStrategy() {
         return typeNameStrategy;
     }
-    
     public TypeDescriptionStrategy getTypeDescriptionStrategy() {
         return typeDescriptionStrategy;
     }
-    
     public DefaultTypeStrategy getDefaultTypeStrategy() {
         return defaultTypeStrategy;
     }
     public EnumValuesStrategy getEnumValuesStrategy() {
         return enumValuesStrategy;
+    }
+    public InterfacesStrategy getInterfacesStrategy() {
+        return interfacesStrategy;
+    }
+    public TypeResolverStrategy getTypeResolverStrategy() {
+        return typeResolverStrategy;
     }
     
     public static class Builder {
@@ -29,6 +35,8 @@ public class TypeStrategies implements BuildContextAware {
         private TypeDescriptionStrategy typeDescriptionStrategy;
         private DefaultTypeStrategy defaultTypeStrategy;
         private EnumValuesStrategy enumValuesStrategy;
+        private InterfacesStrategy interfacesStrategy;
+        private TypeResolverStrategy typeResolverStrategy;
         
         public Builder typeNameStrategy(TypeNameStrategy typeNameStrategy) {
             this.typeNameStrategy = typeNameStrategy;
@@ -50,6 +58,16 @@ public class TypeStrategies implements BuildContextAware {
             return this;
         }
         
+        public Builder interfacesStrategy(InterfacesStrategy interfacesStrategy) {
+            this.interfacesStrategy = interfacesStrategy;
+            return this;
+        }
+        
+        public Builder typeResolverStrategy(TypeResolverStrategy typeResolverStrategy) {
+            this.typeResolverStrategy = typeResolverStrategy;
+            return this;
+        }
+        
         public TypeStrategies build() {
             return new TypeStrategies(this);
         }
@@ -60,6 +78,8 @@ public class TypeStrategies implements BuildContextAware {
         this.typeDescriptionStrategy = builder.typeDescriptionStrategy;
         this.defaultTypeStrategy = builder.defaultTypeStrategy;
         this.enumValuesStrategy = builder.enumValuesStrategy;
+        this.interfacesStrategy = builder.interfacesStrategy;
+        this.typeResolverStrategy = builder.typeResolverStrategy;
     }
     
     @Override
@@ -80,6 +100,12 @@ public class TypeStrategies implements BuildContextAware {
         }
         if (enumValuesStrategy instanceof BuildContextAware) {
             ((BuildContextAware) enumValuesStrategy).setContext(context);
+        }
+        if (interfacesStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) interfacesStrategy).setContext(context);
+        }
+        if (typeResolverStrategy instanceof BuildContextAware) {
+            ((BuildContextAware) typeResolverStrategy).setContext(context);
         }
     }
 }

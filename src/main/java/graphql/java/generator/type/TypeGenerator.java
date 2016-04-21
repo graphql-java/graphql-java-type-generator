@@ -19,6 +19,7 @@ import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
 import graphql.schema.GraphQLInputObjectType;
 import graphql.schema.GraphQLInputType;
+import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLTypeReference;
@@ -151,10 +152,15 @@ public class TypeGenerator
             return enumType;
         }
         
-        GraphQLObjectType.Builder builder = newObject();
-        builder.name(typeName);
-        builder.fields(getOutputFieldDefinitions(object));
-        builder.description(getTypeDescription(object));
+        GraphQLObjectType.Builder builder = newObject()
+                .name(typeName)
+                .fields(getOutputFieldDefinitions(object))
+                .description(getTypeDescription(object));
+        
+        GraphQLInterfaceType[] interfaces = getInterfaces(object);
+        if (interfaces != null) {
+            builder.withInterfaces(interfaces);
+        }
         return builder.build();
     }
     
@@ -224,6 +230,11 @@ public class TypeGenerator
     protected List<GraphQLEnumValueDefinition> getEnumValues(Object object) {
         return getStrategies().getEnumValuesStrategy().getEnumValueDefinitions(object);
     }
+    
+    protected GraphQLInterfaceType[] getInterfaces(Object object) {
+        return getStrategies().getInterfacesStrategy().getInterfaces(object);
+    }
+
     
     @Override
     public void setContext(BuildContext context) {

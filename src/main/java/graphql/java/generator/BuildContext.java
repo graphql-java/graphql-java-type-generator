@@ -27,8 +27,10 @@ import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.Interfaces_Reflection;
 import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
 import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
+import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLOutputType;
 
@@ -39,6 +41,8 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
                     .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
                     .enumValuesStrategy(new EnumValues_Reflection())
+                    .interfacesStrategy(new Interfaces_Reflection())
+                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     public static final FieldsGenerator defaultFieldsGenerator = 
             new FieldsGenerator(new FieldStrategies.Builder()

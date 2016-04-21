@@ -21,8 +21,10 @@ import graphql.java.generator.type.TypeRepository;
 import graphql.java.generator.type.TypeStrategies;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.Interfaces_Reflection;
 import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
 import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
+import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLFieldDefinition;
 
 import org.hamcrest.Matcher;
@@ -53,6 +55,8 @@ public class FieldsGeneratorParamterizedTest {
                     .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
                     .enumValuesStrategy(new EnumValues_Reflection())
+                    .interfacesStrategy(new Interfaces_Reflection())
+                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     
     public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {

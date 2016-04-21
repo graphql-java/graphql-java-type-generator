@@ -25,8 +25,10 @@ import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
 import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.Interfaces_Reflection;
 import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
 import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
+import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -66,6 +68,8 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                     .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
                     .enumValuesStrategy(new EnumValues_Reflection())
+                    .interfacesStrategy(new Interfaces_Reflection())
+                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     
     public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
