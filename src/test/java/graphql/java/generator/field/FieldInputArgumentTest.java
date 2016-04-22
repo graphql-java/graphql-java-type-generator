@@ -1,6 +1,7 @@
 package graphql.java.generator.field;
 
 import graphql.java.generator.type.ITypeGenerator;
+import graphql.java.generator.type.TypeGeneratorTest;
 import graphql.java.generator.type.TypeRepository;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
@@ -82,7 +83,7 @@ public class FieldInputArgumentTest {
         ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testArgument resultMap is {}", resultMap);
+        logger.debug("testArgument resultMap is {}", TypeGeneratorTest.prettyPrint(resultMap));
         assertThat(((Map<String, Object>)resultMap.get("testObj")),
                 equalTo((Map<String, Object>) new HashMap<String, Object>() {{
                     put("number", 100);

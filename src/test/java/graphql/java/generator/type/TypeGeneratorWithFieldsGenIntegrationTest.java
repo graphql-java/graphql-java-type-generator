@@ -204,7 +204,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         ExecutionResult queryResult = new GraphQL(recursiveTestSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testRecursion results {}", resultMap);
+        logger.debug("testRecursion results {}", TypeGeneratorTest.prettyPrint(resultMap));
 
         final ObjectMapper mapper = new ObjectMapper();
         final RecursiveClass data = mapper.convertValue(
@@ -251,6 +251,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         ExecutionResult queryResult = new GraphQL(listTestSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
+        logger.debug("testList results {}", TypeGeneratorTest.prettyPrint(resultMap));
         
         final ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> expectedQueryData = mapper

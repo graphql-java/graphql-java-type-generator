@@ -1,10 +1,8 @@
 package graphql.java.generator.type.reflect;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import graphql.java.generator.BuildContextStorer;
 import graphql.java.generator.type.InterfacesStrategy;
@@ -19,7 +17,6 @@ public class Interfaces_Reflection
     @Override
     public GraphQLInterfaceType[] getInterfaces(Object object) {
         if (object instanceof Class<?>) {
-            //TODO should we support this?
             if (((Class<?>) object).isInterface()) {
                 return null;
             }
@@ -27,6 +24,16 @@ public class Interfaces_Reflection
             Map<Class<?>, GraphQLInterfaceType> interfaces = new HashMap<Class<?>, GraphQLInterfaceType>();
             getInterfaces(interfaces, (Class<?>) object);
             return interfaces.values().toArray(new GraphQLInterfaceType[0]);
+        }
+        return null;
+    }
+
+    @Override
+    public GraphQLInterfaceType getFromJavaInterface(Object object) {
+        if (object instanceof Class<?>) {
+            if (((Class<?>) object).isInterface()) {
+                return generateInterface((Class<?>) object);
+            }
         }
         return null;
     }

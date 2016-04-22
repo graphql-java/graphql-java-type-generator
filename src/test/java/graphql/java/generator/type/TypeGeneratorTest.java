@@ -6,6 +6,7 @@ import graphql.java.generator.BuildContext;
 import graphql.java.generator.InterfaceChild;
 import graphql.java.generator.InterfaceImpl;
 import graphql.java.generator.InterfaceImplSecondary;
+import graphql.java.generator.InterfaceSecondary;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLSchema;
@@ -18,7 +19,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
@@ -78,7 +81,7 @@ public class TypeGeneratorTest {
     }
     
     @Test
-    public void testGraphQLInterfaces() {
+    public void testGraphQLInterfaces() throws JsonProcessingException {
         logger.debug("testGraphQLInterfaces");
         Object interfaceType = generator.getOutputType(InterfaceImplSecondary.class);
         Assert.assertThat(interfaceType, instanceOf(GraphQLOutputType.class));
@@ -99,10 +102,14 @@ public class TypeGeneratorTest {
         + "query testSchema {"
         + "  __schema {"
         + "    types {"
+        + "      name"
+        + "      kind"
+        + "      description"
         + "      interfaces {"
         + "        name"
         + "      }"
         + "      fields {"
+        + "        name"
         + "        args {"
         + "          name"
         + "          description"
@@ -125,7 +132,9 @@ public class TypeGeneratorTest {
         ExecutionResult queryResult = new GraphQL(testSchema).execute(querySchema);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testGraphQLInterfaces resultMap {}", resultMap);
+        if (logger.isDebugEnabled()) {
+            logger.debug("testGraphQLInterfaces resultMap {}", prettyPrint(resultMap));
+        }
         
 //        final ObjectMapper mapper = new ObjectMapper();
 //        Map<String, Object> expectedQueryData = mapper
@@ -134,5 +143,16 @@ public class TypeGeneratorTest {
 //                equalTo(expectedQueryData));
 //        assertThat(((Map<String, Object>)resultMap.get("testObj")).size(),
 //                is(2));
+    }
+    
+    public static ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    public static String prettyPrint(Map<String, Object> resultMap) {
+        try {
+            return mapper.writeValueAsString(resultMap);
+        }
+        catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return resultMap.toString();
+        }
     }
 }

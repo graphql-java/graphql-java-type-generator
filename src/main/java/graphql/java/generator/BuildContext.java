@@ -32,6 +32,7 @@ import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
 import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
 import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLInputType;
+import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLOutputType;
 
 public class BuildContext implements ITypeGenerator, BuildContextAware {
@@ -124,6 +125,18 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
         return getTypeGeneratorStrategy().getOutputType(object);
     }
     
+    /**
+     * Uses the current build context to generate types, where the build
+     * context contains all build strategies.
+     * @param object A representative "object" from which to construct
+     * a {@link GraphQLInterfaceType}, the exact type of which is contextual
+     * @return
+     */
+    @Override
+    public GraphQLInterfaceType getInterfaceType(Object object) {
+        return getTypeGeneratorStrategy().getInterfaceType(object);
+    }
+
     /**
      * Uses the current build context to generate types, where the build
      * context contains all build strategies.

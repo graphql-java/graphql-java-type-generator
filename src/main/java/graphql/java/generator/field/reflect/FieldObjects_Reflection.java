@@ -51,17 +51,21 @@ public class FieldObjects_Reflection implements FieldObjectsStrategy {
                 = fieldStrategy.getFieldRepresentativeObjects(object);
         List<Object> fieldObjectsOutput = new ArrayList<Object>(fieldObjectsFromMethods);
         Set<String> fieldNames = new HashSet<String>();
-        for (Object method : fieldObjectsFromMethods) {
-            fieldNames.add(fieldNameStrategy.getFieldName(method));
-            fieldObjectsOutput.add(method);
-        }
-        for (Object field : fieldObjectsFromFields) {
-            String fieldName = fieldNameStrategy.getFieldName(field);
-            if (fieldNames.contains(fieldName)) {
-                continue;
+        if (fieldObjectsFromMethods != null) {
+            for (Object method : fieldObjectsFromMethods) {
+                fieldNames.add(fieldNameStrategy.getFieldName(method));
+                fieldObjectsOutput.add(method);
             }
-            fieldNames.add(fieldName);
-            fieldObjectsOutput.add(field);
+        }
+        if (fieldObjectsFromFields != null) {
+            for (Object field : fieldObjectsFromFields) {
+                String fieldName = fieldNameStrategy.getFieldName(field);
+                if (fieldNames.contains(fieldName)) {
+                    continue;
+                }
+                fieldNames.add(fieldName);
+                fieldObjectsOutput.add(field);
+            }
         }
         
         return fieldObjectsOutput;
