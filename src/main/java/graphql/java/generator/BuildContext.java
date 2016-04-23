@@ -4,13 +4,13 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import graphql.java.generator.argument.ArgumentName_Simple;
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
 import graphql.java.generator.argument.IArgumentsGenerator;
 import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
 import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
-import graphql.java.generator.argument.reflection.ArgumentName_Reflection;
-import graphql.java.generator.argument.reflection.ArgumentObjects_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
 import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
@@ -59,8 +59,8 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
             new ArgumentsGenerator(new ArgumentStrategies.Builder()
                     .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
                     .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
-                    .argumentNameStrategy(new ArgumentName_Reflection())
-                    .argumentObjectsStrategy(new ArgumentObjects_Reflection())
+                    .argumentNameStrategy(new ArgumentName_Simple())
+                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
                     .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
     public static final BuildContext defaultContext = new Builder()

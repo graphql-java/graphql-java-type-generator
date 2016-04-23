@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface ArgumentObjectsStrategy {
 
-    List<Object> getArgumentRepresentativeObjects(Object object);
+    List<ArgContainer> getArgumentRepresentativeObjects(Object object);
     
 }

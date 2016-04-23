@@ -21,13 +21,13 @@ public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerato
     @Override
     public List<GraphQLArgument> getArguments(Object object) {
         List<GraphQLArgument> arguments = new ArrayList<GraphQLArgument>();
-        List<Object> argObjects = getArgRepresentativeObjects(object);
+        List<ArgContainer> argObjects = getArgRepresentativeObjects(object);
         if (argObjects == null) {
             return arguments;
         }
         
         Set<String> argNames = new HashSet<String>();
-        for (Object argObject : argObjects) {
+        for (ArgContainer argObject : argObjects) {
             GraphQLArgument.Builder argBuilder = getArgument(argObject);
             if (argBuilder == null) {
                 continue;
@@ -43,15 +43,15 @@ public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerato
         return arguments;
     }
     
-    protected GraphQLArgument.Builder getArgument(Object argObject) {
+    protected GraphQLArgument.Builder getArgument(ArgContainer argObject) {
         String name = getStrategies().getArgumentNameStrategy().getArgumentName(argObject);
-        GraphQLInputType type = getStrategies().getArgumentTypeStrategy().getArgumentType(argObject);
+        GraphQLInputType type = getStrategies().getArgumentTypeStrategy().getArgumentType(argObject.getRepresentativeObject());
         if (name == null || type == null) {
             return null;
         }
         
-        String description = getStrategies().getArgumentDescriptionStrategy().getArgumentDescription(argObject);
-        Object defaultValue = getStrategies().getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject);
+        String description = getStrategies().getArgumentDescriptionStrategy().getArgumentDescription(argObject.getRepresentativeObject());
+        Object defaultValue = getStrategies().getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject.getRepresentativeObject());
         GraphQLArgument.Builder builder = GraphQLArgument.newArgument()
                 .name(name)
                 .type(type)
@@ -60,7 +60,7 @@ public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerato
         return builder;
     }
 
-    protected List<Object> getArgRepresentativeObjects(Object object) {
+    protected List<ArgContainer> getArgRepresentativeObjects(Object object) {
         return getStrategies().getArgumentObjectsStrategy()
                 .getArgumentRepresentativeObjects(object);
     }

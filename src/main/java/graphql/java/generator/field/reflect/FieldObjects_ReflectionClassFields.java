@@ -35,6 +35,10 @@ public class FieldObjects_ReflectionClassFields implements FieldObjectsStrategy 
                     //The compiler added this field.
                     continue;
                 }
+                if ("__PARANAMER_DATA".equals(field.getName())) {
+                    //paranamer added this field
+                    continue;
+                }
                 fieldObjects.add(field);
             }
             //we need to expose inherited fields
