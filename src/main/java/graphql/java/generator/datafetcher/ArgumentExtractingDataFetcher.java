@@ -2,7 +2,9 @@ package graphql.java.generator.datafetcher;
 
 import graphql.schema.DataFetchingEnvironment;
 
-public class ArgumentExtractingDataFetcher extends ArgumentAwareDataFetcher {
+public class ArgumentExtractingDataFetcher
+        extends ArgumentAwareDataFetcher
+        implements ChainableDataFetcher<ArgAwareDataFetcher> {
     
     private ArgAwareDataFetcher nextFetcher;
 
@@ -10,9 +12,9 @@ public class ArgumentExtractingDataFetcher extends ArgumentAwareDataFetcher {
         this.setNextFetcher(nextFetcher);
     }
     
-    public ArgumentExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher, final Object[] argNames) {
+    public ArgumentExtractingDataFetcher(final ArgAwareDataFetcher nextFetcher, final String[] argNames) {
         this.setNextFetcher(nextFetcher);
-        this.setArgValues(argNames);
+        this.setArgNames(argNames);
     }
     
     @Override
@@ -27,10 +29,12 @@ public class ArgumentExtractingDataFetcher extends ArgumentAwareDataFetcher {
         return getNextFetcher().get(environment);
     }
 
+    @Override
     public ArgAwareDataFetcher getNextFetcher() {
         return nextFetcher;
     }
 
+    @Override
     public void setNextFetcher(ArgAwareDataFetcher nextFetcher) {
         this.nextFetcher = nextFetcher;
     }

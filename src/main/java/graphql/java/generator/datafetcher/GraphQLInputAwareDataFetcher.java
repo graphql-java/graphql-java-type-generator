@@ -2,22 +2,21 @@ package graphql.java.generator.datafetcher;
 
 import java.util.List;
 
-import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import graphql.schema.GraphQLArgument;
 
-public class GraphQLInputAwareDataFetcher implements DataFetcher {
+public class GraphQLInputAwareDataFetcher
+        extends ChainingDataFetcher<ArgAwareDataFetcher> {
     
-    private ArgAwareDataFetcher nextFetcher;
     private List<GraphQLArgument> arguments;
 
     public GraphQLInputAwareDataFetcher(final ArgAwareDataFetcher nextFetcher) {
-        this.setNextFetcher(nextFetcher);
+        super(nextFetcher);
     }
     
     public GraphQLInputAwareDataFetcher(final ArgAwareDataFetcher nextFetcher,
             final List<GraphQLArgument> arguments) {
-        this.setNextFetcher(nextFetcher);
+        super(nextFetcher);
         this.setArguments(arguments);
     }
     
@@ -31,14 +30,6 @@ public class GraphQLInputAwareDataFetcher implements DataFetcher {
             getNextFetcher().setArgNames(originalArgNames);
         }
         return getNextFetcher().get(environment);
-    }
-
-    public ArgAwareDataFetcher getNextFetcher() {
-        return nextFetcher;
-    }
-
-    public void setNextFetcher(ArgAwareDataFetcher nextFetcher) {
-        this.nextFetcher = nextFetcher;
     }
 
     public List<GraphQLArgument> getArguments() {

@@ -8,6 +8,7 @@ import graphql.schema.DataFetchingEnvironment;
 public class MethodInvokingDataFetcher extends ArgumentAwareDataFetcher {
     
     private Method method;
+    private Object source;
 
     public MethodInvokingDataFetcher(final Method method) {
         this.setMethod(method);
@@ -20,7 +21,8 @@ public class MethodInvokingDataFetcher extends ArgumentAwareDataFetcher {
     
     @Override
     public Object get(DataFetchingEnvironment environment) {
-        Object source = environment.getSource();
+        Object source = getSource();
+        if (source == null) source = environment.getSource();
         if (source == null) return null;
         try {
             return getMethod().invoke(source, getArgValues());
@@ -37,5 +39,13 @@ public class MethodInvokingDataFetcher extends ArgumentAwareDataFetcher {
 
     public void setMethod(Method method) {
         this.method = method;
+    }
+
+    public Object getSource() {
+        return source;
+    }
+
+    public void setSource(Object source) {
+        this.source = source;
     }
 }
