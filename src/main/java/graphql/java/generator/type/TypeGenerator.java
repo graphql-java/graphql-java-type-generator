@@ -84,12 +84,21 @@ public class TypeGenerator
         }
         
         outputTypesBeingBuilt.add(typeName);
-        GraphQLOutputType type = generateOutputType(object);
-        if (getContext().isUsingTypeRepository()) {
-            TypeRepository.registerType(typeName, type);
+        try {
+            GraphQLOutputType type = generateOutputType(object);
+            if (getContext().isUsingTypeRepository()) {
+                TypeRepository.registerType(typeName, type);
+            }
+            return type;
         }
-        outputTypesBeingBuilt.remove(typeName);
-        return type;
+        catch (RuntimeException e) {
+            logger.warn("Failed to generate type named {}", typeName);
+            logger.debug("Failed to generate type, exception is ", e);
+            throw e;
+        }
+        finally {
+            outputTypesBeingBuilt.remove(typeName);
+        }
     }
 
     @Override
@@ -124,10 +133,9 @@ public class TypeGenerator
     }
 
     /**
-     * 
+     * TODO can we dedupe half of this logic
      * @param object A representative "object" from which to construct
      * a {@link GraphQLInputType}, the exact type of which is contextual
-     * @param getContext()
      * @return
      */
     @Override
@@ -163,14 +171,23 @@ public class TypeGenerator
         }
         
         inputTypesBeingBuilt.add(typeName);
-        GraphQLInputType type = generateInputType(object);
-        if (getContext().isUsingTypeRepository()) {
-            TypeRepository.registerType(typeName, type);
+        try {
+            GraphQLInputType type = generateInputType(object);
+            if (getContext().isUsingTypeRepository()) {
+                TypeRepository.registerType(typeName, type);
+            }
+            return type;
         }
-        inputTypesBeingBuilt.remove(typeName);
-        return type;
+        catch (RuntimeException e) {
+            logger.warn("Failed to generate type named {}", typeName);
+            logger.debug("Failed to generate type, exception is ", e);
+            throw e;
+        }
+        finally {
+            inputTypesBeingBuilt.remove(typeName);
+        }
     }
-
+    
     protected GraphQLOutputType generateOutputType(Object object) {
         String typeName = getGraphQLTypeName(object);
         if (typeName == null) {

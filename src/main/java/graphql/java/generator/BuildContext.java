@@ -12,6 +12,7 @@ import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflectio
 import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
 import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
 import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
+import graphql.java.generator.field.FieldDataFetcher_InputAndArgAware;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.IFieldsGenerator;
@@ -50,7 +51,7 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
                     .fieldObjectsStrategy(new FieldObjects_Reflection())
                     .fieldNameStrategy(new FieldName_Reflection())
                     .fieldTypeStrategy(new FieldType_Reflection())
-                    .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
+                    .fieldDataFetcherStrategy(new FieldDataFetcher_InputAndArgAware(new FieldDataFetcher_Reflection()))
                     .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
                     .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
                     .fieldDeprecationStrategy(new FieldDeprecation_Reflection())

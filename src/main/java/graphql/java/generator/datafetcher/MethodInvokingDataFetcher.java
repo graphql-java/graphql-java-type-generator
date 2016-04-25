@@ -24,6 +24,7 @@ public class MethodInvokingDataFetcher extends ArgumentAwareDataFetcher {
         Object source = getSource();
         if (source == null) source = environment.getSource();
         if (source == null) return null;
+        if (getMethod() == null) return null;
         try {
             return getMethod().invoke(source, getArgValues());
         } catch (IllegalAccessException e) {

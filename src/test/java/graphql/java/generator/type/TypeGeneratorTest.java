@@ -6,14 +6,13 @@ import graphql.java.generator.BuildContext;
 import graphql.java.generator.InterfaceChild;
 import graphql.java.generator.InterfaceImpl;
 import graphql.java.generator.InterfaceImplSecondary;
-import graphql.java.generator.InterfaceSecondary;
+import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLSchema;
 
 import static org.junit.Assert.assertThat;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -28,9 +27,10 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.Matchers.empty;
 
+import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "serial"})
 public class TypeGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorTest.class);
@@ -46,7 +46,7 @@ public class TypeGeneratorTest {
     public void testClassesWithInterfaces() {
         logger.debug("testClassesWithInterfaces");
         Object interfaceType = generator.getOutputType(InterfaceChild.class);
-        Assert.assertThat(interfaceType, instanceOf(GraphQLOutputType.class));
+        assertThat(interfaceType, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
@@ -81,15 +81,15 @@ public class TypeGeneratorTest {
     }
     
     @Test
-    public void testGraphQLInterfaces() throws JsonProcessingException {
-        logger.debug("testGraphQLInterfaces");
-        Object interfaceType = generator.getOutputType(InterfaceImplSecondary.class);
-        Assert.assertThat(interfaceType, instanceOf(GraphQLOutputType.class));
+    public void testClassesWithInterfacesSecondary() throws JsonProcessingException {
+        logger.debug("testClassesWithInterfacesSecondary");
+        Object impl = generator.getOutputType(InterfaceChild.class);
+        assertThat(impl, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
                 .field(newFieldDefinition()
-                        .type((GraphQLOutputType) interfaceType)
+                        .type((GraphQLOutputType) impl)
                         .name("testObj")
                         .staticValue(new InterfaceImplSecondary())
                         .build())
@@ -107,9 +107,15 @@ public class TypeGeneratorTest {
         + "      description"
         + "      interfaces {"
         + "        name"
+        + "        possibleTypes {"
+        + "          name"
+        + "        }"
         + "      }"
         + "      fields {"
         + "        name"
+        + "        type {"
+        + "          name"
+        + "        }"
         + "        args {"
         + "          name"
         + "          description"
@@ -129,20 +135,91 @@ public class TypeGeneratorTest {
         + "    child"
         + "  }"
         + "}";
-        ExecutionResult queryResult = new GraphQL(testSchema).execute(querySchema);
+        ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
+        assertThat(queryResult.getErrors(), is(empty()));
+        Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
+        if (logger.isDebugEnabled()) {
+            logger.debug("testClassesWithInterfacesSecondary resultMap {}", prettyPrint(resultMap));
+        }
+        
+        assertThat(((Map<String, Object>)resultMap.get("testObj")),
+                equalTo((Map<String, Object>) new HashMap<String, Object>() {{
+                    put("parent", "parent2");
+                    put("child", "child2");
+                }}));
+        assertThat(((Map<String, Object>)resultMap.get("testObj")).size(),
+                is(2));
+    }
+    
+    @Test
+    public void testGraphQLInterfaces() throws JsonProcessingException {
+        logger.debug("testGraphQLInterfaces");
+        Object interfaceType = generator.getInterfaceType(InterfaceChild.class);
+        assertThat(interfaceType, instanceOf(GraphQLInterfaceType.class));
+        
+        GraphQLObjectType queryType = newObject()
+                .name("testQuery")
+                .field(newFieldDefinition()
+                        .type((GraphQLOutputType) interfaceType)
+                        .name("testObj")
+                        .staticValue(new InterfaceImpl())
+                        .build())
+                .build();
+        GraphQLSchema testSchema = GraphQLSchema.newSchema()
+                .query(queryType)
+                .build();
+        
+        String querySchema = ""
+        + "query testSchema {"
+        + "  __schema {"
+        + "    types {"
+        + "      name"
+        + "      kind"
+        + "      description"
+        + "      interfaces {"
+        + "        name"
+        + "        possibleTypes {"
+        + "          name"
+        + "        }"
+        + "      }"
+        + "      fields {"
+        + "        name"
+        + "        type {"
+        + "          name"
+        + "        }"
+        + "        args {"
+        + "          name"
+        + "          description"
+        + "          type {"
+        + "            name"
+        + "          }"
+        + "        }"
+        + "      }"
+        + "    }"
+        + "  }"
+        + "}";
+        
+        String queryString = 
+        "{"
+        + "  testObj {"
+        + "    parent"
+        + "    child"
+        + "  }"
+        + "}";
+        ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
         if (logger.isDebugEnabled()) {
             logger.debug("testGraphQLInterfaces resultMap {}", prettyPrint(resultMap));
         }
         
-//        final ObjectMapper mapper = new ObjectMapper();
-//        Map<String, Object> expectedQueryData = mapper
-//                .convertValue(new InterfaceImplSecondary(), Map.class);
-//        assertThat(((Map<String, Object>)resultMap.get("testObj")),
-//                equalTo(expectedQueryData));
-//        assertThat(((Map<String, Object>)resultMap.get("testObj")).size(),
-//                is(2));
+        assertThat(((Map<String, Object>)resultMap.get("testObj")),
+                equalTo((Map<String, Object>) new HashMap<String, Object>() {{
+                    put("parent", "parent");
+                    put("child", "child");
+                }}));
+        assertThat(((Map<String, Object>)resultMap.get("testObj")).size(),
+                is(2));
     }
     
     public static ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);

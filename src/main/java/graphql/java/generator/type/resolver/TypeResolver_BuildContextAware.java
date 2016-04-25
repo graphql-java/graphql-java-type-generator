@@ -18,6 +18,6 @@ public class TypeResolver_BuildContextAware
     
     @Override
     public GraphQLObjectType getType(Object object) {
-        return (GraphQLObjectType) getContext().getOutputType(object);
+        return (GraphQLObjectType) getContext().getOutputType(object.getClass());
     }
 }

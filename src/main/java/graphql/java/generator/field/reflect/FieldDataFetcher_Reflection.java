@@ -1,7 +1,6 @@
 package graphql.java.generator.field.reflect;
 
 import graphql.java.generator.BuildContextStorer;
-import graphql.java.generator.datafetcher.ArgAwareDataFetcher;
 import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
 import graphql.java.generator.datafetcher.GraphQLInputAwareDataFetcher;
 import graphql.java.generator.datafetcher.MethodInvokingDataFetcher;
@@ -60,7 +59,12 @@ public class FieldDataFetcher_Reflection
     }
     
     protected Object getFieldFetcherFromMethod(Method method) {
-        ArgAwareDataFetcher methodInvoker = new MethodInvokingDataFetcher(method);
+        return getFieldFetcherFromMethod(method, null);
+    }
+    
+    protected Object getFieldFetcherFromMethod(Method method, Object methodSource) {
+        MethodInvokingDataFetcher methodInvoker = new MethodInvokingDataFetcher(method);
+        methodInvoker.setSource(methodSource);
         List<GraphQLArgument> arguments = getContext()
                 .getArgumentsGeneratorStrategy().getArguments(method);
         if (arguments == null || arguments.isEmpty()) {
