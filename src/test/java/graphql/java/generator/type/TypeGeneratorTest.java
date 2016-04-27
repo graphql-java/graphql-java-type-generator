@@ -37,6 +37,36 @@ public class TypeGeneratorTest {
     
     ITypeGenerator generator = BuildContext.defaultContext;
     
+    public static String querySchema = ""
+    + "query testSchema {"
+    + "  __schema {"
+    + "    types {"
+    + "      name"
+    + "      kind"
+    + "      description"
+    + "      interfaces {"
+    + "        name"
+    + "        possibleTypes {"
+    + "          name"
+    + "        }"
+    + "      }"
+    + "      fields {"
+    + "        name"
+    + "        type {"
+    + "          name"
+    + "        }"
+    + "        args {"
+    + "          name"
+    + "          description"
+    + "          type {"
+    + "            name"
+    + "          }"
+    + "        }"
+    + "      }"
+    + "    }"
+    + "  }"
+    + "}";
+
     @Before
     public void before() {
         TypeRepository.clear();
@@ -98,35 +128,6 @@ public class TypeGeneratorTest {
                 .query(queryType)
                 .build();
         
-        String querySchema = ""
-        + "query testSchema {"
-        + "  __schema {"
-        + "    types {"
-        + "      name"
-        + "      kind"
-        + "      description"
-        + "      interfaces {"
-        + "        name"
-        + "        possibleTypes {"
-        + "          name"
-        + "        }"
-        + "      }"
-        + "      fields {"
-        + "        name"
-        + "        type {"
-        + "          name"
-        + "        }"
-        + "        args {"
-        + "          name"
-        + "          description"
-        + "          type {"
-        + "            name"
-        + "          }"
-        + "        }"
-        + "      }"
-        + "    }"
-        + "  }"
-        + "}";
         
         String queryString = 
         "{"
@@ -168,36 +169,6 @@ public class TypeGeneratorTest {
         GraphQLSchema testSchema = GraphQLSchema.newSchema()
                 .query(queryType)
                 .build();
-        
-        String querySchema = ""
-        + "query testSchema {"
-        + "  __schema {"
-        + "    types {"
-        + "      name"
-        + "      kind"
-        + "      description"
-        + "      interfaces {"
-        + "        name"
-        + "        possibleTypes {"
-        + "          name"
-        + "        }"
-        + "      }"
-        + "      fields {"
-        + "        name"
-        + "        type {"
-        + "          name"
-        + "        }"
-        + "        args {"
-        + "          name"
-        + "          description"
-        + "          type {"
-        + "            name"
-        + "          }"
-        + "        }"
-        + "      }"
-        + "    }"
-        + "  }"
-        + "}";
         
         String queryString = 
         "{"

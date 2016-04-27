@@ -10,6 +10,7 @@ import graphql.GraphQL;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfList;
 import graphql.java.generator.ClassWithLists;
+import graphql.java.generator.ClassWithRawArrays;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.field.FieldStrategies;
@@ -219,19 +220,26 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     @Test
     public void testList() {
-        logger.debug("testList");
-        Object listType = testContext.getOutputType(ClassWithLists.class);
-        Assert.assertThat(listType, instanceOf(GraphQLOutputType.class));
+        testListOrArray("testList", new ClassWithLists(), ClassWithLists.class);
+    }
+    @Test
+    public void testArray() {
+        testListOrArray("testArray", new ClassWithRawArrays(), ClassWithRawArrays.class);
+    }
+    public void testListOrArray(String debug, Object testObject, Class<?> clazzUnderTest) {
+        logger.debug("{}", debug);
+        Object testType = testContext.getOutputType(clazzUnderTest);
+        Assert.assertThat(testType, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
                 .field(newFieldDefinition()
-                        .type((GraphQLOutputType) listType)
+                        .type((GraphQLOutputType) testType)
                         .name("testObj")
-                        .staticValue(new ClassWithLists())
+                        .staticValue(testObject)
                         .build())
                 .build();
-        GraphQLSchema listTestSchema = GraphQLSchema.newSchema()
+        GraphQLSchema testSchema = GraphQLSchema.newSchema()
                 .query(queryType)
                 .build();
         
@@ -248,14 +256,14 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         + "    }"
         + "  }"
         + "}";
-        ExecutionResult queryResult = new GraphQL(listTestSchema).execute(queryString);
+        ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testList results {}", TypeGeneratorTest.prettyPrint(resultMap));
+        logger.debug("{} results {}", debug, TypeGeneratorTest.prettyPrint(resultMap));
         
         final ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> expectedQueryData = mapper
-                .convertValue(new ClassWithLists(), Map.class);
+                .convertValue(testObject, Map.class);
         assertThat(((Map<String, Object>)resultMap.get("testObj")),
                 equalTo(expectedQueryData));
     }
@@ -298,6 +306,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
 //        assertThat(((Map<String, Object>)resultMap.get("testObj")),
 //                equalTo(expectedQueryData));
     }
+    
     
     @Ignore
     @Test
