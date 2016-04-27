@@ -1,6 +1,8 @@
 package graphql.java.generator.field;
 
-public interface FieldNameStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface FieldNameStrategy extends Strategy {
     /**
      * 
      * @param object A representative "field" object, the exact type of which is contextual

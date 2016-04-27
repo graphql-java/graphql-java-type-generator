@@ -67,8 +67,23 @@ public class TypeGeneratorParameterizedTest {
     }
     
     @Test
+    public void testBenchmark() {
+        logger.debug("testBenchmark {} {}", clazz, expectedName);
+        long startTime = System.currentTimeMillis();
+        for (int x = 0; x < 100; ++x) {
+            TypeRepository.clear();
+            basicsOutput();
+        }
+        long endTime = System.currentTimeMillis();
+        logger.error("testBenchmark {} {} took {}", clazz, expectedName, endTime - startTime);
+    }
+    
+    @Test
     public void testBasicsOutput() {
         logger.debug("testBasicsOutput {} {}", clazz, expectedName);
+    }
+    
+    public void basicsOutput() {
         GraphQLType type = generator.getOutputType(clazz);
         Assert.assertThat(type,
                 instanceOf(GraphQLObjectType.class));
@@ -92,6 +107,10 @@ public class TypeGeneratorParameterizedTest {
     @Test
     public void testBasicsInput() {
         logger.debug("testBasicsInput {} {}", clazz, expectedName);
+        basicsInput();
+    }
+    
+    public void basicsInput() {
         if (expectedToSucceed == false) {
             try {
                 generator.getInputType(clazz);

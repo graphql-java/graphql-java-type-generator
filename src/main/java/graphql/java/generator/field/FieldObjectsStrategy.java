@@ -2,7 +2,9 @@ package graphql.java.generator.field;
 
 import java.util.List;
 
-public interface FieldObjectsStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface FieldObjectsStrategy extends Strategy {
     /**
      * Given an object derived from the {@link TypeGenerator}, find out what
      * should become GraphQL Fields.

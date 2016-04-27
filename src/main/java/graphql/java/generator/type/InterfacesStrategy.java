@@ -1,8 +1,9 @@
 package graphql.java.generator.type;
 
+import graphql.java.generator.strategies.Strategy;
 import graphql.schema.GraphQLInterfaceType;
 
-public interface InterfacesStrategy {
+public interface InterfacesStrategy extends Strategy {
 
     /**
      * Should return all interfaces, including those from superclasses

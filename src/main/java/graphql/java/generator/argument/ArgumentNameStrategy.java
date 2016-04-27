@@ -1,6 +1,8 @@
 package graphql.java.generator.argument;
 
-public interface ArgumentNameStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface ArgumentNameStrategy extends Strategy {
 
     String getArgumentName(ArgContainer object);
     

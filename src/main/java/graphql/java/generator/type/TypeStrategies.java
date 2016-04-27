@@ -1,70 +1,66 @@
 package graphql.java.generator.type;
 
-import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextAware;
+import java.util.HashMap;
 
-public class TypeStrategies implements BuildContextAware {
-    private final TypeNameStrategy typeNameStrategy;
-    private final TypeDescriptionStrategy typeDescriptionStrategy;
-    private final DefaultTypeStrategy defaultTypeStrategy;
-    private final EnumValuesStrategy enumValuesStrategy;
-    private final InterfacesStrategy interfacesStrategy;
-    private final TypeResolverStrategy typeResolverStrategy;
-    
+import graphql.java.generator.strategies.AbstractStrategiesContainer;
+import graphql.java.generator.strategies.Strategy;
+
+public class TypeStrategies extends AbstractStrategiesContainer {
     public TypeNameStrategy getTypeNameStrategy() {
-        return typeNameStrategy;
+        return (TypeNameStrategy) allStrategies.get(TypeNameStrategy.class);
     }
     public TypeDescriptionStrategy getTypeDescriptionStrategy() {
-        return typeDescriptionStrategy;
+        return (TypeDescriptionStrategy) allStrategies.get(TypeDescriptionStrategy.class);
     }
     public DefaultTypeStrategy getDefaultTypeStrategy() {
-        return defaultTypeStrategy;
+        return (DefaultTypeStrategy) allStrategies.get(DefaultTypeStrategy.class);
     }
     public EnumValuesStrategy getEnumValuesStrategy() {
-        return enumValuesStrategy;
+        return (EnumValuesStrategy) allStrategies.get(EnumValuesStrategy.class);
     }
     public InterfacesStrategy getInterfacesStrategy() {
-        return interfacesStrategy;
+        return (InterfacesStrategy) allStrategies.get(InterfacesStrategy.class);
     }
     public TypeResolverStrategy getTypeResolverStrategy() {
-        return typeResolverStrategy;
+        return (TypeResolverStrategy) allStrategies.get(TypeResolverStrategy.class);
     }
     
     public static class Builder {
-        private TypeNameStrategy typeNameStrategy;
-        private TypeDescriptionStrategy typeDescriptionStrategy;
-        private DefaultTypeStrategy defaultTypeStrategy;
-        private EnumValuesStrategy enumValuesStrategy;
-        private InterfacesStrategy interfacesStrategy;
-        private TypeResolverStrategy typeResolverStrategy;
+        private HashMap<Class<? extends Strategy>, Strategy> strategies =
+                new HashMap<Class<? extends Strategy>, Strategy>(); 
         
         public Builder typeNameStrategy(TypeNameStrategy typeNameStrategy) {
-            this.typeNameStrategy = typeNameStrategy;
+            strategies.put(TypeNameStrategy.class, typeNameStrategy);
             return this;
         }
         
         public Builder typeDescriptionStrategy(TypeDescriptionStrategy typeDescriptionStrategy) {
-            this.typeDescriptionStrategy = typeDescriptionStrategy;
+            strategies.put(TypeDescriptionStrategy.class, typeDescriptionStrategy);
             return this;
         }
         
         public Builder defaultTypeStrategy(DefaultTypeStrategy defaultTypeStrategy) {
-            this.defaultTypeStrategy = defaultTypeStrategy;
+            strategies.put(DefaultTypeStrategy.class, defaultTypeStrategy);
             return this;
         }
         
         public Builder enumValuesStrategy(EnumValuesStrategy enumValuesStrategy) {
-            this.enumValuesStrategy = enumValuesStrategy;
+            strategies.put(EnumValuesStrategy.class, enumValuesStrategy);
             return this;
         }
         
         public Builder interfacesStrategy(InterfacesStrategy interfacesStrategy) {
-            this.interfacesStrategy = interfacesStrategy;
+            strategies.put(InterfacesStrategy.class, interfacesStrategy);
             return this;
         }
         
         public Builder typeResolverStrategy(TypeResolverStrategy typeResolverStrategy) {
-            this.typeResolverStrategy = typeResolverStrategy;
+            strategies.put(TypeResolverStrategy.class, typeResolverStrategy);
+            return this;
+        }
+        
+        public Builder additionalStrategy(Strategy strategy) {
+            strategies.put(strategy.getClass(), strategy);
             return this;
         }
         
@@ -74,38 +70,6 @@ public class TypeStrategies implements BuildContextAware {
     }
     
     private TypeStrategies(Builder builder) {
-        this.typeNameStrategy = builder.typeNameStrategy;
-        this.typeDescriptionStrategy = builder.typeDescriptionStrategy;
-        this.defaultTypeStrategy = builder.defaultTypeStrategy;
-        this.enumValuesStrategy = builder.enumValuesStrategy;
-        this.interfacesStrategy = builder.interfacesStrategy;
-        this.typeResolverStrategy = builder.typeResolverStrategy;
-    }
-    
-    @Override
-    public BuildContext getContext() {
-        return null;
-    }
-
-    @Override
-    public void setContext(BuildContext context) {
-        if (typeNameStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) typeNameStrategy).setContext(context);
-        }
-        if (typeDescriptionStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) typeDescriptionStrategy).setContext(context);
-        }
-        if (defaultTypeStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) defaultTypeStrategy).setContext(context);
-        }
-        if (enumValuesStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) enumValuesStrategy).setContext(context);
-        }
-        if (interfacesStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) interfacesStrategy).setContext(context);
-        }
-        if (typeResolverStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) typeResolverStrategy).setContext(context);
-        }
+        allStrategies.putAll(builder.strategies);
     }
 }

@@ -1,6 +1,8 @@
 package graphql.java.generator.argument;
 
-public interface ArgumentDescriptionStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface ArgumentDescriptionStrategy extends Strategy {
 
     String getArgumentDescription(Object object);
     

@@ -1,10 +1,11 @@
 package graphql.java.generator.type;
 
+import graphql.java.generator.strategies.Strategy;
 import graphql.schema.GraphQLEnumValueDefinition;
 
 import java.util.List;
 
-public interface EnumValuesStrategy {
+public interface EnumValuesStrategy extends Strategy {
     /**
      * 
      * @param object A representative "type" object, the exact type of which is contextual

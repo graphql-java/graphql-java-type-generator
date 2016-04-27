@@ -1,5 +1,6 @@
 package graphql.java.generator.type;
 
+import graphql.java.generator.strategies.Strategy;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLOutputType;
 
@@ -9,7 +10,7 @@ import graphql.schema.GraphQLOutputType;
  * @author dwinsor
  *
  */
-public interface DefaultTypeStrategy {
+public interface DefaultTypeStrategy extends Strategy {
     /**
      * Returns a canonical default GraphQL type, if applicable for the given input object
      * @param object A representative "type" object, the exact type of which is contextual

@@ -1,87 +1,80 @@
 package graphql.java.generator.field;
 
-import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextAware;
+import java.util.HashMap;
+import graphql.java.generator.strategies.AbstractStrategiesContainer;
+import graphql.java.generator.strategies.Strategy;
 
-public class FieldStrategies implements BuildContextAware {
-    private final FieldObjectsStrategy fieldObjectsStrategy;
-    private final FieldDataFetcherStrategy fieldDataFetcherStrategy;
-    private final FieldNameStrategy fieldNameStrategy;
-    private final FieldTypeStrategy fieldTypeStrategy;
-    private final FieldDescriptionStrategy fieldDescriptionStrategy;
-    private final FieldDeprecationStrategy fieldDeprecationStrategy;
-    private final FieldDefaultValueStrategy fieldDefaultValueStrategy;
-    
+public class FieldStrategies extends AbstractStrategiesContainer {
     public FieldObjectsStrategy getFieldObjectsStrategy() {
-        return fieldObjectsStrategy;
+        return (FieldObjectsStrategy) allStrategies.get(FieldObjectsStrategy.class);
     }
 
     public FieldDataFetcherStrategy getFieldDataFetcherStrategy() {
-        return fieldDataFetcherStrategy;
+        return (FieldDataFetcherStrategy) allStrategies.get(FieldDataFetcherStrategy.class);
     }
     
     public FieldNameStrategy getFieldNameStrategy() {
-        return fieldNameStrategy;
+        return (FieldNameStrategy) allStrategies.get(FieldNameStrategy.class);
     }
     
     public FieldTypeStrategy getFieldTypeStrategy() {
-        return fieldTypeStrategy;
+        return (FieldTypeStrategy) allStrategies.get(FieldTypeStrategy.class);
     }
     
     public FieldDescriptionStrategy getFieldDescriptionStrategy() {
-        return fieldDescriptionStrategy;
+        return (FieldDescriptionStrategy) allStrategies.get(FieldDescriptionStrategy.class);
     }
     
     public FieldDeprecationStrategy getFieldDeprecationStrategy() {
-        return fieldDeprecationStrategy;
+        return (FieldDeprecationStrategy) allStrategies.get(FieldDeprecationStrategy.class);
     }
     
     public FieldDefaultValueStrategy getFieldDefaultValueStrategy() {
-        return fieldDefaultValueStrategy;
+        return (FieldDefaultValueStrategy) allStrategies.get(FieldDefaultValueStrategy.class);
     }
     
     
     public static class Builder {
-        private FieldObjectsStrategy fieldObjectsStrategy;
-        private FieldDataFetcherStrategy fieldDataFetcherStrategy;
-        private FieldNameStrategy fieldNameStrategy;
-        private FieldTypeStrategy fieldTypeStrategy;
-        private FieldDescriptionStrategy fieldDescriptionStrategy;
-        private FieldDeprecationStrategy fieldDeprecationStrategy;
-        private FieldDefaultValueStrategy fieldDefaultValueStrategy;
-        
+        private HashMap<Class<? extends Strategy>, Strategy> strategies =
+                new HashMap<Class<? extends Strategy>, Strategy>(); 
+
         public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
-            this.fieldObjectsStrategy = fieldObjectsStrategy;
+            strategies.put(FieldObjectsStrategy.class, fieldObjectsStrategy);
             return this;
         }
         
         public Builder fieldDataFetcherStrategy(FieldDataFetcherStrategy fieldDataFetcherStrategy) {
-            this.fieldDataFetcherStrategy = fieldDataFetcherStrategy;
+            strategies.put(FieldDataFetcherStrategy.class, fieldDataFetcherStrategy);
             return this;
         }
         
         public Builder fieldNameStrategy(FieldNameStrategy fieldNameStrategy) {
-            this.fieldNameStrategy = fieldNameStrategy;
+            strategies.put(FieldNameStrategy.class, fieldNameStrategy);
             return this;
         }
         
         public Builder fieldTypeStrategy(FieldTypeStrategy fieldTypeStrategy) {
-            this.fieldTypeStrategy = fieldTypeStrategy;
+            strategies.put(FieldTypeStrategy.class, fieldTypeStrategy);
             return this;
         }
         
         public Builder fieldDescriptionStrategy(FieldDescriptionStrategy fieldDescriptionStrategy) {
-            this.fieldDescriptionStrategy = fieldDescriptionStrategy;
+            strategies.put(FieldDescriptionStrategy.class, fieldDescriptionStrategy);
             return this;
         }
         
         public Builder fieldDeprecationStrategy(FieldDeprecationStrategy fieldDeprecationStrategy) {
-            this.fieldDeprecationStrategy = fieldDeprecationStrategy;
+            strategies.put(FieldDeprecationStrategy.class, fieldDeprecationStrategy);
             return this;
         }
         
         public Builder fieldDefaultValueStrategy(FieldDefaultValueStrategy fieldDefaultValueStrategy) {
-            this.fieldDefaultValueStrategy = fieldDefaultValueStrategy;
+            strategies.put(FieldDefaultValueStrategy.class, fieldDefaultValueStrategy);
+            return this;
+        }
+        
+        public Builder additionalStrategy(Strategy strategy) {
+            strategies.put(strategy.getClass(), strategy);
             return this;
         }
         
@@ -91,42 +84,6 @@ public class FieldStrategies implements BuildContextAware {
     }
     
     private FieldStrategies(Builder builder) {
-        this.fieldObjectsStrategy = builder.fieldObjectsStrategy;
-        this.fieldDataFetcherStrategy = builder.fieldDataFetcherStrategy;
-        this.fieldNameStrategy = builder.fieldNameStrategy;
-        this.fieldTypeStrategy = builder.fieldTypeStrategy;
-        this.fieldDescriptionStrategy = builder.fieldDescriptionStrategy;
-        this.fieldDeprecationStrategy = builder.fieldDeprecationStrategy;
-        this.fieldDefaultValueStrategy = builder.fieldDefaultValueStrategy;
-    }
-
-    @Override
-    public BuildContext getContext() {
-        return null;
-    }
-
-    @Override
-    public void setContext(BuildContext context) {
-        if (fieldObjectsStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldObjectsStrategy).setContext(context);
-        }
-        if (fieldDataFetcherStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldDataFetcherStrategy).setContext(context);
-        }
-        if (fieldNameStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldNameStrategy).setContext(context);
-        }
-        if (fieldTypeStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldTypeStrategy).setContext(context);
-        }
-        if (fieldDescriptionStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldDescriptionStrategy).setContext(context);
-        }
-        if (fieldDeprecationStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldDeprecationStrategy).setContext(context);
-        }
-        if (fieldDefaultValueStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) fieldDefaultValueStrategy).setContext(context);
-        }
+        allStrategies.putAll(builder.strategies);
     }
 }

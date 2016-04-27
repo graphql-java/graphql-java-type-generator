@@ -1,6 +1,8 @@
 package graphql.java.generator.field;
 
-public interface FieldDeprecationStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface FieldDeprecationStrategy extends Strategy {
 
     String getFieldDeprecation(Object object);
     

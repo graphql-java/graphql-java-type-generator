@@ -1,6 +1,8 @@
 package graphql.java.generator.field;
 
-public interface FieldDataFetcherStrategy {
+import graphql.java.generator.strategies.Strategy;
+
+public interface FieldDataFetcherStrategy extends Strategy {
     /**
      * Return the {@link graphql.schema.DataFetcher} instance that will fetch the data,
      * OR return some other object instance to return a static value.

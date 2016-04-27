@@ -1,88 +1,62 @@
 package graphql.java.generator.argument;
 
-import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextAware;
+import java.util.HashMap;
 
-public class ArgumentStrategies implements BuildContextAware {
-    private final ArgumentObjectsStrategy argumentObjectsStrategy;
-    private final ArgumentNameStrategy argumentNameStrategy;
-    private final ArgumentDescriptionStrategy argumentDescriptionStrategy;
-    private final ArgumentTypeStrategy argumentTypeStrategy;
-    private final ArgumentDefaultValueStrategy argumentDefaultValueStrategy;
-    
+import graphql.java.generator.strategies.AbstractStrategiesContainer;
+import graphql.java.generator.strategies.Strategy;
+
+public class ArgumentStrategies extends AbstractStrategiesContainer {
     public ArgumentObjectsStrategy getArgumentObjectsStrategy() {
-        return argumentObjectsStrategy;
+        return (ArgumentObjectsStrategy) allStrategies.get(ArgumentObjectsStrategy.class);
     }
     
     public ArgumentNameStrategy getArgumentNameStrategy() {
-        return argumentNameStrategy;
+        return (ArgumentNameStrategy) allStrategies.get(ArgumentNameStrategy.class);
     }
     
     public ArgumentDescriptionStrategy getArgumentDescriptionStrategy() {
-        return argumentDescriptionStrategy;
+        return (ArgumentDescriptionStrategy) allStrategies.get(ArgumentDescriptionStrategy.class);
     }
     
     public ArgumentTypeStrategy getArgumentTypeStrategy() {
-        return argumentTypeStrategy;
+        return (ArgumentTypeStrategy) allStrategies.get(ArgumentTypeStrategy.class);
     }
     
     public ArgumentDefaultValueStrategy getArgumentDefaultValueStrategy() {
-        return argumentDefaultValueStrategy;
-    }
-    
-    @Override
-    public BuildContext getContext() {
-        return null;
-    }
-    
-    @Override
-    public void setContext(BuildContext context) {
-        if (argumentObjectsStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) argumentObjectsStrategy).setContext(context);
-        }
-        if (argumentNameStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) argumentNameStrategy).setContext(context);
-        }
-        if (argumentDescriptionStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) argumentDescriptionStrategy).setContext(context);
-        }
-        if (argumentTypeStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) argumentTypeStrategy).setContext(context);
-        }
-        if (argumentDefaultValueStrategy instanceof BuildContextAware) {
-            ((BuildContextAware) argumentDefaultValueStrategy).setContext(context);
-        }
+        return (ArgumentDefaultValueStrategy) allStrategies.get(ArgumentDefaultValueStrategy.class);
     }
     
     public static class Builder {
-        private ArgumentObjectsStrategy argumentObjectsStrategy;
-        private ArgumentNameStrategy argumentNameStrategy;
-        private ArgumentDescriptionStrategy argumentDescriptionStrategy;
-        private ArgumentTypeStrategy argumentTypeStrategy;
-        private ArgumentDefaultValueStrategy argumentDefaultValueStrategy;
+        private HashMap<Class<? extends Strategy>, Strategy> strategies =
+                new HashMap<Class<? extends Strategy>, Strategy>(); 
         
         public Builder argumentObjectsStrategy(ArgumentObjectsStrategy argumentObjectsStrategy) {
-            this.argumentObjectsStrategy = argumentObjectsStrategy;
+            strategies.put(ArgumentObjectsStrategy.class, argumentObjectsStrategy);
             return this;
         }
         
         public Builder argumentNameStrategy(ArgumentNameStrategy argumentNameStrategy) {
-            this.argumentNameStrategy = argumentNameStrategy;
+            strategies.put(ArgumentNameStrategy.class, argumentNameStrategy);
             return this;
         }
         
         public Builder argumentDescriptionStrategy(ArgumentDescriptionStrategy argumentDescriptionStrategy) {
-            this.argumentDescriptionStrategy = argumentDescriptionStrategy;
+            strategies.put(ArgumentDescriptionStrategy.class, argumentDescriptionStrategy);
             return this;
         }
         
         public Builder argumentTypeStrategy(ArgumentTypeStrategy argumentTypeStrategy) {
-            this.argumentTypeStrategy = argumentTypeStrategy;
+            strategies.put(ArgumentTypeStrategy.class, argumentTypeStrategy);
             return this;
         }
         
         public Builder argumentDefaultValueStrategy(ArgumentDefaultValueStrategy argumentDefaultValueStrategy) {
-            this.argumentDefaultValueStrategy = argumentDefaultValueStrategy;
+            strategies.put(ArgumentDefaultValueStrategy.class, argumentDefaultValueStrategy);
+            return this;
+        }
+        
+        public Builder additionalStrategy(Strategy strategy) {
+            strategies.put(strategy.getClass(), strategy);
             return this;
         }
         
@@ -92,10 +66,6 @@ public class ArgumentStrategies implements BuildContextAware {
     }
     
     private ArgumentStrategies(Builder builder) {
-        this.argumentObjectsStrategy = builder.argumentObjectsStrategy;
-        this.argumentNameStrategy = builder.argumentNameStrategy;
-        this.argumentDescriptionStrategy = builder.argumentDescriptionStrategy;
-        this.argumentTypeStrategy = builder.argumentTypeStrategy;
-        this.argumentDefaultValueStrategy = builder.argumentDefaultValueStrategy;
+        allStrategies.putAll(builder.strategies);
     }
 }

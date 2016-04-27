@@ -1,12 +1,14 @@
 package graphql.java.generator.field;
 
+import graphql.java.generator.strategies.Strategy;
+
 /**
  * Given any field-representative object,
  * decide how you wish the GraphQL description to be.
  * @author dwinsor
  *
  */
-public interface FieldDescriptionStrategy {
+public interface FieldDescriptionStrategy extends Strategy {
     /**
      * 
      * @param object A representative "field" object, the exact type of which is contextual
