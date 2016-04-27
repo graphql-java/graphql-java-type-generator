@@ -13,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.hamcrest.CoreMatchers.*;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,6 +54,8 @@ public class TypeGeneratorScalarsTest {
             add(new Object[] {int.class, Scalars.GraphQLInt});
             add(new Object[] {Long.class, Scalars.GraphQLLong});
             add(new Object[] {long.class, Scalars.GraphQLLong});
+            add(new Object[] {BigInteger.class, graphql.java.generator.Scalars.GraphQLBigInteger});
+            add(new Object[] {BigDecimal.class, graphql.java.generator.Scalars.GraphQLBigDecimal});
         }};
         return list;
     }

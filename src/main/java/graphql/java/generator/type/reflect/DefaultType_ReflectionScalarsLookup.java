@@ -1,5 +1,6 @@
 package graphql.java.generator.type.reflect;
 
+import graphql.java.generator.DefaultTypes;
 import graphql.java.generator.Scalars;
 import graphql.java.generator.type.DefaultTypeStrategy;
 import graphql.schema.GraphQLInputType;
@@ -10,7 +11,9 @@ public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy 
 
     @Override
     public GraphQLOutputType getDefaultOutputType(Object object) {
-        return getDefaultScalarType(object);
+        GraphQLScalarType scalar = getDefaultScalarType(object);
+        if (scalar != null) return scalar;
+        return getDefaultType(object);
     }
 
     @Override
@@ -18,6 +21,17 @@ public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy 
         return getDefaultScalarType(object);
     }
 
+    protected GraphQLOutputType getDefaultType(Object object) {
+        if (object == null) {
+            return null;
+        }
+        if (!(object instanceof Class<?>)) {
+            object = object.getClass();
+        }
+        Class<?> clazz = (Class<?>) object;
+        return DefaultTypes.getDefaultType(clazz);
+    }
+    
     protected GraphQLScalarType getDefaultScalarType(Object object) {
         if (object == null) {
             return null;

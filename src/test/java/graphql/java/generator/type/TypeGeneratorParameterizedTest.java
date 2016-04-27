@@ -70,10 +70,13 @@ public class TypeGeneratorParameterizedTest {
     public void testBenchmark() {
         logger.debug("testBenchmark {} {}", clazz, expectedName);
         long startTime = System.currentTimeMillis();
-        for (int x = 0; x < 100; ++x) {
+        
+        final int numRuns = 0;
+        for (int x = 0; x < numRuns; ++x) {
             TypeRepository.clear();
             basicsOutput();
         }
+        
         long endTime = System.currentTimeMillis();
         logger.error("testBenchmark {} {} took {}", clazz, expectedName, endTime - startTime);
     }
