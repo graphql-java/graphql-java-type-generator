@@ -126,7 +126,7 @@ public class TypeGeneratorTest {
     
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     @Test

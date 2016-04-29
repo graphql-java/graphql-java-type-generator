@@ -31,7 +31,7 @@ public class TypeGeneratorScalarsTest {
     
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     public TypeGeneratorScalarsTest(Class<?> clazz, GraphQLScalarType expected) {

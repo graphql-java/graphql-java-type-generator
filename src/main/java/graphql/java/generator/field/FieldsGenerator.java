@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;
@@ -25,7 +25,7 @@ import graphql.schema.GraphQLOutputType;
  *
  */
 public class FieldsGenerator
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements IFieldsGenerator {
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);

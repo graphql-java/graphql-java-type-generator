@@ -1,12 +1,12 @@
 package graphql.java.generator.type.resolver;
 
 import graphql.java.generator.BuildContext;
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.TypeResolver;
 
 public class TypeResolver_BuildContextAware
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements TypeResolver {
 
     public TypeResolver_BuildContextAware() {

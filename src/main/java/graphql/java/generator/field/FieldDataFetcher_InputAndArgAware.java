@@ -2,7 +2,7 @@ package graphql.java.generator.field;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.BuildContextAware;
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.datafetcher.ArgAwareDataFetcher;
 import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
 import graphql.java.generator.datafetcher.GraphQLInputAwareDataFetcher;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  */
 public class FieldDataFetcher_InputAndArgAware
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements FieldDataFetcherStrategy {
     
     private FieldDataFetcherStrategy nextStrategy;

@@ -1,6 +1,12 @@
 package graphql.java.generator;
 
-public class BuildContextStorer implements BuildContextAware {
+/**
+ * Any object instances that use this may not be shared among multiple
+ * {@link BuildContext}s.
+ * @author dwinsor
+ *
+ */
+public class UnsharableBuildContextStorer implements BuildContextAware {
     private BuildContext context;
     
     @Override

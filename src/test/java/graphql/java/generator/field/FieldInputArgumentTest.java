@@ -2,7 +2,6 @@ package graphql.java.generator.field;
 
 import graphql.java.generator.type.ITypeGenerator;
 import graphql.java.generator.type.TypeGeneratorTest;
-import graphql.java.generator.type.TypeRepository;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.java.generator.*;
@@ -32,7 +31,7 @@ public class FieldInputArgumentTest {
 
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     @SuppressWarnings({"unchecked"})

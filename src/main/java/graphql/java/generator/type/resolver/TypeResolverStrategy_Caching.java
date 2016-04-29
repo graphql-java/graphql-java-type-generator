@@ -1,6 +1,6 @@
 package graphql.java.generator.type.resolver;
 
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.type.TypeResolverStrategy;
 import graphql.java.generator.type.resolver.TypeResolver_BuildContextAware;
 import graphql.schema.TypeResolver;
@@ -11,7 +11,7 @@ import graphql.schema.TypeResolver;
  *
  */
 public class TypeResolverStrategy_Caching
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements TypeResolverStrategy {
 
     @Override

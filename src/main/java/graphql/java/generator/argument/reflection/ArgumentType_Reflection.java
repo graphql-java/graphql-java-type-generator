@@ -1,11 +1,11 @@
 package graphql.java.generator.argument.reflection;
 
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.argument.ArgumentTypeStrategy;
 import graphql.schema.GraphQLInputType;
 
 public class ArgumentType_Reflection
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements ArgumentTypeStrategy {
     
     @Override

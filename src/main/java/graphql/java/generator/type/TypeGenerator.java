@@ -3,6 +3,7 @@ package graphql.java.generator.type;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLEnumType.newEnum;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.BuildContextAware;
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
@@ -31,18 +32,26 @@ import graphql.schema.GraphQLTypeReference;
  *
  */
 public class TypeGenerator
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements ITypeGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
     protected final Map<String, GraphQLOutputType> generatedOutputTypes;
     protected final Map<String, GraphQLInputType> generatedInputTypes;
     private TypeStrategies strategies;
+    private TypeRepository typeRepository;
     
     public TypeGenerator(TypeStrategies strategies) {
         this.setStrategies(strategies);
-        generatedOutputTypes = TypeRepository.getGeneratedOutputTypes();
-        generatedInputTypes = TypeRepository.getGeneratedInputTypes();
+        this.typeRepository = strategies.getTypeRepository();
+        if (typeRepository != null) {
+            generatedOutputTypes = typeRepository.getGeneratedOutputTypes();
+            generatedInputTypes = typeRepository.getGeneratedInputTypes();
+        }
+        else {
+            generatedOutputTypes = Collections.<String, GraphQLOutputType>emptyMap();
+            generatedInputTypes = Collections.<String, GraphQLInputType>emptyMap();
+        }
     }
     
     /**
@@ -77,17 +86,15 @@ public class TypeGenerator
             return new GraphQLTypeReference(typeName);
         }
 
-        if (getContext().isUsingTypeRepository()) {
-            if (generatedOutputTypes.containsKey(typeName)) {
-                return generatedOutputTypes.get(typeName);
-            }
+        if (generatedOutputTypes.containsKey(typeName)) {
+            return generatedOutputTypes.get(typeName);
         }
         
         outputTypesBeingBuilt.add(typeName);
         try {
             GraphQLOutputType type = generateOutputType(object);
-            if (getContext().isUsingTypeRepository()) {
-                TypeRepository.registerType(typeName, type);
+            if (typeRepository != null) {
+                typeRepository.registerType(typeName, type);
             }
             return type;
         }
@@ -119,15 +126,13 @@ public class TypeGenerator
                     + "there is no GraphQLTypeReference");
         }
 
-        if (getContext().isUsingTypeRepository()) {
-            if (generatedOutputTypes.containsKey(typeName)) {
-                return (GraphQLInterfaceType) generatedOutputTypes.get(typeName);
-            }
+        if (generatedOutputTypes.containsKey(typeName)) {
+            return (GraphQLInterfaceType) generatedOutputTypes.get(typeName);
         }
         
         GraphQLInterfaceType type = generateInterfaceType(object);
-        if (getContext().isUsingTypeRepository()) {
-            TypeRepository.registerType(typeName, type);
+        if (typeRepository != null) {
+            typeRepository.registerType(typeName, type);
         }
         return type;
     }
@@ -164,17 +169,15 @@ public class TypeGenerator
                     + "there is no GraphQLTypeReference");
         }
 
-        if (getContext().isUsingTypeRepository()) {
-            if (generatedInputTypes.containsKey(typeName)) {
-                return generatedInputTypes.get(typeName);
-            }
+        if (generatedInputTypes.containsKey(typeName)) {
+            return generatedInputTypes.get(typeName);
         }
         
         inputTypesBeingBuilt.add(typeName);
         try {
             GraphQLInputType type = generateInputType(object);
-            if (getContext().isUsingTypeRepository()) {
-                TypeRepository.registerType(typeName, type);
+            if (typeRepository != null) {
+                typeRepository.registerType(typeName, type);
             }
             return type;
         }

@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.type.InterfacesStrategy;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.TypeResolver;
 
 public class Interfaces_Reflection
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements InterfacesStrategy {
     
     @Override

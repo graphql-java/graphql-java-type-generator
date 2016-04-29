@@ -6,6 +6,12 @@ import graphql.java.generator.strategies.AbstractStrategiesContainer;
 import graphql.java.generator.strategies.Strategy;
 
 public class TypeStrategies extends AbstractStrategiesContainer {
+    private final TypeRepository typeRepository;
+
+    public TypeRepository getTypeRepository() {
+        return typeRepository;
+    }
+
     public TypeNameStrategy getTypeNameStrategy() {
         return (TypeNameStrategy) allStrategies.get(TypeNameStrategy.class);
     }
@@ -28,7 +34,13 @@ public class TypeStrategies extends AbstractStrategiesContainer {
     public static class Builder {
         private HashMap<Class<? extends Strategy>, Strategy> strategies =
                 new HashMap<Class<? extends Strategy>, Strategy>(); 
+        protected TypeRepository typeRepository;
         
+        public Builder usingTypeRepository(TypeRepository typeRepository) {
+            this.typeRepository = typeRepository;
+            return this;
+        }
+
         public Builder typeNameStrategy(TypeNameStrategy typeNameStrategy) {
             strategies.put(TypeNameStrategy.class, typeNameStrategy);
             return this;
@@ -71,5 +83,6 @@ public class TypeStrategies extends AbstractStrategiesContainer {
     
     private TypeStrategies(Builder builder) {
         allStrategies.putAll(builder.strategies);
+        this.typeRepository = builder.typeRepository;
     }
 }

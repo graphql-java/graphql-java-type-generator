@@ -1,6 +1,5 @@
 package graphql.java.generator.type;
 
-import graphql.java.generator.BuildContext;
 import graphql.java.generator.*;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
@@ -37,7 +36,7 @@ public class TypeGeneratorParameterizedTest {
     
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     public TypeGeneratorParameterizedTest(Class<?> clazz, String expectedName,
@@ -73,7 +72,7 @@ public class TypeGeneratorParameterizedTest {
         
         final int numRuns = 0;
         for (int x = 0; x < numRuns; ++x) {
-            TypeRepository.clear();
+            BuildContext.defaultTypeRepository.clear();
             basicsOutput();
         }
         

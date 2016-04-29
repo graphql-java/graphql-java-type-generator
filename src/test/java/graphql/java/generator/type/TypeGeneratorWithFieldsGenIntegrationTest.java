@@ -13,6 +13,13 @@ import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.ClassWithRawArrays;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
+import graphql.java.generator.argument.ArgumentName_Simple;
+import graphql.java.generator.argument.ArgumentStrategies;
+import graphql.java.generator.argument.ArgumentsGenerator;
+import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
+import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
+import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
@@ -65,6 +72,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     BuildContext testContext;
     final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
+                    .usingTypeRepository(BuildContext.defaultTypeRepository)
                     .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
                     .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
@@ -72,19 +80,26 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                     .interfacesStrategy(new Interfaces_Reflection())
                     .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
+    final ArgumentsGenerator defaultArgumentsGenerator = 
+            new ArgumentsGenerator(new ArgumentStrategies.Builder()
+                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
+                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
+                    .argumentNameStrategy(new ArgumentName_Simple())
+                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
+                    .argumentTypeStrategy(new ArgumentType_Reflection())
+                    .build());
     
     public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
         testContext = new Builder()
                 .setTypeGeneratorStrategy(defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
-                .setArgumentsGeneratorStrategy(BuildContext.defaultArgumentsGenerator)
-                .usingTypeRepository(true)
+                .setArgumentsGeneratorStrategy(defaultArgumentsGenerator)
                 .build();
     }
     
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     @Parameters

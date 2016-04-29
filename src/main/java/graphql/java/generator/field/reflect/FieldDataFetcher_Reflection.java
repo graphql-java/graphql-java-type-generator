@@ -1,6 +1,6 @@
 package graphql.java.generator.field.reflect;
 
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
 import graphql.java.generator.datafetcher.GraphQLInputAwareDataFetcher;
 import graphql.java.generator.datafetcher.MethodInvokingDataFetcher;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class FieldDataFetcher_Reflection
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements FieldDataFetcherStrategy {
     private static Logger logger = LoggerFactory.getLogger(
             FieldDataFetcher_Reflection.class);

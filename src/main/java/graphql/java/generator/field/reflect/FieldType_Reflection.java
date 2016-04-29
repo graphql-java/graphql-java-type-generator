@@ -9,7 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import graphql.java.generator.BuildContextStorer;
+import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.InputOutput;
 import graphql.java.generator.field.FieldTypeStrategy;
 import graphql.java.generator.type.ITypeGenerator;
@@ -19,7 +19,7 @@ import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
 
 public class FieldType_Reflection
-        extends BuildContextStorer
+        extends UnsharableBuildContextStorer
         implements FieldTypeStrategy {
     private static Logger logger = LoggerFactory.getLogger(
             FieldType_Reflection.class);

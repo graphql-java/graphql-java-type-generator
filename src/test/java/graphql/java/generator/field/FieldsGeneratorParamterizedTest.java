@@ -7,6 +7,13 @@ import java.util.List;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
+import graphql.java.generator.argument.ArgumentName_Simple;
+import graphql.java.generator.argument.ArgumentStrategies;
+import graphql.java.generator.argument.ArgumentsGenerator;
+import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
+import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
+import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
 import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;
@@ -17,7 +24,6 @@ import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
 import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.type.TypeGenerator;
-import graphql.java.generator.type.TypeRepository;
 import graphql.java.generator.type.TypeStrategies;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
@@ -51,6 +57,7 @@ public class FieldsGeneratorParamterizedTest {
     BuildContext testContext;
     final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
+                    .usingTypeRepository(BuildContext.defaultTypeRepository)
                     .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
                     .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
                     .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
@@ -59,18 +66,26 @@ public class FieldsGeneratorParamterizedTest {
                     .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     
+    final ArgumentsGenerator defaultArgumentsGenerator = 
+            new ArgumentsGenerator(new ArgumentStrategies.Builder()
+                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
+                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
+                    .argumentNameStrategy(new ArgumentName_Simple())
+                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
+                    .argumentTypeStrategy(new ArgumentType_Reflection())
+                    .build());
+
     public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {
         generator = fieldsGen;
         testContext = new Builder()
                 .setTypeGeneratorStrategy(defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
-                .setArgumentsGeneratorStrategy(BuildContext.defaultArgumentsGenerator)
-                .usingTypeRepository(true)
+                .setArgumentsGeneratorStrategy(defaultArgumentsGenerator)
                 .build();
     }
     @Before
     public void before() {
-        TypeRepository.clear();
+        BuildContext.defaultTypeRepository.clear();
     }
     
     @Parameters
