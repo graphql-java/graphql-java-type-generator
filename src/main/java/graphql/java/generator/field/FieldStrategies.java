@@ -1,6 +1,14 @@
 package graphql.java.generator.field;
 
 import java.util.HashMap;
+
+import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
+import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
+import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;
+import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
+import graphql.java.generator.field.reflect.FieldName_Reflection;
+import graphql.java.generator.field.reflect.FieldObjects_Reflection;
+import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.strategies.AbstractStrategiesContainer;
 import graphql.java.generator.strategies.Strategy;
 
@@ -35,8 +43,17 @@ public class FieldStrategies extends AbstractStrategiesContainer {
     
     
     public static class Builder {
+        @SuppressWarnings("serial")
         private HashMap<Class<? extends Strategy>, Strategy> strategies =
-                new HashMap<Class<? extends Strategy>, Strategy>(); 
+                new HashMap<Class<? extends Strategy>, Strategy>() {{
+                    put(FieldObjectsStrategy.class, new FieldObjects_Reflection());
+                    put(FieldNameStrategy.class, new FieldName_Reflection());
+                    put(FieldTypeStrategy.class, new FieldType_Reflection());
+                    put(FieldDataFetcherStrategy.class, new FieldDataFetcher_InputAndArgAware(new FieldDataFetcher_Reflection()));
+                    put(FieldDescriptionStrategy.class, new FieldDescription_ReflectionAutogen());
+                    put(FieldDefaultValueStrategy.class, new FieldDefaultValue_Reflection());
+                    put(FieldDeprecationStrategy.class, new FieldDeprecation_Reflection());
+                }}; 
 
         public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
             strategies.put(FieldObjectsStrategy.class, fieldObjectsStrategy);

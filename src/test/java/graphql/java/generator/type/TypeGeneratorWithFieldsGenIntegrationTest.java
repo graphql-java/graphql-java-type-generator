@@ -12,21 +12,10 @@ import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.ClassWithRawArrays;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
-import graphql.java.generator.argument.ArgumentName_Simple;
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
-import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
-import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
-import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
-import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.FieldsGeneratorParamterizedTest;
-import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
-import graphql.java.generator.type.reflect.EnumValues_Reflection;
-import graphql.java.generator.type.reflect.Interfaces_Reflection;
-import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
-import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
-import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLObjectType;
@@ -63,20 +52,9 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
                     .usingTypeRepository(BuildContext.defaultTypeRepository)
-                    .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
-                    .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
-                    .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
-                    .enumValuesStrategy(new EnumValues_Reflection())
-                    .interfacesStrategy(new Interfaces_Reflection())
-                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     final ArgumentsGenerator defaultArgumentsGenerator = 
             new ArgumentsGenerator(new ArgumentStrategies.Builder()
-                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
-                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
-                    .argumentNameStrategy(new ArgumentName_Simple())
-                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
-                    .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
     
     public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {

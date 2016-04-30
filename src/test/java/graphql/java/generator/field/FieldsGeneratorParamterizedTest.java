@@ -7,30 +7,13 @@ import java.util.List;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
-import graphql.java.generator.argument.ArgumentName_Simple;
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
-import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
-import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
-import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
-import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
-import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
-import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
-import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;
-import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
-import graphql.java.generator.field.reflect.FieldName_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
-import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeStrategies;
-import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
-import graphql.java.generator.type.reflect.EnumValues_Reflection;
-import graphql.java.generator.type.reflect.Interfaces_Reflection;
-import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
-import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
-import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLFieldDefinition;
 
 import org.hamcrest.Matcher;
@@ -58,21 +41,10 @@ public class FieldsGeneratorParamterizedTest {
     final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
                     .usingTypeRepository(BuildContext.defaultTypeRepository)
-                    .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
-                    .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
-                    .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
-                    .enumValuesStrategy(new EnumValues_Reflection())
-                    .interfacesStrategy(new Interfaces_Reflection())
-                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     
     final ArgumentsGenerator defaultArgumentsGenerator = 
             new ArgumentsGenerator(new ArgumentStrategies.Builder()
-                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
-                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
-                    .argumentNameStrategy(new ArgumentName_Simple())
-                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
-                    .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
 
     public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {
@@ -93,32 +65,14 @@ public class FieldsGeneratorParamterizedTest {
         final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
                         .build());
         final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
                         .build());
         final FieldsGenerator fieldsCombined = new FieldsGenerator(
                 new FieldStrategies.Builder()
                         .fieldObjectsStrategy(new FieldObjects_Reflection())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
                         .build());
         @SuppressWarnings("serial")
         ArrayList<Object[]> list = new ArrayList<Object[]>() {{

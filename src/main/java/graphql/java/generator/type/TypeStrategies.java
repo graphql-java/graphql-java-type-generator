@@ -4,6 +4,12 @@ import java.util.HashMap;
 
 import graphql.java.generator.strategies.AbstractStrategiesContainer;
 import graphql.java.generator.strategies.Strategy;
+import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
+import graphql.java.generator.type.reflect.EnumValues_Reflection;
+import graphql.java.generator.type.reflect.Interfaces_Reflection;
+import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
+import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
+import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 
 public class TypeStrategies extends AbstractStrategiesContainer {
     private final TypeRepository typeRepository;
@@ -32,8 +38,16 @@ public class TypeStrategies extends AbstractStrategiesContainer {
     }
     
     public static class Builder {
+        @SuppressWarnings("serial")
         private HashMap<Class<? extends Strategy>, Strategy> strategies =
-                new HashMap<Class<? extends Strategy>, Strategy>(); 
+                new HashMap<Class<? extends Strategy>, Strategy>() {{
+                    put(DefaultTypeStrategy.class, new DefaultType_ReflectionScalarsLookup());
+                    put(TypeNameStrategy.class, new TypeName_ReflectionFQNReplaceDotWithChar());
+                    put(TypeDescriptionStrategy.class, new TypeDescription_ReflectionAutogen());
+                    put(EnumValuesStrategy.class, new EnumValues_Reflection());
+                    put(InterfacesStrategy.class, new Interfaces_Reflection());
+                    put(TypeResolverStrategy.class, new TypeResolverStrategy_Caching());
+                }}; 
         protected TypeRepository typeRepository;
         
         public Builder usingTypeRepository(TypeRepository typeRepository) {

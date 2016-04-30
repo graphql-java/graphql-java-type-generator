@@ -2,6 +2,10 @@ package graphql.java.generator.argument;
 
 import java.util.HashMap;
 
+import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
+import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
+import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
+import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
 import graphql.java.generator.strategies.AbstractStrategiesContainer;
 import graphql.java.generator.strategies.Strategy;
 
@@ -27,8 +31,15 @@ public class ArgumentStrategies extends AbstractStrategiesContainer {
     }
     
     public static class Builder {
+        @SuppressWarnings("serial")
         private HashMap<Class<? extends Strategy>, Strategy> strategies =
-                new HashMap<Class<? extends Strategy>, Strategy>(); 
+                new HashMap<Class<? extends Strategy>, Strategy>() {{
+                    put(ArgumentDefaultValueStrategy.class, new ArgumentDefaultValue_Reflection());
+                    put(ArgumentDescriptionStrategy.class, new ArgumentDescription_ReflectionAutogen());
+                    put(ArgumentNameStrategy.class, new ArgumentName_Simple());
+                    put(ArgumentObjectsStrategy.class, new ArgumentObjects_ReflectionAndParanamer());
+                    put(ArgumentTypeStrategy.class, new ArgumentType_Reflection());
+                }}; 
         
         public Builder argumentObjectsStrategy(ArgumentObjectsStrategy argumentObjectsStrategy) {
             strategies.put(ArgumentObjectsStrategy.class, argumentObjectsStrategy);

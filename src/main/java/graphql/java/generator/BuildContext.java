@@ -4,36 +4,17 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import graphql.java.generator.argument.ArgumentName_Simple;
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
 import graphql.java.generator.argument.IArgumentsGenerator;
-import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
-import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
-import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
-import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
-import graphql.java.generator.field.FieldDataFetcher_InputAndArgAware;
 import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
 import graphql.java.generator.field.IFieldsGenerator;
-import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
-import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
-import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;
-import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
-import graphql.java.generator.field.reflect.FieldName_Reflection;
-import graphql.java.generator.field.reflect.FieldObjects_Reflection;
-import graphql.java.generator.field.reflect.FieldType_Reflection;
 import graphql.java.generator.type.ITypeGenerator;
 import graphql.java.generator.type.StaticTypeRepository;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeRepository;
 import graphql.java.generator.type.TypeStrategies;
-import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
-import graphql.java.generator.type.reflect.EnumValues_Reflection;
-import graphql.java.generator.type.reflect.Interfaces_Reflection;
-import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
-import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
-import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLOutputType;
@@ -44,30 +25,12 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
     private static final TypeGenerator defaultTypeGenerator = 
             new TypeGenerator(new TypeStrategies.Builder()
                     .usingTypeRepository(defaultTypeRepository)
-                    .defaultTypeStrategy(new DefaultType_ReflectionScalarsLookup())
-                    .typeNameStrategy(new TypeName_ReflectionFQNReplaceDotWithChar())
-                    .typeDescriptionStrategy(new TypeDescription_ReflectionAutogen())
-                    .enumValuesStrategy(new EnumValues_Reflection())
-                    .interfacesStrategy(new Interfaces_Reflection())
-                    .typeResolverStrategy(new TypeResolverStrategy_Caching())
                     .build());
     private static final FieldsGenerator defaultFieldsGenerator = 
             new FieldsGenerator(new FieldStrategies.Builder()
-                    .fieldObjectsStrategy(new FieldObjects_Reflection())
-                    .fieldNameStrategy(new FieldName_Reflection())
-                    .fieldTypeStrategy(new FieldType_Reflection())
-                    .fieldDataFetcherStrategy(new FieldDataFetcher_InputAndArgAware(new FieldDataFetcher_Reflection()))
-                    .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                    .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                    .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
                     .build());
     private static final ArgumentsGenerator defaultArgumentsGenerator = 
             new ArgumentsGenerator(new ArgumentStrategies.Builder()
-                    .argumentDefaultValueStrategy(new ArgumentDefaultValue_Reflection())
-                    .argumentDescriptionStrategy(new ArgumentDescription_ReflectionAutogen())
-                    .argumentNameStrategy(new ArgumentName_Simple())
-                    .argumentObjectsStrategy(new ArgumentObjects_ReflectionAndParanamer())
-                    .argumentTypeStrategy(new ArgumentType_Reflection())
                     .build());
     public static final BuildContext defaultContext = new Builder()
             .setTypeGeneratorStrategy(defaultTypeGenerator)
