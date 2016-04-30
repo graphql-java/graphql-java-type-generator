@@ -1,6 +1,5 @@
 package graphql.java.generator.type;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +19,8 @@ import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflectio
 import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
 import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;
 import graphql.java.generator.argument.reflection.ArgumentType_Reflection;
-import graphql.java.generator.field.FieldStrategies;
 import graphql.java.generator.field.FieldsGenerator;
-import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
-import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
-import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;
-import graphql.java.generator.field.reflect.FieldDescription_ReflectionAutogen;
-import graphql.java.generator.field.reflect.FieldName_Reflection;
-import graphql.java.generator.field.reflect.FieldObjects_Reflection;
-import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
-import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
-import graphql.java.generator.field.reflect.FieldType_Reflection;
+import graphql.java.generator.field.FieldsGeneratorParamterizedTest;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
 import graphql.java.generator.type.reflect.Interfaces_Reflection;
@@ -104,43 +94,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     @Parameters
     public static Collection<Object[]> data() {
-        final FieldsGenerator fieldsByJavaMethods = new FieldsGenerator(
-                new FieldStrategies.Builder()
-                        .fieldObjectsStrategy(new FieldObjects_ReflectionClassMethods())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
-                        .build());
-        final FieldsGenerator fieldsByJavaFields = new FieldsGenerator(
-                new FieldStrategies.Builder()
-                        .fieldObjectsStrategy(new FieldObjects_ReflectionClassFields())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
-                        .build());
-        final FieldsGenerator fieldsCombined = new FieldsGenerator(
-                new FieldStrategies.Builder()
-                        .fieldObjectsStrategy(new FieldObjects_Reflection())
-                        .fieldNameStrategy(new FieldName_Reflection())
-                        .fieldTypeStrategy(new FieldType_Reflection())
-                        .fieldDataFetcherStrategy(new FieldDataFetcher_Reflection())
-                        .fieldDescriptionStrategy(new FieldDescription_ReflectionAutogen())
-                        .fieldDefaultValueStrategy(new FieldDefaultValue_Reflection())
-                        .fieldDeprecationStrategy(new FieldDeprecation_Reflection())
-                        .build());
-        @SuppressWarnings("serial")
-        ArrayList<Object[]> list = new ArrayList<Object[]>() {{
-            add(new Object[] {fieldsByJavaMethods});
-            add(new Object[] {fieldsByJavaFields});
-            add(new Object[] {fieldsCombined});
-        }};
-        return list;
+        return FieldsGeneratorParamterizedTest.data();
     }
     
     @Test
@@ -153,8 +107,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                         hasProperty("name", is("A")),
                         hasProperty("name", is("B")),
                         hasProperty("name", is("C")));
-        assertThat(((GraphQLEnumType)enumObj).getValues(), hasItemsMatcher
-        );
+        assertThat(((GraphQLEnumType)enumObj).getValues(), hasItemsMatcher);
         
         enumObj = testContext.getOutputType(graphql.java.generator.EmptyEnum.class);
         Assert.assertThat(enumObj, instanceOf(GraphQLEnumType.class));

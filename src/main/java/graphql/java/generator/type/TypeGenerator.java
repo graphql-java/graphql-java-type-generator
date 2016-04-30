@@ -3,9 +3,7 @@ package graphql.java.generator.type;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLEnumType.newEnum;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -13,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.BuildContextAware;
+import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
@@ -23,11 +22,12 @@ import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLType;
 import graphql.schema.GraphQLTypeReference;
 
 /**
- * Given any object, decide how you wish the GraphQL type to be generated
- * Not yet certified with InputTypes or arrays.
+ * Given any object, decide how you wish the GraphQL type to be generated.
+ * Not yet certified with arrays.
  * @author dwinsor
  *
  */
@@ -36,22 +36,12 @@ public class TypeGenerator
         implements ITypeGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
-    protected final Map<String, GraphQLOutputType> generatedOutputTypes;
-    protected final Map<String, GraphQLInputType> generatedInputTypes;
     private TypeStrategies strategies;
     private TypeRepository typeRepository;
     
     public TypeGenerator(TypeStrategies strategies) {
         this.setStrategies(strategies);
         this.typeRepository = strategies.getTypeRepository();
-        if (typeRepository != null) {
-            generatedOutputTypes = typeRepository.getGeneratedOutputTypes();
-            generatedInputTypes = typeRepository.getGeneratedInputTypes();
-        }
-        else {
-            generatedOutputTypes = Collections.<String, GraphQLOutputType>emptyMap();
-            generatedInputTypes = Collections.<String, GraphQLInputType>emptyMap();
-        }
     }
     
     /**
@@ -70,75 +60,15 @@ public class TypeGenerator
             return defaultType;
         }
         
-        String typeName = getGraphQLTypeName(object);
-        if (typeName == null) {
-            logger.debug("TypeName was null for object [{}]. "
-                    + "Type will attempt to be built but not placed in the TypeRepository", object);
-            return generateOutputType(object);
-        }
-        logger.debug("TypeName for object [{}]", typeName);
-        
-        //this check must come before generatedOutputTypes.get
-        //necessary for synchronicity to avoid duplicate object creations
-        final Set<String> outputTypesBeingBuilt = getContext().getOutputTypesBeingBuilt();
-        if (outputTypesBeingBuilt.contains(typeName)) {
-            logger.debug("Using a reference to: [{}]", typeName);
-            return new GraphQLTypeReference(typeName);
-        }
-
-        if (generatedOutputTypes.containsKey(typeName)) {
-            return generatedOutputTypes.get(typeName);
-        }
-        
-        outputTypesBeingBuilt.add(typeName);
-        try {
-            GraphQLOutputType type = generateOutputType(object);
-            if (typeRepository != null) {
-                typeRepository.registerType(typeName, type);
-            }
-            return type;
-        }
-        catch (RuntimeException e) {
-            logger.warn("Failed to generate type named {}", typeName);
-            logger.debug("Failed to generate type, exception is ", e);
-            throw e;
-        }
-        finally {
-            outputTypesBeingBuilt.remove(typeName);
-        }
+        return (GraphQLOutputType) getType(object, TypeKind.OBJECT);
     }
-
+    
     @Override
     public GraphQLInterfaceType getInterfaceType(Object object) {
-        String typeName = getGraphQLTypeName(object);
-        if (typeName == null) {
-            logger.debug("TypeName was null for object [{}]. "
-                    + "Type will attempt to be built but not placed in the TypeRepository", object);
-            return (GraphQLInterfaceType) generateInterfaceType(object);
-        }
-        logger.debug("TypeName for object [{}]", typeName);
-        
-        //this check must come before generatedOutputTypes.get
-        final Set<String> outputTypesBeingBuilt = getContext().getOutputTypesBeingBuilt();
-        if (outputTypesBeingBuilt.contains(typeName)) {
-            logger.error("While constructing interface type, using a reference to: [{}]", typeName);
-            throw new RuntimeException("Cannot put type-cycles into interface types, "
-                    + "there is no GraphQLTypeReference");
-        }
-
-        if (generatedOutputTypes.containsKey(typeName)) {
-            return (GraphQLInterfaceType) generatedOutputTypes.get(typeName);
-        }
-        
-        GraphQLInterfaceType type = generateInterfaceType(object);
-        if (typeRepository != null) {
-            typeRepository.registerType(typeName, type);
-        }
-        return type;
+        return (GraphQLInterfaceType) getType(object, TypeKind.INTERFACE);
     }
 
     /**
-     * TODO can we dedupe half of this logic
      * @param object A representative "object" from which to construct
      * a {@link GraphQLInputType}, the exact type of which is contextual
      * @return
@@ -153,31 +83,41 @@ public class TypeGenerator
             return defaultType;
         }
         
+        return (GraphQLInputType) getType(object, TypeKind.INPUT_OBJECT);
+    }
+    
+    protected GraphQLType getType(Object object, TypeKind typeKind) {
         String typeName = getGraphQLTypeName(object);
         if (typeName == null) {
             logger.debug("TypeName was null for object [{}]. "
-                    + "Type will be built but not placed in the TypeRepository", object);
-            return generateInputType(object);
+                    + "Type will attempt to be built but not placed in the TypeRepository", object);
+            return generateType(object, typeKind);
         }
         logger.debug("TypeName for object [{}]", typeName);
         
-        //this check must come before generatedInputTypes.get
-        final Set<String> inputTypesBeingBuilt = getContext().getInputTypesBeingBuilt();
-        if (inputTypesBeingBuilt.contains(typeName)) {
-            logger.error("While constructing input type, using a reference to: [{}]", typeName);
-            throw new RuntimeException("Cannot put type-cycles into input types, "
+        //this check must come before generated*Types.get
+        //necessary for synchronicity to avoid duplicate object creations
+        Set<String> typesBeingBuilt = getContext().getTypesBeingBuilt();
+        if (typesBeingBuilt.contains(typeName)) {
+            logger.debug("Using a reference to: [{}]", typeName);
+            if (TypeKind.OBJECT.equals(typeKind)) {
+                return new GraphQLTypeReference(typeName);
+            }
+            logger.error("While constructing type, using a reference to: [{}]", typeName);
+            throw new RuntimeException("Cannot put type-cycles into input or interface types, "
                     + "there is no GraphQLTypeReference");
         }
-
-        if (generatedInputTypes.containsKey(typeName)) {
-            return generatedInputTypes.get(typeName);
+        
+        GraphQLType prevType = typeRepository.getGeneratedType(typeName, typeKind);
+        if (prevType != null) {
+            return prevType;
         }
         
-        inputTypesBeingBuilt.add(typeName);
+        typesBeingBuilt.add(typeName);
         try {
-            GraphQLInputType type = generateInputType(object);
+            GraphQLType type = generateType(object, typeKind);
             if (typeRepository != null) {
-                typeRepository.registerType(typeName, type);
+                typeRepository.registerType(typeName, type, typeKind);
             }
             return type;
         }
@@ -187,7 +127,20 @@ public class TypeGenerator
             throw e;
         }
         finally {
-            inputTypesBeingBuilt.remove(typeName);
+            typesBeingBuilt.remove(typeName);
+        }
+    }
+
+    protected GraphQLType generateType(Object object, TypeKind typeKind) {
+        switch (typeKind) {
+        case OBJECT:
+            return generateOutputType(object);
+        case INTERFACE:
+            return generateInterfaceType(object);
+        case INPUT_OBJECT:
+            return generateInputType(object);
+        default:
+            return null;
         }
     }
     

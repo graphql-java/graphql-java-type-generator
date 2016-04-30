@@ -53,23 +53,6 @@ public class FieldInputArgumentTest {
                 .query(queryType)
                 .build();
         
-        String querySchema = ""
-        + "query testSchema {"
-        + "  __schema {"
-        + "    types {"
-        + "      fields {"
-        + "        args {"
-        + "          name"
-        + "          description"
-        + "          type {"
-        + "            name"
-        + "          }"
-        + "        }"
-        + "      }"
-        + "    }"
-        + "  }"
-        + "}";
-        
         String queryString = 
         "{"
         + "  testObj {"

@@ -88,10 +88,7 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
     private final FieldsGenerator fieldsGenerator;
     private final ArgumentsGenerator argumentsGenerator;
 
-    private final Set<String> outputTypesBeingBuilt = Collections.newSetFromMap(
-            new ConcurrentHashMap<String, Boolean>());
-    
-    private final Set<String> inputTypesBeingBuilt = Collections.newSetFromMap(
+    private final Set<String> typesBeingBuilt = Collections.newSetFromMap(
             new ConcurrentHashMap<String, Boolean>());
     
     public ITypeGenerator getTypeGeneratorStrategy() {
@@ -104,12 +101,8 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
         return argumentsGenerator;
     }
 
-    public Set<String> getOutputTypesBeingBuilt() {
-        return outputTypesBeingBuilt;
-    }
-    
-    public Set<String> getInputTypesBeingBuilt() {
-        return inputTypesBeingBuilt;
+    public Set<String> getTypesBeingBuilt() {
+        return typesBeingBuilt;
     }
     
 

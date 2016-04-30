@@ -1,7 +1,9 @@
 package graphql.java.generator.type;
 
+import graphql.introspection.Introspection.TypeKind;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,37 +14,52 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class StaticTypeRepository implements TypeRepository {
-    private static Map<String, GraphQLOutputType> generatedOutputTypes =
-            new ConcurrentHashMap<String, GraphQLOutputType>();
-    private static Map<String, GraphQLInputType> generatedInputTypes =
-            new ConcurrentHashMap<String, GraphQLInputType>();
+    private static Map<String, GraphQLType> generatedOutputTypes =
+            new ConcurrentHashMap<String, GraphQLType>();
+    private static Map<String, GraphQLType> generatedInputTypes =
+            new ConcurrentHashMap<String, GraphQLType>();
     
+    @Override
+    public GraphQLType registerType(String typeName, GraphQLType graphQlType, TypeKind typeKind) {
+        switch (typeKind) {
+        case OBJECT:
+        case INTERFACE:
+            return registerType(typeName, (GraphQLOutputType) graphQlType);
+        case INPUT_OBJECT:
+            return registerType(typeName, (GraphQLInputType) graphQlType);
+        default:
+            return null;
+        }
+    }
+
     public GraphQLOutputType registerType(String typeName,
             GraphQLOutputType graphQlOutputType) {
-        synchronized (generatedOutputTypes) {
-            if (!generatedOutputTypes.containsKey(typeName)) {
-                generatedOutputTypes.put(typeName, graphQlOutputType);
-                return graphQlOutputType;
-            }
-        }
-        return generatedOutputTypes.get(typeName);
+        return (GraphQLOutputType) syncRegisterType(
+                typeName, graphQlOutputType, generatedOutputTypes);
     }
 
     public GraphQLInputType registerType(String typeName,
             GraphQLInputType graphQlInputType) {
-        synchronized (generatedInputTypes) {
-            if (!generatedInputTypes.containsKey(typeName)) {
-                generatedInputTypes.put(typeName, graphQlInputType);
-                return graphQlInputType;
+        return (GraphQLInputType) syncRegisterType(
+                typeName, graphQlInputType, generatedInputTypes);
+    }
+    
+    private GraphQLType syncRegisterType(String typeName,
+            GraphQLType graphQlType, Map<String, GraphQLType> map) {
+        synchronized (map) {
+            if (!map.containsKey(typeName)) {
+                map.put(typeName, graphQlType);
+                return graphQlType;
             }
         }
-        return generatedInputTypes.get(typeName);
+        return map.get(typeName);
+
     }
 
-    public Map<String, GraphQLOutputType> getGeneratedOutputTypes() {
+    public Map<String, GraphQLType> getGeneratedOutputTypes() {
         return generatedOutputTypes;
     }
-    public Map<String, GraphQLInputType> getGeneratedInputTypes() {
+    public Map<String, GraphQLType> getGeneratedInputTypes() {
         return generatedInputTypes;
     }
     
@@ -53,8 +70,21 @@ public class StaticTypeRepository implements TypeRepository {
         //anyone working on the old types doesn't want to have
         //their generated*Types .clear()ed out from under them. 
         generatedOutputTypes =
-                new ConcurrentHashMap<String, GraphQLOutputType>();
+                new ConcurrentHashMap<String, GraphQLType>();
         generatedInputTypes =
-                new ConcurrentHashMap<String, GraphQLInputType>();
+                new ConcurrentHashMap<String, GraphQLType>();
+    }
+
+    @Override
+    public GraphQLType getGeneratedType(String typeName, TypeKind typeKind) {
+        switch (typeKind) {
+        case OBJECT:
+        case INTERFACE:
+            return generatedOutputTypes.get(typeName);
+        case INPUT_OBJECT:
+            return generatedInputTypes.get(typeName);
+        default:
+            return null;
+        }
     }
 }

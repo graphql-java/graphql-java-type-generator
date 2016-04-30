@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.InputOutput;
+import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.field.FieldTypeStrategy;
 import graphql.java.generator.type.ITypeGenerator;
 import graphql.schema.GraphQLInputType;
@@ -27,49 +27,49 @@ public class FieldType_Reflection
     @Override
     public GraphQLOutputType getOutputTypeOfField(Object object) {
         return (GraphQLOutputType) getTypeOfField(
-                object, InputOutput.OUTPUT);
+                object, TypeKind.OBJECT);
     }
     
     @Override
     public GraphQLInputType getInputTypeOfField(Object object) {
         return (GraphQLInputType) getTypeOfField(
-                object, InputOutput.INPUT);
+                object, TypeKind.INPUT_OBJECT);
     }
     
     public GraphQLType getTypeOfField(
-            Object object, InputOutput ioFlag) {
+            Object object, TypeKind typeKind) {
         if (object instanceof Field) {
             Field field = (Field) object;
-            return getTypeOfFieldFromField(field, ioFlag);
+            return getTypeOfFieldFromField(field, typeKind);
         }
 
         if (object instanceof Method) {
             Method method = (Method) object;
-            return getTypeOfFieldFromMethod(method, ioFlag);
+            return getTypeOfFieldFromMethod(method, typeKind);
         }
 
         return null;
     }
     
     protected GraphQLType getTypeOfFieldFromField(
-            Field field, InputOutput ioFlag) {
+            Field field, TypeKind typeKind) {
         Class<?> fieldClazz = field.getType();
         Type genericType = field.getGenericType();
         return getTypeOfFieldFromSignature(
-                fieldClazz, genericType, field.toGenericString(), ioFlag);
+                fieldClazz, genericType, field.toGenericString(), typeKind);
     }
     
     protected GraphQLType getTypeOfFieldFromMethod(
-            Method method, InputOutput ioFlag) {
+            Method method, TypeKind typeKind) {
         Class<?> returnTypeClazz = method.getReturnType();
         Type genericType = method.getGenericReturnType();
         return getTypeOfFieldFromSignature(
-                returnTypeClazz, genericType, method.toGenericString(), ioFlag);
+                returnTypeClazz, genericType, method.toGenericString(), typeKind);
     }
     
     protected GraphQLType getTypeOfFieldFromSignature(
             Class<?> typeClazz, Type genericType,
-            String name, InputOutput ioFlag) {
+            String name, TypeKind typeKind) {
         ITypeGenerator typeGen = getContext().getTypeGeneratorStrategy();
 
         //attempt GraphQLList from types
@@ -77,8 +77,8 @@ public class FieldType_Reflection
                 typeClazz, genericType);
         if (listGenericType != null) {
             logger.debug("this [{}] is an {} list of generic type [{}], and will be made a GraphQLList",
-                    name, ioFlag, listGenericType);
-            if (InputOutput.OUTPUT.equals(ioFlag)) {
+                    name, typeKind, listGenericType);
+            if (TypeKind.OBJECT.equals(typeKind)) {
                 return new GraphQLList(typeGen.getOutputType(listGenericType));
             }
             else {
@@ -86,7 +86,7 @@ public class FieldType_Reflection
             }
         }
 
-        if (InputOutput.OUTPUT.equals(ioFlag)) {
+        if (TypeKind.OBJECT.equals(typeKind)) {
             return typeGen.getOutputType(typeClazz);
         }
         else {
