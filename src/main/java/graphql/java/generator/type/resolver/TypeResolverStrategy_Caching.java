@@ -1,8 +1,8 @@
 package graphql.java.generator.type.resolver;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.type.TypeResolverStrategy;
 import graphql.java.generator.type.resolver.TypeResolver_BuildContextAware;
+import graphql.java.generator.type.strategies.TypeResolverStrategy;
 import graphql.schema.TypeResolver;
 
 /**

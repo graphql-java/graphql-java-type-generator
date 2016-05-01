@@ -1,9 +1,9 @@
 package graphql.java.generator.field.reflect;
 
-import graphql.java.generator.field.FieldNameStrategy;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+
+import graphql.java.generator.field.strategies.FieldNameStrategy;
 
 public class FieldName_Reflection implements FieldNameStrategy {
 

@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import graphql.java.generator.field.FieldObjectsStrategy;
+import graphql.java.generator.field.strategies.FieldObjectsStrategy;
 
 /**
  * A reflection based, java Field centric class for generating data

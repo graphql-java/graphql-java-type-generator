@@ -1,6 +1,7 @@
-package graphql.java.generator.type;
+package graphql.java.generator.type.strategies;
 
 import graphql.java.generator.strategies.Strategy;
+import graphql.java.generator.type.TypeRepository;
 
 /**
  * Given any object, decide how you wish the GraphQL type to be named

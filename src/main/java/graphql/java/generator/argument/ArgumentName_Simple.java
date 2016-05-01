@@ -1,5 +1,7 @@
 package graphql.java.generator.argument;
 
+import graphql.java.generator.argument.strategies.ArgumentNameStrategy;
+
 public class ArgumentName_Simple
         implements ArgumentNameStrategy {
     

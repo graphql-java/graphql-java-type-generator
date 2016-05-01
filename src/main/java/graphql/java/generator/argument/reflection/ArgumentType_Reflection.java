@@ -1,7 +1,7 @@
 package graphql.java.generator.argument.reflection;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.argument.ArgumentTypeStrategy;
+import graphql.java.generator.argument.strategies.ArgumentTypeStrategy;
 import graphql.schema.GraphQLInputType;
 
 public class ArgumentType_Reflection

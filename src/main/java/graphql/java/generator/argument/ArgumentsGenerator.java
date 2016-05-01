@@ -7,6 +7,7 @@ import java.util.Set;
 
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.BuildContextAware;
+import graphql.java.generator.argument.strategies.ArgumentStrategies;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLInputType;
 

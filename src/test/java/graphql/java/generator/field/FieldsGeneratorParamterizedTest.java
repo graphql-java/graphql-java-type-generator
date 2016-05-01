@@ -7,13 +7,14 @@ import java.util.List;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
-import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
+import graphql.java.generator.argument.strategies.ArgumentStrategies;
 import graphql.java.generator.field.reflect.FieldObjects_Reflection;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassFields;
 import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
+import graphql.java.generator.field.strategies.FieldStrategies;
 import graphql.java.generator.type.TypeGenerator;
-import graphql.java.generator.type.TypeStrategies;
+import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLFieldDefinition;
 
 import org.hamcrest.Matcher;

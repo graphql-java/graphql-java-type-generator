@@ -1,4 +1,4 @@
-package graphql.java.generator.type;
+package graphql.java.generator.type.strategies;
 
 import java.lang.reflect.ParameterizedType;
 

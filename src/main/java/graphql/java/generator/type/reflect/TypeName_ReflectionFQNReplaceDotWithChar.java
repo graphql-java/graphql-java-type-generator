@@ -1,9 +1,9 @@
 package graphql.java.generator.type.reflect;
 
-import graphql.java.generator.type.TypeNameStrategy;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import graphql.java.generator.type.strategies.TypeNameStrategy;
 
 /**
  * Take the fully qualified name of the given Class.class or object's class,

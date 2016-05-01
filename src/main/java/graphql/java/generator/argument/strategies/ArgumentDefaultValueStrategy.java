@@ -1,4 +1,4 @@
-package graphql.java.generator.argument;
+package graphql.java.generator.argument.strategies;
 
 import graphql.java.generator.strategies.Strategy;
 

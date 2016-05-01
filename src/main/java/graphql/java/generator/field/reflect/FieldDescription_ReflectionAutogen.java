@@ -3,7 +3,7 @@ package graphql.java.generator.field.reflect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import graphql.java.generator.field.FieldDescriptionStrategy;
+import graphql.java.generator.field.strategies.FieldDescriptionStrategy;
 
 public class FieldDescription_ReflectionAutogen implements FieldDescriptionStrategy {
     

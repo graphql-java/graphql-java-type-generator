@@ -1,7 +1,8 @@
-package graphql.java.generator.field;
+package graphql.java.generator.field.strategies;
 
 import java.util.HashMap;
 
+import graphql.java.generator.field.FieldDataFetcher_InputAndArgAware;
 import graphql.java.generator.field.reflect.FieldDataFetcher_Reflection;
 import graphql.java.generator.field.reflect.FieldDefaultValue_Reflection;
 import graphql.java.generator.field.reflect.FieldDeprecation_Reflection;

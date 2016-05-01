@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.type.InterfacesStrategy;
+import graphql.java.generator.type.strategies.InterfacesStrategy;
 import graphql.schema.GraphQLInterfaceType;
 
 public class Interfaces_Reflection

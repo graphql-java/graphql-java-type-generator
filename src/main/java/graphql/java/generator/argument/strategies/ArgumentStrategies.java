@@ -1,7 +1,8 @@
-package graphql.java.generator.argument;
+package graphql.java.generator.argument.strategies;
 
 import java.util.HashMap;
 
+import graphql.java.generator.argument.ArgumentName_Simple;
 import graphql.java.generator.argument.reflection.ArgumentDefaultValue_Reflection;
 import graphql.java.generator.argument.reflection.ArgumentDescription_ReflectionAutogen;
 import graphql.java.generator.argument.reflection.ArgumentObjects_ReflectionAndParanamer;

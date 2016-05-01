@@ -1,6 +1,6 @@
 package graphql.java.generator.argument.reflection;
 
-import graphql.java.generator.argument.ArgumentDescriptionStrategy;
+import graphql.java.generator.argument.strategies.ArgumentDescriptionStrategy;
 
 public class ArgumentDescription_ReflectionAutogen implements ArgumentDescriptionStrategy {
     

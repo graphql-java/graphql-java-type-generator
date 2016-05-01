@@ -4,7 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import graphql.java.generator.field.FieldDeprecationStrategy;
+import graphql.java.generator.field.strategies.FieldDeprecationStrategy;
 
 public class FieldDeprecation_Reflection implements FieldDeprecationStrategy {
     

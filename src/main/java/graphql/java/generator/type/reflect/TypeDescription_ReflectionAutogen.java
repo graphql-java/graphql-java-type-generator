@@ -1,6 +1,6 @@
 package graphql.java.generator.type.reflect;
 
-import graphql.java.generator.type.TypeDescriptionStrategy;
+import graphql.java.generator.type.strategies.TypeDescriptionStrategy;
 
 public class TypeDescription_ReflectionAutogen implements TypeDescriptionStrategy {
 

@@ -1,4 +1,4 @@
-package graphql.java.generator.field;
+package graphql.java.generator.field.strategies;
 
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.strategies.Strategy;

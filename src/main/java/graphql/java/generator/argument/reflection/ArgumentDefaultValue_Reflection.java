@@ -1,6 +1,6 @@
 package graphql.java.generator.argument.reflection;
 
-import graphql.java.generator.argument.ArgumentDefaultValueStrategy;
+import graphql.java.generator.argument.strategies.ArgumentDefaultValueStrategy;
 
 public class ArgumentDefaultValue_Reflection implements ArgumentDefaultValueStrategy {
     

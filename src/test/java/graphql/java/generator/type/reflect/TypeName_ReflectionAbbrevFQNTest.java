@@ -1,7 +1,7 @@
 package graphql.java.generator.type.reflect;
 
 import graphql.java.generator.ClassWithLists;
-import graphql.java.generator.type.TypeNameStrategy;
+import graphql.java.generator.type.strategies.TypeNameStrategy;
 
 import org.junit.Test;
 

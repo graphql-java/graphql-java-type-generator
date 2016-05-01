@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import graphql.java.generator.field.FieldObjectsStrategy;
+import graphql.java.generator.field.strategies.FieldObjectsStrategy;
 
 /**
  * A reflection based, java Method+Field way of generating data

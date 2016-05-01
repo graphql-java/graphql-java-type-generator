@@ -14,6 +14,7 @@ import graphql.java.generator.BuildContext;
 import graphql.java.generator.BuildContextAware;
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.UnsharableBuildContextStorer;
+import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
@@ -43,7 +44,7 @@ public class TypeGenerator
     
     public TypeGenerator(TypeStrategies strategies) {
         this.setStrategies(strategies);
-        this.typeRepository = strategies.getTypeRepository();
+        this.setTypeRepository(strategies.getTypeRepository());
     }
     
     /**
@@ -54,7 +55,7 @@ public class TypeGenerator
      */
     @Override
     public final GraphQLOutputType getOutputType(Object object) {
-        return (GraphQLOutputType) getType(object, null, TypeKind.OBJECT);
+        return (GraphQLOutputType) getParameterizedType(object, null, TypeKind.OBJECT);
     }
     
     /**
@@ -68,7 +69,7 @@ public class TypeGenerator
      */
     @Override
     public final GraphQLInterfaceType getInterfaceType(Object object) {
-        return (GraphQLInterfaceType) getType(object, null, TypeKind.INTERFACE);
+        return (GraphQLInterfaceType) getParameterizedType(object, null, TypeKind.INTERFACE);
     }
 
     /**
@@ -78,17 +79,24 @@ public class TypeGenerator
      */
     @Override
     public final GraphQLInputType getInputType(Object object) {
-        return (GraphQLInputType) getType(object, null, TypeKind.INPUT_OBJECT);
+        return (GraphQLInputType) getParameterizedType(object, null, TypeKind.INPUT_OBJECT);
     }
     
     
     
     @Override
-    public final GraphQLType getParameterizedType(Object object,
+    public GraphQLType getParameterizedType(Object object,
             ParameterizedType genericType, TypeKind typeKind) {
         return getType(object, genericType, typeKind);
     }
     
+    /**
+     * An internal, unchanging impl.
+     * @param object
+     * @param genericType
+     * @param typeKind
+     * @return
+     */
     protected final GraphQLType getType(Object object,
             ParameterizedType genericType, TypeKind typeKind) {
         logger.debug("{} object is [{}]", typeKind, object);
@@ -128,7 +136,7 @@ public class TypeGenerator
         }
         
         
-        GraphQLType prevType = typeRepository.getGeneratedType(typeName, typeKind);
+        GraphQLType prevType = getTypeRepository().getGeneratedType(typeName, typeKind);
         if (prevType != null) {
             return prevType;
         }
@@ -137,8 +145,8 @@ public class TypeGenerator
         typesBeingBuilt.add(typeName);
         try {
             GraphQLType type = generateType(object, typeKind);
-            if (typeRepository != null) {
-                typeRepository.registerType(typeName, type, typeKind);
+            if (getTypeRepository() != null) {
+                getTypeRepository().registerType(typeName, type, typeKind);
             }
             return type;
         }
@@ -298,5 +306,13 @@ public class TypeGenerator
 
     protected void setStrategies(TypeStrategies strategies) {
         this.strategies = strategies;
+    }
+
+    protected TypeRepository getTypeRepository() {
+        return typeRepository;
+    }
+
+    protected void setTypeRepository(TypeRepository typeRepository) {
+        this.typeRepository = typeRepository;
     }
 }

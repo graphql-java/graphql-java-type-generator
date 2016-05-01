@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.type.TypeWrapperStrategy;
+import graphql.java.generator.type.strategies.TypeWrapperStrategy;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLType;
 

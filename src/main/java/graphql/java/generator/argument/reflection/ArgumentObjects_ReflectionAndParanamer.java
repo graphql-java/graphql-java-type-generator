@@ -8,7 +8,7 @@ import com.thoughtworks.paranamer.CachingParanamer;
 import com.thoughtworks.paranamer.Paranamer;
 
 import graphql.java.generator.argument.ArgContainer;
-import graphql.java.generator.argument.ArgumentObjectsStrategy;
+import graphql.java.generator.argument.strategies.ArgumentObjectsStrategy;
 
 public class ArgumentObjects_ReflectionAndParanamer
         implements ArgumentObjectsStrategy {

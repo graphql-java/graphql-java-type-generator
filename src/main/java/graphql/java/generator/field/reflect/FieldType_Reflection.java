@@ -7,8 +7,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
+import graphql.java.generator.field.strategies.FieldTypeStrategy;
 import graphql.introspection.Introspection.TypeKind;
-import graphql.java.generator.field.FieldTypeStrategy;
 import graphql.schema.GraphQLType;
 
 public class FieldType_Reflection

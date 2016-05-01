@@ -4,7 +4,7 @@ import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.datafetcher.ArgumentExtractingDataFetcher;
 import graphql.java.generator.datafetcher.GraphQLInputAwareDataFetcher;
 import graphql.java.generator.datafetcher.MethodInvokingDataFetcher;
-import graphql.java.generator.field.FieldDataFetcherStrategy;
+import graphql.java.generator.field.strategies.FieldDataFetcherStrategy;
 import graphql.schema.FieldDataFetcher;
 import graphql.schema.GraphQLArgument;
 

@@ -1,9 +1,10 @@
-package graphql.java.generator.type;
+package graphql.java.generator.type.strategies;
 
 import java.util.HashMap;
 
 import graphql.java.generator.strategies.AbstractStrategiesContainer;
 import graphql.java.generator.strategies.Strategy;
+import graphql.java.generator.type.TypeRepository;
 import graphql.java.generator.type.reflect.DefaultType_ReflectionScalarsLookup;
 import graphql.java.generator.type.reflect.EnumValues_Reflection;
 import graphql.java.generator.type.reflect.Interfaces_Reflection;

@@ -3,7 +3,7 @@ package graphql.java.generator.type.reflect;
 import java.util.ArrayList;
 import java.util.List;
 
-import graphql.java.generator.type.EnumValuesStrategy;
+import graphql.java.generator.type.strategies.EnumValuesStrategy;
 import graphql.schema.GraphQLEnumValueDefinition;
 
 public class EnumValues_Reflection implements EnumValuesStrategy {

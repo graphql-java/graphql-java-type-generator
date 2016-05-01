@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.UnsharableBuildContextStorer;
+import graphql.java.generator.field.strategies.FieldStrategies;
 import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLArgument;
 import graphql.schema.GraphQLFieldDefinition;

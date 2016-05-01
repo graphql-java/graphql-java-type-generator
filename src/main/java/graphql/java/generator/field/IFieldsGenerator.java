@@ -2,6 +2,7 @@ package graphql.java.generator.field;
 
 import java.util.List;
 
+import graphql.java.generator.field.strategies.FieldStrategies;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
 

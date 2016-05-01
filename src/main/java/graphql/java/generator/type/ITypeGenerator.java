@@ -3,6 +3,7 @@ package graphql.java.generator.type;
 import java.lang.reflect.ParameterizedType;
 
 import graphql.introspection.Introspection.TypeKind;
+import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLOutputType;
