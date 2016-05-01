@@ -1,8 +1,5 @@
 package graphql.java.generator.type;
 
-import static graphql.schema.GraphQLObjectType.newObject;
-import static graphql.schema.GraphQLEnumType.newEnum;
-
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Set;
@@ -19,10 +16,8 @@ import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
-import graphql.schema.GraphQLInputObjectType;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
-import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
 import graphql.schema.GraphQLTypeReference;
@@ -30,11 +25,13 @@ import graphql.schema.TypeResolver;
 
 /**
  * Given any object, decide how you wish the GraphQL type to be generated.
+ * This class defines the implementation contract, and further TypeGenerators
+ * must be built off of this, using {@link #getType(Object, ParameterizedType, TypeKind)}
  * Not yet certified with arrays.
  * @author dwinsor
  *
  */
-public class TypeGenerator
+public abstract class TypeGenerator
         extends UnsharableBuildContextStorer
         implements ITypeGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
@@ -168,79 +165,18 @@ public class TypeGenerator
             return generateInterfaceType(object);
         case INPUT_OBJECT:
             return generateInputType(object);
+        case ENUM:
+            return generateEnumType(object);
         default:
             return null;
         }
     }
     
-    protected GraphQLOutputType generateOutputType(Object object) {
-        String typeName = getGraphQLTypeNameOrIdentityCode(object);
-        
-        GraphQLEnumType enumType = buildEnumType(object, typeName);
-        if (enumType != null) {
-            return enumType;
-        }
-        
-        GraphQLObjectType.Builder builder = newObject()
-                .name(typeName)
-                .fields(getOutputFieldDefinitions(object))
-                .description(getTypeDescription(object));
-        
-        GraphQLInterfaceType[] interfaces = getInterfaces(object);
-        if (interfaces != null) {
-            builder.withInterfaces(interfaces);
-        }
-        return builder.build();
-    }
     
-    protected GraphQLInterfaceType generateInterfaceType(Object object) {
-        String name = getGraphQLTypeNameOrIdentityCode(object);
-        List<GraphQLFieldDefinition> fieldDefinitions = getOutputFieldDefinitions(object);
-        TypeResolver typeResolver = getTypeResolver(object);
-        String description = getTypeDescription(object);
-        if (name == null || fieldDefinitions == null || typeResolver == null) {
-            return null;
-        }
-        GraphQLInterfaceType.Builder builder = GraphQLInterfaceType.newInterface()
-                .description(description)
-                .fields(fieldDefinitions)
-                .name(name)
-                .typeResolver(typeResolver);
-        return builder.build();
-    }
-    
-    protected GraphQLInputType generateInputType(Object object) {
-        String typeName = getGraphQLTypeNameOrIdentityCode(object);
-        
-        //An enum is a special case in both java and graphql
-        GraphQLEnumType enumType = buildEnumType(object, typeName);
-        if (enumType != null) {
-            return enumType;
-        }
-        
-        GraphQLInputObjectType.Builder builder = new GraphQLInputObjectType.Builder();
-        builder.name(typeName);
-        builder.fields(getInputFieldDefinitions(object));
-        builder.description(getTypeDescription(object));
-        return builder.build();
-    }
-
-    protected GraphQLEnumType buildEnumType(Object object, String typeName) {
-        List<GraphQLEnumValueDefinition> enumValues = getEnumValues(object);
-        if (enumValues == null) {
-            return null;
-        }
-        GraphQLEnumType.Builder builder = newEnum();
-        builder.name(typeName);
-        builder.description(getTypeDescription(object));
-        for (GraphQLEnumValueDefinition value : enumValues) {
-            builder.value(value.getName(), value.getValue(), value.getDescription());
-        }
-        return builder.build();
-    }
-
-    
-    
+    protected abstract GraphQLOutputType generateOutputType(Object object);
+    protected abstract GraphQLInterfaceType generateInterfaceType(Object object);
+    protected abstract GraphQLInputType generateInputType(Object object);
+    protected abstract GraphQLEnumType generateEnumType(Object object);
     
     
     protected List<GraphQLFieldDefinition> getOutputFieldDefinitions(Object object) {

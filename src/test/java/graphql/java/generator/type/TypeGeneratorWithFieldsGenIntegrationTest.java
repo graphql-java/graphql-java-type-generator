@@ -51,7 +51,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     BuildContext testContext;
     final TypeGenerator defaultTypeGenerator = 
-            new TypeGenerator(new TypeStrategies.Builder()
+            new FullTypeGenerator(new TypeStrategies.Builder()
                     .usingTypeRepository(BuildContext.defaultTypeRepository)
                     .build());
     final ArgumentsGenerator defaultArgumentsGenerator = 
