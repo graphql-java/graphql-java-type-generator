@@ -39,7 +39,7 @@ public class ArgumentStrategies extends AbstractStrategiesContainer {
                     put(ArgumentNameStrategy.class, new ArgumentName_Simple());
                     put(ArgumentObjectsStrategy.class, new ArgumentObjects_ReflectionAndParanamer());
                     put(ArgumentTypeStrategy.class, new ArgumentType_Reflection());
-                }}; 
+                }};
         
         public Builder argumentObjectsStrategy(ArgumentObjectsStrategy argumentObjectsStrategy) {
             strategies.put(ArgumentObjectsStrategy.class, argumentObjectsStrategy);

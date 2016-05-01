@@ -1,9 +1,11 @@
 package graphql.java.generator;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.argument.ArgumentStrategies;
 import graphql.java.generator.argument.ArgumentsGenerator;
 import graphql.java.generator.argument.IArgumentsGenerator;
@@ -18,6 +20,7 @@ import graphql.java.generator.type.TypeStrategies;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLType;
 
 public class BuildContext implements ITypeGenerator, BuildContextAware {
     public static final TypeRepository defaultTypeRepository =
@@ -105,6 +108,11 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
         return getTypeGeneratorStrategy().getInputType(object);
     }
     
+    @Override
+    public GraphQLType getParameterizedType(Object object, ParameterizedType type, TypeKind typeKind) {
+        return getTypeGeneratorStrategy().getParameterizedType(object, type, typeKind);
+    }
+
     @Override
     public TypeStrategies getStrategies() {
         return getTypeGeneratorStrategy().getStrategies();

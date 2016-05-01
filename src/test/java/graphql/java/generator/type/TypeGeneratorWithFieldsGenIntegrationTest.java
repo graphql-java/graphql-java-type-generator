@@ -150,15 +150,24 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     }
     
     @Test
-    public void testList() {
-        testListOrArray("testList", new ClassWithLists(), ClassWithLists.class);
+    public void testRawList() {
+        //TODO test getType(List<Integer>)
+    }
+    @Test
+    public void testRawArray() {
+        //TODO test getType(Integer[])
+    }
+    
+    @Test
+    public void testClassWithList() {
+        testClassWithListOrArray("testClassWithList", new ClassWithLists(), ClassWithLists.class);
     }
     @Ignore("Need to fix this with arrays as lists")
     @Test
-    public void testArray() {
-        testListOrArray("testArray", new ClassWithRawArrays(), ClassWithRawArrays.class);
+    public void testClassWithArray() {
+        testClassWithListOrArray("testClassWithArray", new ClassWithRawArrays(), ClassWithRawArrays.class);
     }
-    public void testListOrArray(String debug, Object testObject, Class<?> clazzUnderTest) {
+    public void testClassWithListOrArray(String debug, Object testObject, Class<?> clazzUnderTest) {
         logger.debug("{}", debug);
         Object testType = testContext.getOutputType(clazzUnderTest);
         Assert.assertThat(testType, instanceOf(GraphQLOutputType.class));

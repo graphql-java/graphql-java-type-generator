@@ -3,6 +3,7 @@ package graphql.java.generator.type;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLEnumType.newEnum;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
 import graphql.schema.GraphQLTypeReference;
+import graphql.schema.TypeResolver;
 
 /**
  * Given any object, decide how you wish the GraphQL type to be generated.
@@ -52,20 +54,21 @@ public class TypeGenerator
      */
     @Override
     public final GraphQLOutputType getOutputType(Object object) {
-        logger.debug("output object is [{}]", object);
-        //short circuit if it's a primitive type or some other user defined default
-        GraphQLOutputType defaultType = getDefaultOutputType(object);
-        if (defaultType != null) {
-            logger.debug("output defaultType is [{}]", defaultType);
-            return defaultType;
-        }
-        
-        return (GraphQLOutputType) getType(object, TypeKind.OBJECT);
+        return (GraphQLOutputType) getType(object, null, TypeKind.OBJECT);
     }
     
+    /**
+     * @param object A representative "object" from which to construct
+     * a {@link GraphQLInterfaceType}, the exact type of which is contextual,
+     * but MUST represent a java interface, NOT an object or class with an interface.
+     * Will be stored internally as a {@link GraphQLOutputType}, so its name
+     * must not clash with any GraphQLOutputType.
+     * 
+     * @return
+     */
     @Override
-    public GraphQLInterfaceType getInterfaceType(Object object) {
-        return (GraphQLInterfaceType) getType(object, TypeKind.INTERFACE);
+    public final GraphQLInterfaceType getInterfaceType(Object object) {
+        return (GraphQLInterfaceType) getType(object, null, TypeKind.INTERFACE);
     }
 
     /**
@@ -74,26 +77,42 @@ public class TypeGenerator
      * @return
      */
     @Override
-    public GraphQLInputType getInputType(Object object) {
-        logger.debug("input object is [{}]", object);
+    public final GraphQLInputType getInputType(Object object) {
+        return (GraphQLInputType) getType(object, null, TypeKind.INPUT_OBJECT);
+    }
+    
+    
+    
+    @Override
+    public final GraphQLType getParameterizedType(Object object,
+            ParameterizedType genericType, TypeKind typeKind) {
+        return getType(object, genericType, typeKind);
+    }
+    
+    protected final GraphQLType getType(Object object,
+            ParameterizedType genericType, TypeKind typeKind) {
+        logger.debug("{} object is [{}]", typeKind, object);
+        
         //short circuit if it's a primitive type or some other user defined default
-        GraphQLInputType defaultType = getDefaultInputType(object);
+        GraphQLType defaultType = getDefaultType(object, typeKind);
         if (defaultType != null) {
-            logger.debug("input defaultType is [{}]", defaultType);
             return defaultType;
         }
         
-        return (GraphQLInputType) getType(object, TypeKind.INPUT_OBJECT);
-    }
-    
-    protected GraphQLType getType(Object object, TypeKind typeKind) {
+        
+        GraphQLType wrappedType = getTypeWrapper(object, genericType, typeKind);
+        if (wrappedType != null) {
+            return wrappedType;
+        }
+        
+        
         String typeName = getGraphQLTypeName(object);
         if (typeName == null) {
             logger.debug("TypeName was null for object [{}]. "
                     + "Type will attempt to be built but not placed in the TypeRepository", object);
             return generateType(object, typeKind);
         }
-        logger.debug("TypeName for object [{}]", typeName);
+        
         
         //this check must come before generated*Types.get
         //necessary for synchronicity to avoid duplicate object creations
@@ -108,10 +127,12 @@ public class TypeGenerator
                     + "there is no GraphQLTypeReference");
         }
         
+        
         GraphQLType prevType = typeRepository.getGeneratedType(typeName, typeKind);
         if (prevType != null) {
             return prevType;
         }
+        
         
         typesBeingBuilt.add(typeName);
         try {
@@ -122,7 +143,7 @@ public class TypeGenerator
             return type;
         }
         catch (RuntimeException e) {
-            logger.warn("Failed to generate type named {}", typeName);
+            logger.warn("Failed to generate type named {} with kind {}", typeName, typeKind);
             logger.debug("Failed to generate type, exception is ", e);
             throw e;
         }
@@ -145,10 +166,7 @@ public class TypeGenerator
     }
     
     protected GraphQLOutputType generateOutputType(Object object) {
-        String typeName = getGraphQLTypeName(object);
-        if (typeName == null) {
-            typeName = "Object_" + String.valueOf(System.identityHashCode(object));
-        }
+        String typeName = getGraphQLTypeNameOrIdentityCode(object);
         
         GraphQLEnumType enumType = buildEnumType(object, typeName);
         if (enumType != null) {
@@ -168,18 +186,23 @@ public class TypeGenerator
     }
     
     protected GraphQLInterfaceType generateInterfaceType(Object object) {
-        String typeName = getGraphQLTypeName(object);
-        if (typeName == null) {
-            typeName = "Object_" + String.valueOf(System.identityHashCode(object));
+        String name = getGraphQLTypeNameOrIdentityCode(object);
+        List<GraphQLFieldDefinition> fieldDefinitions = getOutputFieldDefinitions(object);
+        TypeResolver typeResolver = getTypeResolver(object);
+        String description = getTypeDescription(object);
+        if (name == null || fieldDefinitions == null || typeResolver == null) {
+            return null;
         }
-        return getStrategies().getInterfacesStrategy().getFromJavaInterface(object);
+        GraphQLInterfaceType.Builder builder = GraphQLInterfaceType.newInterface()
+                .description(description)
+                .fields(fieldDefinitions)
+                .name(name)
+                .typeResolver(typeResolver);
+        return builder.build();
     }
     
     protected GraphQLInputType generateInputType(Object object) {
-        String typeName = getGraphQLTypeName(object);
-        if (typeName == null) {
-            typeName = "Object_" + String.valueOf(System.identityHashCode(object));
-        }
+        String typeName = getGraphQLTypeNameOrIdentityCode(object);
         
         //An enum is a special case in both java and graphql
         GraphQLEnumType enumType = buildEnumType(object, typeName);
@@ -208,6 +231,10 @@ public class TypeGenerator
         return builder.build();
     }
 
+    
+    
+    
+    
     protected List<GraphQLFieldDefinition> getOutputFieldDefinitions(Object object) {
         List<GraphQLFieldDefinition> definitions = 
                 getContext().getFieldsGeneratorStrategy()
@@ -222,14 +249,17 @@ public class TypeGenerator
         return definitions;
     }
     
-    protected GraphQLOutputType getDefaultOutputType(Object object) {
-        return getStrategies().getDefaultTypeStrategy().getDefaultOutputType(object);
+    protected GraphQLType getDefaultType(Object object, TypeKind typeKind) {
+        return getStrategies().getDefaultTypeStrategy().getDefaultType(object, typeKind);
     }
     
-    protected GraphQLInputType getDefaultInputType(Object object) {
-        return getStrategies().getDefaultTypeStrategy().getDefaultInputType(object);
+    protected String getGraphQLTypeNameOrIdentityCode(Object object) {
+        String typeName = getGraphQLTypeName(object);
+        if (typeName == null) {
+            typeName = "Object_" + String.valueOf(System.identityHashCode(object));
+        }
+        return typeName;
     }
-    
     protected String getGraphQLTypeName(Object object) {
         return getStrategies().getTypeNameStrategy().getTypeName(object);
     }
@@ -244,6 +274,14 @@ public class TypeGenerator
     
     protected GraphQLInterfaceType[] getInterfaces(Object object) {
         return getStrategies().getInterfacesStrategy().getInterfaces(object);
+    }
+
+    protected GraphQLType getTypeWrapper(Object object, ParameterizedType type, TypeKind typeKind) {
+        return getStrategies().getTypeWrapperStrategy().getWrapperAroundType(object, type, typeKind);
+    }
+    
+    protected TypeResolver getTypeResolver(Object object) {
+        return getStrategies().getTypeResolverStrategy().getTypeResolver(object);
     }
 
     

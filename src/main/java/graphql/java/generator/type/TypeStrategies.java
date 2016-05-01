@@ -9,6 +9,7 @@ import graphql.java.generator.type.reflect.EnumValues_Reflection;
 import graphql.java.generator.type.reflect.Interfaces_Reflection;
 import graphql.java.generator.type.reflect.TypeDescription_ReflectionAutogen;
 import graphql.java.generator.type.reflect.TypeName_ReflectionFQNReplaceDotWithChar;
+import graphql.java.generator.type.reflect.TypeWrapper_ReflectionList;
 import graphql.java.generator.type.resolver.TypeResolverStrategy_Caching;
 
 public class TypeStrategies extends AbstractStrategiesContainer {
@@ -36,6 +37,9 @@ public class TypeStrategies extends AbstractStrategiesContainer {
     public TypeResolverStrategy getTypeResolverStrategy() {
         return (TypeResolverStrategy) allStrategies.get(TypeResolverStrategy.class);
     }
+    public TypeWrapperStrategy getTypeWrapperStrategy() {
+        return (TypeWrapperStrategy) allStrategies.get(TypeWrapperStrategy.class);
+    }
     
     public static class Builder {
         @SuppressWarnings("serial")
@@ -47,7 +51,8 @@ public class TypeStrategies extends AbstractStrategiesContainer {
                     put(EnumValuesStrategy.class, new EnumValues_Reflection());
                     put(InterfacesStrategy.class, new Interfaces_Reflection());
                     put(TypeResolverStrategy.class, new TypeResolverStrategy_Caching());
-                }}; 
+                    put(TypeWrapperStrategy.class, new TypeWrapper_ReflectionList());
+                }};
         protected TypeRepository typeRepository;
         
         public Builder usingTypeRepository(TypeRepository typeRepository) {
@@ -82,6 +87,11 @@ public class TypeStrategies extends AbstractStrategiesContainer {
         
         public Builder typeResolverStrategy(TypeResolverStrategy typeResolverStrategy) {
             strategies.put(TypeResolverStrategy.class, typeResolverStrategy);
+            return this;
+        }
+        
+        public Builder typeWrapperStrategy(TypeWrapperStrategy typeWrapperStrategy) {
+            strategies.put(TypeWrapperStrategy.class, typeWrapperStrategy);
             return this;
         }
         

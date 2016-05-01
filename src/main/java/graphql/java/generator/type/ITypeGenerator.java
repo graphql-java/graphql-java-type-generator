@@ -1,8 +1,12 @@
 package graphql.java.generator.type;
 
+import java.lang.reflect.ParameterizedType;
+
+import graphql.introspection.Introspection.TypeKind;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLType;
 
 
 public interface ITypeGenerator {
@@ -29,5 +33,7 @@ public interface ITypeGenerator {
      * @return
      */
     GraphQLInterfaceType getInterfaceType(Object object);
+
+    GraphQLType getParameterizedType(Object object, ParameterizedType type, TypeKind typeKind);
     
 }

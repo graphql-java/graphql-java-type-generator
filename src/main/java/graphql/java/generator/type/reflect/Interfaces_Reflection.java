@@ -1,14 +1,11 @@
 package graphql.java.generator.type.reflect;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.type.InterfacesStrategy;
-import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInterfaceType;
-import graphql.schema.TypeResolver;
 
 public class Interfaces_Reflection
         extends UnsharableBuildContextStorer
@@ -28,16 +25,6 @@ public class Interfaces_Reflection
         return null;
     }
 
-    @Override
-    public GraphQLInterfaceType getFromJavaInterface(Object object) {
-        if (object instanceof Class<?>) {
-            if (((Class<?>) object).isInterface()) {
-                return generateInterface((Class<?>) object);
-            }
-        }
-        return null;
-    }
-
     protected void getInterfaces(
             final Map<Class<?>, GraphQLInterfaceType> interfaceMap,
             final Class<?> clazz) {
@@ -46,7 +33,7 @@ public class Interfaces_Reflection
             if (interfaceMap.containsKey(intf)) {
                 continue;
             }
-            GraphQLInterfaceType iType = generateInterface(intf);
+            GraphQLInterfaceType iType = getContext().getInterfaceType(intf);
             if (iType != null) {
                 interfaceMap.put(intf, iType);
             }
@@ -56,21 +43,5 @@ public class Interfaces_Reflection
         if (superClazz != null && superClazz != Object.class) {
             getInterfaces(interfaceMap, superClazz);
         }
-    }
-
-    protected GraphQLInterfaceType generateInterface(Class<?> intf) {
-        String name = getContext().getTypeGeneratorStrategy().getStrategies().getTypeNameStrategy().getTypeName(intf);
-        List<GraphQLFieldDefinition> fieldDefinitions = getContext().getFieldsGeneratorStrategy().getOutputFields(intf);
-        TypeResolver typeResolver = getContext().getTypeGeneratorStrategy().getStrategies().getTypeResolverStrategy().getTypeResolver(intf);
-        String description = getContext().getTypeGeneratorStrategy().getStrategies().getTypeDescriptionStrategy().getTypeDescription(intf);
-        if (name == null || fieldDefinitions == null || typeResolver == null) {
-            return null;
-        }
-        GraphQLInterfaceType.Builder builder = GraphQLInterfaceType.newInterface()
-                .description(description)
-                .fields(fieldDefinitions)
-                .name(name)
-                .typeResolver(typeResolver);
-        return builder.build();
     }
 }

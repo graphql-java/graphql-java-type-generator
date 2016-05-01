@@ -9,7 +9,7 @@ public class DefaultTypes {
             .description("Default Type for java.lang.Object")
             .build();
 
-    public static GraphQLObjectType getDefaultType(Class<?> clazz) {
+    public static GraphQLObjectType getDefaultObjectType(Class<?> clazz) {
         if (Object.class.equals(clazz)) {
             return emptyJavaObject;
         }

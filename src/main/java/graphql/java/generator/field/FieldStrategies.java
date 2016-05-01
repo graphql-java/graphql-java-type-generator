@@ -53,7 +53,7 @@ public class FieldStrategies extends AbstractStrategiesContainer {
                     put(FieldDescriptionStrategy.class, new FieldDescription_ReflectionAutogen());
                     put(FieldDefaultValueStrategy.class, new FieldDefaultValue_Reflection());
                     put(FieldDeprecationStrategy.class, new FieldDeprecation_Reflection());
-                }}; 
+                }};
 
         public Builder fieldObjectsStrategy(FieldObjectsStrategy fieldObjectsStrategy) {
             strategies.put(FieldObjectsStrategy.class, fieldObjectsStrategy);
