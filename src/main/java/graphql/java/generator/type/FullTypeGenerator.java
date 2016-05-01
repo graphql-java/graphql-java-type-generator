@@ -4,7 +4,6 @@ import static graphql.schema.GraphQLObjectType.newObject;
 import static graphql.schema.GraphQLEnumType.newEnum;
 
 import java.util.List;
-import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
@@ -14,7 +13,6 @@ import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
-import graphql.schema.GraphQLType;
 import graphql.schema.TypeResolver;
 
 /**

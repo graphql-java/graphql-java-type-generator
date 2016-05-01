@@ -27,6 +27,9 @@ import graphql.schema.TypeResolver;
  * Given any object, decide how you wish the GraphQL type to be generated.
  * This class defines the implementation contract, and further TypeGenerators
  * must be built off of this, using {@link #getType(Object, ParameterizedType, TypeKind)}
+ * Use {@link WrappingTypeGenerator} to create types from {@code List<?>}s, otherwise
+ * this generator will be happy to create an object based on List.class, which
+ * is not what you want.
  * Not yet certified with arrays.
  * @author dwinsor
  *
@@ -102,12 +105,6 @@ public abstract class TypeGenerator
         GraphQLType defaultType = getDefaultType(object, typeKind);
         if (defaultType != null) {
             return defaultType;
-        }
-        
-        
-        GraphQLType wrappedType = getTypeWrapper(object, genericType, typeKind);
-        if (wrappedType != null) {
-            return wrappedType;
         }
         
         
@@ -220,10 +217,6 @@ public abstract class TypeGenerator
         return getStrategies().getInterfacesStrategy().getInterfaces(object);
     }
 
-    protected GraphQLType getTypeWrapper(Object object, ParameterizedType type, TypeKind typeKind) {
-        return getStrategies().getTypeWrapperStrategy().getWrapperAroundType(object, type, typeKind);
-    }
-    
     protected TypeResolver getTypeResolver(Object object) {
         return getStrategies().getTypeResolverStrategy().getTypeResolver(object);
     }

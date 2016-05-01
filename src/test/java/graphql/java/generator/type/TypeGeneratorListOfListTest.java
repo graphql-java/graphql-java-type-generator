@@ -5,13 +5,20 @@ import graphql.GraphQL;
 import graphql.Scalars;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfList;
+import graphql.java.generator.ClassWithListOfListOfList;
+import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLObjectType;
+import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.GraphQLType;
 
 import static org.junit.Assert.assertThat;
 
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +42,44 @@ public class TypeGeneratorListOfListTest {
     @Before
     public void before() {
         BuildContext.defaultTypeRepository.clear();
+    }
+    
+    @Test
+    public void testGeneratedListOfList() {
+        logger.debug("testGeneratedListOfList");
+        Object objectType = generator.getOutputType(ClassWithListOfList.class);
+        Assert.assertThat(objectType, instanceOf(GraphQLObjectType.class));
+        Assert.assertThat(objectType, not(instanceOf(GraphQLList.class)));
+        GraphQLFieldDefinition field = ((GraphQLObjectType) objectType)
+                .getFieldDefinition("listOfListOfInts");
+        
+        Assert.assertThat(field, notNullValue());
+        GraphQLOutputType outputType = field.getType();
+        assertListOfListOfInt(outputType);
+    }
+    
+    @Test
+    public void testGeneratedListOfListOfList() {
+        logger.debug("testGeneratedListOfListOfList");
+        Object objectType = generator.getOutputType(ClassWithListOfListOfList.class);
+        Assert.assertThat(objectType, instanceOf(GraphQLObjectType.class));
+        Assert.assertThat(objectType, not(instanceOf(GraphQLList.class)));
+        GraphQLFieldDefinition field = ((GraphQLObjectType) objectType)
+                .getFieldDefinition("listOfListOfListOfInts");
+        
+        Assert.assertThat(field, notNullValue());
+        GraphQLOutputType listType = field.getType();
+        Assert.assertThat(listType, instanceOf(GraphQLList.class));
+        GraphQLType wrappedType = ((GraphQLList) listType).getWrappedType();
+        assertListOfListOfInt(wrappedType);
+    }
+    
+    public void assertListOfListOfInt(GraphQLType type) {
+        Assert.assertThat(type, instanceOf(GraphQLList.class));
+        GraphQLType wrappedType = ((GraphQLList) type).getWrappedType();
+        Assert.assertThat(wrappedType, instanceOf(GraphQLList.class));
+        GraphQLType integerType = ((GraphQLList) wrappedType).getWrappedType();
+        Assert.assertThat(integerType, instanceOf(GraphQLScalarType.class));
     }
     
     //@Test

@@ -17,6 +17,7 @@ import graphql.java.generator.type.ITypeGenerator;
 import graphql.java.generator.type.StaticTypeRepository;
 import graphql.java.generator.type.TypeGenerator;
 import graphql.java.generator.type.TypeRepository;
+import graphql.java.generator.type.WrappingTypeGenerator;
 import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
@@ -26,10 +27,10 @@ import graphql.schema.GraphQLType;
 public class BuildContext implements ITypeGenerator, BuildContextAware {
     public static final TypeRepository defaultTypeRepository =
             new StaticTypeRepository();
-    private static final TypeGenerator defaultTypeGenerator = 
-            new FullTypeGenerator(new TypeStrategies.Builder()
+    private static final TypeGenerator defaultTypeGenerator =
+            new WrappingTypeGenerator(new FullTypeGenerator(new TypeStrategies.Builder()
                     .usingTypeRepository(defaultTypeRepository)
-                    .build());
+                    .build()));
     private static final FieldsGenerator defaultFieldsGenerator = 
             new FieldsGenerator(new FieldStrategies.Builder()
                     .build());

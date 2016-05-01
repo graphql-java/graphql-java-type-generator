@@ -1,25 +1,33 @@
 package graphql.java.generator.type.strategies;
 
-import java.lang.reflect.ParameterizedType;
-
-import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.strategies.Strategy;
+import graphql.java.generator.type.TypeSpecContainer;
 import graphql.schema.GraphQLType;
 
 public interface TypeWrapperStrategy extends Strategy {
 
     /**
-     * If the given {@code object} is a representative "type"
-     * object that should be wrapped (e.g. class of {@code List<Integer>})
+     * If the given {@code interiorType} is a representative "type"
+     * object that should be wrapped (e.g. the {@code Integer} from {@code List<Integer>})
      * then return a GraphQL Wrapper around the generated GraphQLType
-     * (e.g. GraphQLList(GraphQLInt) ).
-     * Return null if no wrapper is applicable.
-     * @param object
-     * @param genericType A Type object representing the Generic arguments,
-     * if known from the signature of a method or field. Can be null.
-     * @param typeKind The kind to build, whether input, output, etc.
+     * (e.g. GraphQLList(interiorType) ).
+     * Return original object if no wrapper is applicable.
+     * @param interiorType
+     * @param originalObject
      * @return
      */
-    GraphQLType getWrapperAroundType(Object object, ParameterizedType genericType, TypeKind typeKind);
+    GraphQLType wrapType(
+            GraphQLType interiorType, TypeSpecContainer originalObject);
+    
+    /**
+     * If the given {@code originalObject} is a representative "type"
+     * object that should be wrapped (e.g. class of {@code List<Integer>})
+     * then return the interior type spec to build (e.g. class of {@code Integer})
+     * Return null if no wrapper is applicable.
+     * @param originalObject
+     * @return
+     */
+    TypeSpecContainer getInteriorObjectToGenerate(
+            TypeSpecContainer originalObject);
     
 }

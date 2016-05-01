@@ -50,15 +50,16 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
             TypeGeneratorWithFieldsGenIntegrationTest.class);
     
     BuildContext testContext;
-    final TypeGenerator defaultTypeGenerator = 
-            new FullTypeGenerator(new TypeStrategies.Builder()
-                    .usingTypeRepository(BuildContext.defaultTypeRepository)
-                    .build());
-    final ArgumentsGenerator defaultArgumentsGenerator = 
-            new ArgumentsGenerator(new ArgumentStrategies.Builder()
-                    .build());
     
     public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
+        final TypeGenerator defaultTypeGenerator = 
+                new WrappingTypeGenerator(new FullTypeGenerator(new TypeStrategies.Builder()
+                        .usingTypeRepository(BuildContext.defaultTypeRepository)
+                        .build()));
+        final ArgumentsGenerator defaultArgumentsGenerator = 
+                new ArgumentsGenerator(new ArgumentStrategies.Builder()
+                        .build());
+        
         testContext = new Builder()
                 .setTypeGeneratorStrategy(defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)

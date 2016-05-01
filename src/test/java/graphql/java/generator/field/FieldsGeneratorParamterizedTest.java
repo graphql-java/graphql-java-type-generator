@@ -15,6 +15,7 @@ import graphql.java.generator.field.reflect.FieldObjects_ReflectionClassMethods;
 import graphql.java.generator.field.strategies.FieldStrategies;
 import graphql.java.generator.type.FullTypeGenerator;
 import graphql.java.generator.type.TypeGenerator;
+import graphql.java.generator.type.WrappingTypeGenerator;
 import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLFieldDefinition;
 
@@ -40,17 +41,18 @@ public class FieldsGeneratorParamterizedTest {
     
     FieldsGenerator generator;
     BuildContext testContext;
-    final TypeGenerator defaultTypeGenerator = 
-            new FullTypeGenerator(new TypeStrategies.Builder()
-                    .usingTypeRepository(BuildContext.defaultTypeRepository)
-                    .build());
-    
-    final ArgumentsGenerator defaultArgumentsGenerator = 
-            new ArgumentsGenerator(new ArgumentStrategies.Builder()
-                    .build());
-
     public FieldsGeneratorParamterizedTest(FieldsGenerator fieldsGen) {
         generator = fieldsGen;
+        
+        final TypeGenerator defaultTypeGenerator = 
+                new WrappingTypeGenerator(new FullTypeGenerator(new TypeStrategies.Builder()
+                        .usingTypeRepository(BuildContext.defaultTypeRepository)
+                        .build()));
+        
+        final ArgumentsGenerator defaultArgumentsGenerator = 
+                new ArgumentsGenerator(new ArgumentStrategies.Builder()
+                        .build());
+
         testContext = new Builder()
                 .setTypeGeneratorStrategy(defaultTypeGenerator)
                 .setFieldsGeneratorStrategy(fieldsGen)
