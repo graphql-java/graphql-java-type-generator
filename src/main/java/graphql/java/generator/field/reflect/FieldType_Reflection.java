@@ -9,26 +9,12 @@ import java.util.List;
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.field.FieldTypeStrategy;
-import graphql.java.generator.type.ITypeGenerator;
-import graphql.schema.GraphQLInputType;
-import graphql.schema.GraphQLOutputType;
 import graphql.schema.GraphQLType;
 
 public class FieldType_Reflection
         extends UnsharableBuildContextStorer
         implements FieldTypeStrategy {
     @Override
-    public GraphQLOutputType getOutputTypeOfField(Object object) {
-        return (GraphQLOutputType) getTypeOfField(
-                object, TypeKind.OBJECT);
-    }
-    
-    @Override
-    public GraphQLInputType getInputTypeOfField(Object object) {
-        return (GraphQLInputType) getTypeOfField(
-                object, TypeKind.INPUT_OBJECT);
-    }
-    
     public GraphQLType getTypeOfField(
             Object object, TypeKind typeKind) {
         if (object instanceof Field) {
@@ -53,23 +39,14 @@ public class FieldType_Reflection
     protected GraphQLType getTypeOfFieldFromSignature(
             Class<?> typeClazz, Type genericType,
             String name, TypeKind typeKind) {
-        ITypeGenerator typeGen = getContext().getTypeGeneratorStrategy();
 
+        ParameterizedType pType = null;
         //attempt GraphQLList from types
         if (genericType instanceof ParameterizedType) {
-            ParameterizedType pType = (ParameterizedType) genericType;
-            GraphQLType type = typeGen.getParameterizedType(typeClazz, pType, typeKind);
-            if (type != null) {
-                return type;
-            }
+            pType = (ParameterizedType) genericType;
         }
 
-        if (TypeKind.OBJECT.equals(typeKind)) {
-            return typeGen.getOutputType(typeClazz);
-        }
-        else {
-            return typeGen.getInputType(typeClazz);
-        }
+        return getContext().getParameterizedType(typeClazz, pType, typeKind);
     }
     
     protected Class<?> getListGenericType(Class<?> typeClazz, Type genericType) {

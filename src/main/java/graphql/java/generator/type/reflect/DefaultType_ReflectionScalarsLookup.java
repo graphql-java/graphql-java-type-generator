@@ -21,9 +21,7 @@ public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy 
     }
 
     protected GraphQLOutputType getDefaultOutputType(Object object) {
-        if (object == null) {
-            return null;
-        }
+        if (object == null) return null;
         if (!(object instanceof Class<?>)) {
             object = object.getClass();
         }
@@ -32,9 +30,7 @@ public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy 
     }
     
     protected GraphQLScalarType getDefaultScalarType(Object object) {
-        if (object == null) {
-            return null;
-        }
+        if (object == null) return null;
         if (!(object instanceof Class<?>)) {
             object = object.getClass();
         }

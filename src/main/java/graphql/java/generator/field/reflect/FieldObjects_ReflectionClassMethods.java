@@ -21,8 +21,9 @@ public class FieldObjects_ReflectionClassMethods implements FieldObjectsStrategy
      */
     @Override
     public List<Object> getFieldRepresentativeObjects(Object object) {
+        if (object == null) return null;
         if (!(object instanceof Class<?>)) {
-            return null;
+            object = object.getClass();
         }
         Class<?> clazz = (Class<?>) object;
         List<Object> fieldObjects = new ArrayList<Object>();

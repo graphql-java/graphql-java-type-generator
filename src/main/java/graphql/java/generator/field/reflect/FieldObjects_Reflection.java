@@ -42,9 +42,11 @@ public class FieldObjects_Reflection implements FieldObjectsStrategy {
      */
     @Override
     public List<Object> getFieldRepresentativeObjects(Object object) {
+        if (object == null) return null;
         if (!(object instanceof Class<?>)) {
-            return null;
+            object = object.getClass();
         }
+        
         List<Object> fieldObjectsFromMethods
                 = methodStrategy.getFieldRepresentativeObjects(object);
         List<Object> fieldObjectsFromFields

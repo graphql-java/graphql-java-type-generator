@@ -11,6 +11,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.schema.DataFetcher;
@@ -19,6 +20,7 @@ import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLInputObjectField;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLType;
 
 /**
  * @author dwinsor
@@ -99,7 +101,8 @@ public class FieldsGenerator
     protected GraphQLFieldDefinition.Builder getOutputFieldDefinition(
             final Object object) {
         String fieldName = getFieldName(object);
-        GraphQLOutputType fieldType = getOutputTypeOfField(object);
+        GraphQLOutputType fieldType = (GraphQLOutputType)
+                getTypeOfField(object, TypeKind.OBJECT);
         if (fieldName == null || fieldType == null) {
             return null;
         }
@@ -136,7 +139,8 @@ public class FieldsGenerator
     protected GraphQLInputObjectField.Builder getInputFieldDefinition(
             final Object object) {
         String fieldName = getFieldName(object);
-        GraphQLInputType fieldType = getInputTypeOfField(object);
+        GraphQLInputType fieldType = (GraphQLInputType)
+                getTypeOfField(object, TypeKind.INPUT_OBJECT);
         if (fieldName == null || fieldType == null) {
             return null;
         }
@@ -158,12 +162,8 @@ public class FieldsGenerator
                 .getFieldRepresentativeObjects(object);
     }
     
-    protected GraphQLOutputType getOutputTypeOfField(final Object object) {
-        return getStrategies().getFieldTypeStrategy().getOutputTypeOfField(object);
-    }
-    
-    protected GraphQLInputType getInputTypeOfField(final Object object) {
-        return getStrategies().getFieldTypeStrategy().getInputTypeOfField(object);
+    protected GraphQLType getTypeOfField(final Object object, TypeKind typeKind) {
+        return getStrategies().getFieldTypeStrategy().getTypeOfField(object, typeKind);
     }
     
     protected Object getFieldFetcher(final Object object) {
