@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import graphql.java.generator.field.strategies.FieldNameStrategy;
+import graphql.java.generator.field.strategies.FieldName_LowerCase;
 import graphql.java.generator.field.strategies.FieldObjectsStrategy;
 import graphql.java.generator.type.reflect.ReflectionUtils;
 
@@ -14,23 +16,25 @@ import graphql.java.generator.type.reflect.ReflectionUtils;
  * {@link FieldObjects_ReflectionClassMethods} with {@link FieldObjects_ReflectionClassFields}
  * based upon the name given by {@link FieldName_Reflection}
  * where priority is given to methods.
+ * Unless given a different strategy, this will discount duplicate fields/methods with
+ * differing case. 
  * @author dwinsor
  *
  */
 public class FieldObjects_Reflection implements FieldObjectsStrategy {
     private final FieldObjects_ReflectionClassFields fieldStrategy;
     private final FieldObjects_ReflectionClassMethods methodStrategy;
-    private final FieldName_Reflection fieldNameStrategy;
+    private final FieldNameStrategy fieldNameStrategy;
     
     public FieldObjects_Reflection() {
         this(new FieldObjects_ReflectionClassFields(),
                 new FieldObjects_ReflectionClassMethods(),
-                new FieldName_Reflection());
+                new FieldName_LowerCase(new FieldName_Reflection()));
     }
     public FieldObjects_Reflection(
             final FieldObjects_ReflectionClassFields fieldStrategy,
             final FieldObjects_ReflectionClassMethods methodStrategy,
-            final FieldName_Reflection fieldNameStrategy) {
+            final FieldNameStrategy fieldNameStrategy) {
         this.fieldStrategy = fieldStrategy;
         this.methodStrategy = methodStrategy;
         this.fieldNameStrategy = fieldNameStrategy;
@@ -54,6 +58,8 @@ public class FieldObjects_Reflection implements FieldObjectsStrategy {
         Set<String> fieldNames = new HashSet<String>();
         if (fieldObjectsFromMethods != null) {
             for (Object method : fieldObjectsFromMethods) {
+                //duplicate names are ok here because methods have different signatures.
+                //duplicate names are a problem downstream.
                 fieldNames.add(fieldNameStrategy.getFieldName(method));
                 fieldObjectsOutput.add(method);
             }

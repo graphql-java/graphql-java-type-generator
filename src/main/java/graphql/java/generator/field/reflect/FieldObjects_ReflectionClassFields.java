@@ -31,6 +31,9 @@ public class FieldObjects_ReflectionClassFields implements FieldObjectsStrategy 
             Field[] fields = clazz.getDeclaredFields();
             for (int index = 0; index < fields.length; ++index) {
                 Field field = fields[index];
+                if (!field.isAccessible()) {
+                    continue;
+                }
                 if (field.isSynthetic()) {
                     //The compiler added this field.
                     continue;

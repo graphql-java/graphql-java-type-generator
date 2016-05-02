@@ -35,6 +35,10 @@ public class FieldInputArgumentTest {
         BuildContext.defaultTypeRepository.clear();
     }
     
+    public void testMultipleMethodsDifferingArguments() {
+        //TODO test get(), get(int), get(int, int) etc.
+    }
+    
     @Test
     public void testArgument() {
         logger.debug("testArgument");
