@@ -1,8 +1,11 @@
 package graphql.java.generator.argument.reflection;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.UnsharableBuildContextStorer;
+import graphql.java.generator.argument.ArgContainer;
 import graphql.java.generator.argument.strategies.ArgumentTypeStrategy;
 import graphql.schema.GraphQLInputType;
 
@@ -15,14 +18,17 @@ public class ArgumentType_Reflection
         implements ArgumentTypeStrategy {
     
     @Override
-    public GraphQLInputType getArgumentType(Object object) {
-        if (object instanceof Type) {
-            return getArgumentType((Type) object);
+    public GraphQLInputType getArgumentType(ArgContainer container) {
+        if (container == null) return null;
+        Object object = container.getRepresentativeObject();
+        if (object == null) return null;
+        
+        if (!(object instanceof ParameterizedType)) {
+            return getContext().getInputType(object);
         }
-        return null;
-    }
-    
-    protected GraphQLInputType getArgumentType(Type type) {
-        return getContext().getInputType(type);
+        return (GraphQLInputType) getContext().getParameterizedType(
+                object,
+                (ParameterizedType) object,
+                TypeKind.INPUT_OBJECT);
     }
 }

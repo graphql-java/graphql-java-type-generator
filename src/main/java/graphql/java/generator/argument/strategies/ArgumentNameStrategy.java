@@ -5,6 +5,6 @@ import graphql.java.generator.strategies.Strategy;
 
 public interface ArgumentNameStrategy extends Strategy {
 
-    String getArgumentName(ArgContainer object);
+    String getArgumentName(ArgContainer container);
     
 }

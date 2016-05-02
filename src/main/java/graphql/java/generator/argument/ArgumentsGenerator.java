@@ -46,13 +46,13 @@ public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerato
     
     protected GraphQLArgument.Builder getArgument(ArgContainer argObject) {
         String name = getStrategies().getArgumentNameStrategy().getArgumentName(argObject);
-        GraphQLInputType type = getStrategies().getArgumentTypeStrategy().getArgumentType(argObject.getRepresentativeObject());
+        GraphQLInputType type = getStrategies().getArgumentTypeStrategy().getArgumentType(argObject);
         if (name == null || type == null) {
             return null;
         }
         
-        String description = getStrategies().getArgumentDescriptionStrategy().getArgumentDescription(argObject.getRepresentativeObject());
-        Object defaultValue = getStrategies().getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject.getRepresentativeObject());
+        String description = getStrategies().getArgumentDescriptionStrategy().getArgumentDescription(argObject);
+        Object defaultValue = getStrategies().getArgumentDefaultValueStrategy().getArgumentDefaultValue(argObject);
         GraphQLArgument.Builder builder = GraphQLArgument.newArgument()
                 .name(name)
                 .type(type)

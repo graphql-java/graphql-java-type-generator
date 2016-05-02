@@ -1,6 +1,7 @@
 package graphql.java.generator.argument.reflection;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ArgumentObjects_ReflectionAndParanamer
 
     protected List<ArgContainer> getObjectsFromMethod(Method method) {
         List<ArgContainer> argObjects = new ArrayList<ArgContainer>();
-        Class<?>[] params = method.getParameterTypes();
+        Type[] params = method.getGenericParameterTypes();
         String[] paramNames = paranamer.lookupParameterNames(method, false);
         
         if (paramNames == null || params.length != paramNames.length) {
@@ -40,7 +41,7 @@ public class ArgumentObjects_ReflectionAndParanamer
         }
         
         for (int index = 0; index < params.length; ++index) {
-            Class<?> param = params[index];
+            Type param = params[index];
             String name = paramNames[index];
             argObjects.add(new ArgContainer(method, param, name, index));
         }

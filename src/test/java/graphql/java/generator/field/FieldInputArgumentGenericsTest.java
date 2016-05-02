@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings({"unchecked", "serial"})
-public class FieldInputArgumentTest {
+public class FieldInputArgumentGenericsTest {
     private static Logger logger = LoggerFactory.getLogger(
-            FieldInputArgumentTest.class);
+            FieldInputArgumentGenericsTest.class);
     
     ITypeGenerator testContext = BuildContext.defaultContext;
 
@@ -36,9 +36,9 @@ public class FieldInputArgumentTest {
     }
     
     @Test
-    public void testArgument() {
-        logger.debug("testArgument");
-        Object testType = testContext.getOutputType(ClassWithMethodsWithArguments.class);
+    public void testArgumentGenerics() {
+        logger.debug("testArgumentGenerics");
+        Object testType = testContext.getOutputType(ArgumentsWithGenerics.class);
         Assert.assertThat(testType, instanceOf(GraphQLOutputType.class));
         
         GraphQLObjectType queryType = newObject()
@@ -46,7 +46,7 @@ public class FieldInputArgumentTest {
                 .field(newFieldDefinition()
                         .type((GraphQLOutputType) testType)
                         .name("testObj")
-                        .staticValue(new ClassWithMethodsWithArguments())
+                        .staticValue(new ArgumentsWithGenerics())
                         .build())
                 .build();
         GraphQLSchema testSchema = GraphQLSchema.newSchema()
@@ -56,20 +56,18 @@ public class FieldInputArgumentTest {
         String queryString = 
         "{"
         + "  testObj {"
-        + "    number (number: 100)"
-        + "    number2Args (number: 20, ignored: false)"
-        + "    stringConcat (one: \"abc\", two: \"def\")"
+        + "    sum (ints: [1,2,3])"
         + "  }"
         + "}";
-        ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
+        ExecutionResult queryResult = new GraphQL(testSchema)
+                //.execute(TypeGeneratorTest.querySchema);
+                .execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testArgument resultMap is {}", TypeGeneratorTest.prettyPrint(resultMap));
+        logger.debug("testArgumentGenerics resultMap is {}", TypeGeneratorTest.prettyPrint(resultMap));
         assertThat(((Map<String, Object>)resultMap.get("testObj")),
                 equalTo((Map<String, Object>) new HashMap<String, Object>() {{
-                    put("number", 100);
-                    put("number2Args", 20);
-                    put("stringConcat", "abcdef");
+                    put("sum", 6);
                 }}));
     }
 }

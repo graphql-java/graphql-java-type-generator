@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
 import static org.hamcrest.CoreMatchers.*;
@@ -48,6 +47,10 @@ public class TypeGeneratorListOfListTest {
     public void testGeneratedListOfList() {
         logger.debug("testGeneratedListOfList");
         Object objectType = generator.getOutputType(ClassWithListOfList.class);
+        assertClassWithListOfList(objectType);
+    }
+    
+    public static void assertClassWithListOfList(Object objectType) {
         Assert.assertThat(objectType, instanceOf(GraphQLObjectType.class));
         Assert.assertThat(objectType, not(instanceOf(GraphQLList.class)));
         GraphQLFieldDefinition field = ((GraphQLObjectType) objectType)
@@ -74,7 +77,7 @@ public class TypeGeneratorListOfListTest {
         assertListOfListOfInt(wrappedType);
     }
     
-    public void assertListOfListOfInt(GraphQLType type) {
+    public static void assertListOfListOfInt(GraphQLType type) {
         Assert.assertThat(type, instanceOf(GraphQLList.class));
         GraphQLType wrappedType = ((GraphQLList) type).getWrappedType();
         Assert.assertThat(wrappedType, instanceOf(GraphQLList.class));
@@ -82,12 +85,9 @@ public class TypeGeneratorListOfListTest {
         Assert.assertThat(integerType, instanceOf(GraphQLScalarType.class));
     }
     
-    //@Test
+    @Test
     public void testCanonicalListOfList() {
         logger.debug("testCanonicalListOfList");
-        List<Integer> listOfInts = new ArrayList<Integer>() {{
-            add(0);
-        }};
         List<List<Integer>> listOfListOfInts = new ArrayList<List<Integer>>() {{
             add(new ArrayList<Integer>() {{
                 add(0);
@@ -97,9 +97,9 @@ public class TypeGeneratorListOfListTest {
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
                 .field(newFieldDefinition()
-                        .type(new GraphQLList(Scalars.GraphQLInt))
+                        .type(new GraphQLList(new GraphQLList(Scalars.GraphQLInt)))
                         .name("testObj")
-                        .staticValue(listOfInts)
+                        .staticValue(listOfListOfInts)
                         .build())
                 .build();
         GraphQLSchema listTestSchema = GraphQLSchema.newSchema()
@@ -107,19 +107,18 @@ public class TypeGeneratorListOfListTest {
                 .build();
         
         String queryString = 
-        "{"
-        + "  testObj "
-        + "  "
-        + "}";
+        "{" +
+        "  testObj" +
+        "}";
         ExecutionResult queryResult = new GraphQL(listTestSchema).execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testCanonicalListOfList resultMap {}", TypeGeneratorTest.prettyPrint(resultMap));
+        logger.debug("testCanonicalListOfList resultMap {}",
+                TypeGeneratorTest.prettyPrint(resultMap));
+        Object testObj = resultMap.get("testObj");
+        Assert.assertThat(testObj, instanceOf(List.class));
+        assertThat(((List<List<Integer>>) testObj),
+                equalTo(listOfListOfInts));
         
-        final ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> expectedQueryData = mapper
-                .convertValue(new ClassWithListOfList(), Map.class);
-        assertThat(((Map<String, Object>)resultMap.get("testObj")),
-                equalTo(expectedQueryData));
     }
 }

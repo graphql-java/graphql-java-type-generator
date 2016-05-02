@@ -211,7 +211,6 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                 equalTo(expectedQueryData));
     }
     
-    @Ignore("No idea what SHOULD happen here, what the canonical behaviour is")
     @Test
     public void testListOfList() {
         logger.debug("testListOfList");
@@ -223,7 +222,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
                 .field(newFieldDefinition()
                         .type((GraphQLOutputType) listType)
                         .name("testObj")
-                        .staticValue(new ClassWithLists())
+                        .staticValue(new ClassWithListOfList())
                         .build())
                 .build();
         GraphQLSchema listTestSchema = GraphQLSchema.newSchema()
@@ -233,21 +232,18 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
         String queryString = 
         "{"
         + "  testObj {"
-        + "    listOfListOfInts {"
-        + "      empty"
-        + "    }"
+        + "    listOfListOfInts"
         + "  }"
         + "}";
         ExecutionResult queryResult = new GraphQL(listTestSchema).execute(queryString);
-        //At this time, this query only works for "Method" strategy
-//        assertThat(queryResult.getErrors(), is(empty()));
-//        Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-//        
-//        final ObjectMapper mapper = new ObjectMapper();
-//        Map<String, Object> expectedQueryData = mapper
-//                .convertValue(new ClassWithListOfList(), Map.class);
-//        assertThat(((Map<String, Object>)resultMap.get("testObj")),
-//                equalTo(expectedQueryData));
+        assertThat(queryResult.getErrors(), is(empty()));
+        Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
+        logger.debug("testCanonicalListOfList resultMap {}",
+                TypeGeneratorTest.prettyPrint(resultMap));
+        Object testObj = resultMap.get("testObj");
+        Assert.assertThat(testObj, instanceOf(Map.class));
+        Object listObj = ((Map<String, Object>) testObj).get("listOfListOfInts");
+        Assert.assertThat(listObj, instanceOf(List.class));
     }
     
     
