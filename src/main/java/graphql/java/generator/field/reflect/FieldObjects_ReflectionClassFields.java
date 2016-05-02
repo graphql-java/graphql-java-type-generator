@@ -1,6 +1,7 @@
 package graphql.java.generator.field.reflect;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class FieldObjects_ReflectionClassFields implements FieldObjectsStrategy 
             Field[] fields = clazz.getDeclaredFields();
             for (int index = 0; index < fields.length; ++index) {
                 Field field = fields[index];
-                if (!field.isAccessible()) {
+                if (!Modifier.isPublic(field.getModifiers())) {
                     continue;
                 }
                 if (field.isSynthetic()) {

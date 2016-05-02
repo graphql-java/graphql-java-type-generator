@@ -10,6 +10,7 @@ import graphql.schema.GraphQLArgument;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -47,8 +48,8 @@ public class FieldDataFetcher_Reflection
             //fieldBuilder.dataFetcher(new PropertyDataFetcher(field.getName()));
         }
         else {
-            if (!field.isAccessible()) {
-                logger.debug("field [{}] is not accessible and has no getter", field);
+            if (!Modifier.isPublic(field.getModifiers())) {
+                logger.debug("field [{}] is not public and has no getter", field);
                 return null;
             }
             logger.debug("Direct field access Class [{}], field [{}], type [{}]",
