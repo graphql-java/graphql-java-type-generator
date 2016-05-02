@@ -21,20 +21,14 @@ public class DefaultType_ReflectionScalarsLookup implements DefaultTypeStrategy 
     }
 
     protected GraphQLOutputType getDefaultOutputType(Object object) {
-        if (object == null) return null;
-        if (!(object instanceof Class<?>)) {
-            object = object.getClass();
-        }
-        Class<?> clazz = (Class<?>) object;
+        Class<?> clazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (clazz == null) return null;
         return DefaultTypes.getDefaultObjectType(clazz);
     }
     
     protected GraphQLScalarType getDefaultScalarType(Object object) {
-        if (object == null) return null;
-        if (!(object instanceof Class<?>)) {
-            object = object.getClass();
-        }
-        Class<?> clazz = (Class<?>) object;
+        Class<?> clazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (clazz == null) return null;
         return Scalars.getScalarType(clazz);
     }
 }

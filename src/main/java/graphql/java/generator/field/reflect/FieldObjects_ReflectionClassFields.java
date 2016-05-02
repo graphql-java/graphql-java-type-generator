@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import graphql.java.generator.field.strategies.FieldObjectsStrategy;
+import graphql.java.generator.type.reflect.ReflectionUtils;
 
 /**
  * A reflection based, java Field centric class for generating data
@@ -22,11 +23,9 @@ public class FieldObjects_ReflectionClassFields implements FieldObjectsStrategy 
      */
     @Override
     public List<Object> getFieldRepresentativeObjects(Object object) {
-        if (object == null) return null;
-        if (!(object instanceof Class<?>)) {
-            object = object.getClass();
-        }
-        Class<?> clazz = (Class<?>) object;
+        Class<?> clazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (clazz == null) return null;
+
         List<Object> fieldObjects = new ArrayList<Object>();
         while (clazz != null && !clazz.isAssignableFrom(Object.class)) {
             Field[] fields = clazz.getDeclaredFields();

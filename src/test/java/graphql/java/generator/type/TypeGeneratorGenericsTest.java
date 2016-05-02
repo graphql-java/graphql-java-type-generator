@@ -4,6 +4,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfGenerics;
+import graphql.java.generator.ClassWithListOfGenericsWithBounds;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLObjectType;
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static graphql.schema.GraphQLFieldDefinition.newFieldDefinition;
 import static graphql.schema.GraphQLObjectType.newObject;
@@ -38,16 +41,16 @@ public class TypeGeneratorGenericsTest {
         BuildContext.defaultTypeRepository.clear();
     }
     
-    //@Test
-    public void testGeneratedListOfParamQuery() {
-        logger.debug("testGeneratedListOfParamQuery");
-        Object objectType = generator.getOutputType(ClassWithListOfGenerics.class);
+    @Test
+    public void testGenericsBoundsQuery() {
+        logger.debug("testGenericsBoundsQuery");
+        Object objectType = generator.getOutputType(ClassWithListOfGenericsWithBounds.class);
         GraphQLObjectType queryType = newObject()
                 .name("testQuery")
                 .field(newFieldDefinition()
                         .type((GraphQLOutputType) objectType)
                         .name("testObj")
-                        .staticValue(new ClassWithListOfGenerics())
+                        .staticValue(new ClassWithListOfGenericsWithBounds())
                         .build())
                 .build();
         GraphQLSchema testSchema = GraphQLSchema.newSchema()
@@ -57,29 +60,32 @@ public class TypeGeneratorGenericsTest {
         String queryString = 
         "{"
         + "  testObj {"
-        + "    listOfParamOfInts {"
-        + "      t"
+        + "    listOfParamOfII {"
+        + "      interfaceImpl {"
+        + "        parent"
+        + "        child"
+        + "      }"
         + "    }"
         + "  }"
         + "}";
-        ExecutionResult queryResult = new GraphQL(testSchema).execute(queryString);
+        ExecutionResult queryResult = new GraphQL(testSchema)
+                //.execute(TypeGeneratorTest.querySchema);
+                .execute(queryString);
         assertThat(queryResult.getErrors(), is(empty()));
         Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
-        logger.debug("testGeneratedListOfParamQuery results {}",
+        logger.debug("testGenericsBoundsQuery results {}",
                 TypeGeneratorTest.prettyPrint(resultMap));
-
-//        final ObjectMapper mapper = new ObjectMapper();
-//        final RecursiveClass data = mapper.convertValue(
-//                resultMap.get("testObj"), RecursiveClass.class);
-//        assertThat(data, equalTo(new RecursiveClass(2)));
-//        
-//        Map<String, Object> expectedQueryData = mapper
-//                .convertValue(new RecursiveClass(2), Map.class);
-//        assertThat(((Map<String, Object>)resultMap.get("testObj")),
-//                equalTo(expectedQueryData));
+        
+        final ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> expectedQueryData = mapper
+                .convertValue(new ClassWithListOfGenericsWithBounds(), Map.class);
+        logger.debug("testGenericsBoundsQuery expectedQueryData {}",
+                TypeGeneratorTest.prettyPrint(expectedQueryData));
+        assertThat(((Map<String, Object>)resultMap.get("testObj")),
+                equalTo(expectedQueryData));
     }
     
-    //@Test
+    @Test
     public void testGeneratedListOfParam() {
         logger.debug("testGeneratedListOfParam");
         Object objectType = generator.getOutputType(ClassWithListOfGenerics.class);

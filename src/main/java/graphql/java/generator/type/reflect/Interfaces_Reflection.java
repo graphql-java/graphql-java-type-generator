@@ -13,6 +13,7 @@ public class Interfaces_Reflection
     
     @Override
     public GraphQLInterfaceType[] getInterfaces(Object object) {
+        //TODO handle generics?
         if (object instanceof Class<?>) {
             if (((Class<?>) object).isInterface()) {
                 return null;

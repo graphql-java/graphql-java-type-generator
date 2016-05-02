@@ -10,13 +10,8 @@ public class EnumValues_Reflection implements EnumValuesStrategy {
     
     @Override
     public List<GraphQLEnumValueDefinition> getEnumValueDefinitions(Object object) {
-        if (object == null) {
-            return null;
-        }
-        if (!(object instanceof Class<?>)) {
-            object = object.getClass();
-        }
-        Class<?> clazz = (Class<?>) object;
+        Class<?> clazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (clazz == null) return null;
         if (!clazz.isEnum()) {
             return null;
         }

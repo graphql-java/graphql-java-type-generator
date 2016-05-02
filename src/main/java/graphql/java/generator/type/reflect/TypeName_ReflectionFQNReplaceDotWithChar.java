@@ -26,13 +26,8 @@ public class TypeName_ReflectionFQNReplaceDotWithChar  implements TypeNameStrate
     
     @Override
     public String getTypeName(Object object) {
-        if (object == null) {
-            return null;
-        }
-        if (!(object instanceof Class<?>)) {
-            object = object.getClass();
-        }
-        Class<?> clazz = (Class<?>) object;
+        Class<?> clazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (clazz == null) return null;
         String canonicalClassName = clazz.getCanonicalName();
         if (canonicalClassName == null) {
             logger.debug("Name was null for class [{}]. "

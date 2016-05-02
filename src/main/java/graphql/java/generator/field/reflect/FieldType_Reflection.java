@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.field.strategies.FieldTypeStrategy;
@@ -47,17 +46,5 @@ public class FieldType_Reflection
         }
 
         return getContext().getParameterizedType(typeClazz, pType, typeKind);
-    }
-    
-    protected Class<?> getListGenericType(Class<?> typeClazz, Type genericType) {
-        if (List.class.isAssignableFrom(typeClazz)) {
-            if (genericType instanceof ParameterizedType) {
-                Type listGenericType = ((ParameterizedType) genericType).getActualTypeArguments()[0];
-                if (listGenericType instanceof Class<?>) {
-                    return (Class<?>) listGenericType;
-                }
-            }
-        }
-        return null;
     }
 }

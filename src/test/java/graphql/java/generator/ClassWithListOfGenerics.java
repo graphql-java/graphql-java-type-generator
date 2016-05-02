@@ -13,4 +13,13 @@ public class ClassWithListOfGenerics {
     public List<ParameterizedClass<Integer>> getListOfParamOfInts() {
         return listOfParamOfInts;
     }
+    
+    public List<ParameterizedClass<InterfaceImpl>> listOfParamOfII = new ArrayList<ParameterizedClass<InterfaceImpl>>() {{
+        add(new ParameterizedClass<InterfaceImpl>() {{
+            setT(new InterfaceImpl());
+        }});
+    }};
+    public List<ParameterizedClass<InterfaceImpl>> getListOfParamOfII() {
+        return listOfParamOfII;
+    }
 }
