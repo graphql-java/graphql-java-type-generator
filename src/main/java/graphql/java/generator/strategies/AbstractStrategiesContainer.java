@@ -1,6 +1,5 @@
 package graphql.java.generator.strategies;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,7 +1,6 @@
 package graphql.java.generator.argument.reflection;
 
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.UnsharableBuildContextStorer;

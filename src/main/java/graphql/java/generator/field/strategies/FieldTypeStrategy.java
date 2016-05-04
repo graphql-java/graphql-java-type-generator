@@ -8,6 +8,7 @@ public interface FieldTypeStrategy extends Strategy {
     /**
      * 
      * @param object A representative "field" object, the exact type of which is contextual
+     * @param typeKind
      * @return
      */
     GraphQLType getTypeOfField(Object object, TypeKind typeKind);

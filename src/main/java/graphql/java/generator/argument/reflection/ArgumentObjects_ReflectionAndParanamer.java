@@ -12,7 +12,6 @@ import graphql.java.generator.argument.ArgContainer;
 import graphql.java.generator.argument.strategies.ArgumentObjectsStrategy;
 
 /**
- * TODO generics
  * @author dwinsor
  *
  */

@@ -1,12 +1,12 @@
 package graphql.java.generator.type.resolver;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
-import graphql.java.generator.type.resolver.TypeResolver_BuildContextAware;
 import graphql.java.generator.type.strategies.TypeResolverStrategy;
 import graphql.schema.TypeResolver;
 
 /**
- * Reuses 1 {@link TypeResolver_BuildContextAware} per {@link BuildContext}
+ * Reuses 1 {@linkplain graphql.java.generator.type.resolver.TypeResolver_BuildContextAware TypeResolver_BuildContextAware}
+ * per {@linkplain graphql.java.generator.BuildContext BuildContext}
  * since this TypeResolverStrategy_Caching itself is tied to only 1 BuildContext.
  * @author dwinsor
  *

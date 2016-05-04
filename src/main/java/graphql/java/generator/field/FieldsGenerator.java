@@ -95,8 +95,7 @@ public class FieldsGenerator
 
     /**
      * May return null should this field be disallowed
-     * @param field
-     * @param clazz
+     * @param object
      * @return
      */
     protected GraphQLFieldDefinition.Builder getOutputFieldDefinition(
@@ -133,8 +132,7 @@ public class FieldsGenerator
     
     /**
      * May return null should this field be disallowed
-     * @param field
-     * @param clazz
+     * @param object
      * @return
      */
     protected GraphQLInputObjectField.Builder getInputFieldDefinition(
