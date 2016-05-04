@@ -2,6 +2,7 @@ package graphql.java.generator.type;
 
 import graphql.Scalars;
 import graphql.java.generator.BuildContext;
+import graphql.java.generator.DefaultBuildContext;
 import graphql.schema.GraphQLScalarType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,14 +25,14 @@ public class TypeGeneratorScalarsTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorScalarsTest.class);
     
-    ITypeGenerator generator = BuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.defaultContext;
 
     private Class<?> clazz;
     private GraphQLScalarType expected;
     
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     public TypeGeneratorScalarsTest(Class<?> clazz, GraphQLScalarType expected) {

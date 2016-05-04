@@ -27,7 +27,7 @@ public class TypeGeneratorParameterizedTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorParameterizedTest.class);
     
-    ITypeGenerator generator = BuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.defaultContext;
 
     private Class<?> clazz;
     private String expectedName;
@@ -36,7 +36,7 @@ public class TypeGeneratorParameterizedTest {
     
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     public TypeGeneratorParameterizedTest(Class<?> clazz, String expectedName,
@@ -72,7 +72,7 @@ public class TypeGeneratorParameterizedTest {
         
         final int numRuns = 0;
         for (int x = 0; x < numRuns; ++x) {
-            BuildContext.defaultTypeRepository.clear();
+            DefaultBuildContext.defaultTypeRepository.clear();
             basicsOutput();
         }
         

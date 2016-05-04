@@ -28,11 +28,11 @@ public class FieldInputArgumentGenericsTest {
     private static Logger logger = LoggerFactory.getLogger(
             FieldInputArgumentGenericsTest.class);
     
-    ITypeGenerator testContext = BuildContext.defaultContext;
+    ITypeGenerator testContext = DefaultBuildContext.defaultContext;
 
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     @Test

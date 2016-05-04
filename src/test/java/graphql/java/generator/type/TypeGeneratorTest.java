@@ -3,6 +3,7 @@ package graphql.java.generator.type;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.java.generator.BuildContext;
+import graphql.java.generator.DefaultBuildContext;
 import graphql.java.generator.InterfaceChild;
 import graphql.java.generator.InterfaceImpl;
 import graphql.java.generator.InterfaceImplSecondary;
@@ -35,7 +36,7 @@ public class TypeGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorTest.class);
     
-    ITypeGenerator generator = BuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.defaultContext;
     
     public static String querySchema = ""
         + "query IntrospectionQuery {"
@@ -123,7 +124,7 @@ public class TypeGeneratorTest {
     
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     @Test

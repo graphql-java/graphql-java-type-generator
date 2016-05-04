@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import graphql.java.generator.BuildContext;
+import graphql.java.generator.DefaultBuildContext;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.argument.ArgumentsGenerator;
@@ -46,7 +47,7 @@ public class FieldsGeneratorParamterizedTest {
         
         final TypeGenerator defaultTypeGenerator = 
                 new WrappingTypeGenerator(new FullTypeGenerator(new TypeStrategies.Builder()
-                        .usingTypeRepository(BuildContext.defaultTypeRepository)
+                        .usingTypeRepository(DefaultBuildContext.defaultTypeRepository)
                         .build()));
         
         final ArgumentsGenerator defaultArgumentsGenerator = 
@@ -61,7 +62,7 @@ public class FieldsGeneratorParamterizedTest {
     }
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     @Parameters

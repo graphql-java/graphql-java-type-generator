@@ -10,6 +10,7 @@ import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfList;
 import graphql.java.generator.ClassWithLists;
 import graphql.java.generator.ClassWithRawArrays;
+import graphql.java.generator.DefaultBuildContext;
 import graphql.java.generator.RecursiveClass;
 import graphql.java.generator.BuildContext.Builder;
 import graphql.java.generator.argument.ArgumentsGenerator;
@@ -54,7 +55,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     public TypeGeneratorWithFieldsGenIntegrationTest(FieldsGenerator fieldsGen) {
         final TypeGenerator defaultTypeGenerator = 
                 new WrappingTypeGenerator(new FullTypeGenerator(new TypeStrategies.Builder()
-                        .usingTypeRepository(BuildContext.defaultTypeRepository)
+                        .usingTypeRepository(DefaultBuildContext.defaultTypeRepository)
                         .build()));
         final ArgumentsGenerator defaultArgumentsGenerator = 
                 new ArgumentsGenerator(new ArgumentStrategies.Builder()
@@ -69,7 +70,7 @@ public class TypeGeneratorWithFieldsGenIntegrationTest {
     
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     @Parameters

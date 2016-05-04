@@ -6,6 +6,7 @@ import graphql.Scalars;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfList;
 import graphql.java.generator.ClassWithListOfListOfList;
+import graphql.java.generator.DefaultBuildContext;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLObjectType;
@@ -36,11 +37,11 @@ public class TypeGeneratorListOfListTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorListOfListTest.class);
     
-    ITypeGenerator generator = BuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.defaultContext;
     
     @Before
     public void before() {
-        BuildContext.defaultTypeRepository.clear();
+        DefaultBuildContext.defaultTypeRepository.clear();
     }
     
     @Test
