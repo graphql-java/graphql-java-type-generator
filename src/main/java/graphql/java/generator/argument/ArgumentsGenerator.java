@@ -13,10 +13,10 @@ import graphql.schema.GraphQLInputType;
 
 public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerator {
     
-    private ArgumentStrategies strategies;
+    private final ArgumentStrategies strategies;
 
     public ArgumentsGenerator(ArgumentStrategies strategies) {
-        this.setStrategies(strategies);
+        this.strategies = strategies;
     }
 
     @Override
@@ -80,8 +80,4 @@ public class ArgumentsGenerator implements BuildContextAware, IArgumentsGenerato
     public ArgumentStrategies getStrategies() {
         return strategies;
     }
-
-    private void setStrategies(ArgumentStrategies strategies) {
-        this.strategies = strategies;
-    }    
 }

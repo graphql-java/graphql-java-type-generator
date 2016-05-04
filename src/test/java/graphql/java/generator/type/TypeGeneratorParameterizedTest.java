@@ -27,7 +27,7 @@ public class TypeGeneratorParameterizedTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorParameterizedTest.class);
     
-    ITypeGenerator generator = DefaultBuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.reflectionContext;
 
     private Class<?> clazz;
     private String expectedName;

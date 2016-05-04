@@ -25,7 +25,7 @@ public class TypeGeneratorScalarsTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorScalarsTest.class);
     
-    ITypeGenerator generator = DefaultBuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.reflectionContext;
 
     private Class<?> clazz;
     private GraphQLScalarType expected;

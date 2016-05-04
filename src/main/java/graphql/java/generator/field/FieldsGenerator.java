@@ -33,10 +33,10 @@ public class FieldsGenerator
     private static Logger logger = LoggerFactory.getLogger(
             FieldsGenerator.class);
     
-    private FieldStrategies strategies;
+    private final FieldStrategies strategies;
     
     public FieldsGenerator(FieldStrategies strategies) {
-        this.setStrategies(strategies);
+        this.strategies = strategies;
     }
     
     @Override
@@ -193,9 +193,5 @@ public class FieldsGenerator
     @Override
     public FieldStrategies getStrategies() {
         return strategies;
-    }
-
-    private void setStrategies(FieldStrategies strategies) {
-        this.strategies = strategies;
     }
 }

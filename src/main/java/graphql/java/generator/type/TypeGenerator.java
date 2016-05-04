@@ -39,12 +39,12 @@ public abstract class TypeGenerator
         implements ITypeGenerator, BuildContextAware {
     private static Logger logger = LoggerFactory.getLogger(TypeGenerator.class);
     
-    private TypeStrategies strategies;
-    private TypeRepository typeRepository;
+    private final TypeStrategies strategies;
+    private final TypeRepository typeRepository;
     
     public TypeGenerator(TypeStrategies strategies) {
-        this.setStrategies(strategies);
-        this.setTypeRepository(strategies.getTypeRepository());
+        this.strategies = strategies;
+        this.typeRepository = strategies.getTypeRepository();
     }
     
     /**
@@ -233,15 +233,7 @@ public abstract class TypeGenerator
         return strategies;
     }
 
-    protected void setStrategies(TypeStrategies strategies) {
-        this.strategies = strategies;
-    }
-
     protected TypeRepository getTypeRepository() {
         return typeRepository;
-    }
-
-    protected void setTypeRepository(TypeRepository typeRepository) {
-        this.typeRepository = typeRepository;
     }
 }

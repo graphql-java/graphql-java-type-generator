@@ -28,7 +28,7 @@ public class FieldInputArgumentTest {
     private static Logger logger = LoggerFactory.getLogger(
             FieldInputArgumentTest.class);
     
-    ITypeGenerator testContext = DefaultBuildContext.defaultContext;
+    ITypeGenerator testContext = DefaultBuildContext.reflectionContext;
 
     @Before
     public void before() {

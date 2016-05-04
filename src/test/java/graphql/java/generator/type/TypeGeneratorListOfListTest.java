@@ -37,7 +37,7 @@ public class TypeGeneratorListOfListTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorListOfListTest.class);
     
-    ITypeGenerator generator = DefaultBuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.reflectionContext;
     
     @Before
     public void before() {

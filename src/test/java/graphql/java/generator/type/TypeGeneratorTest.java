@@ -36,7 +36,7 @@ public class TypeGeneratorTest {
     private static Logger logger = LoggerFactory.getLogger(
             TypeGeneratorTest.class);
     
-    ITypeGenerator generator = DefaultBuildContext.defaultContext;
+    ITypeGenerator generator = DefaultBuildContext.reflectionContext;
     
     public static String querySchema = ""
         + "query IntrospectionQuery {"
