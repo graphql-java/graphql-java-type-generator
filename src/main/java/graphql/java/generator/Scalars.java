@@ -14,14 +14,12 @@ public class Scalars {
     
     private static final int BYTE_MAX = Byte.MAX_VALUE;
     private static final int BYTE_MIN = Byte.MIN_VALUE;
-    private static final int CHAR_MAX = Character.MAX_VALUE;
-    private static final int CHAR_MIN = Character.MIN_VALUE;
     private static final int SHORT_MAX = Short.MAX_VALUE;
     private static final int SHORT_MIN = Short.MIN_VALUE;
 
     public static GraphQLScalarType GraphQLBigInteger = new GraphQLScalarType("BigInteger", "Built-in java.math.BigInteger", new Coercing() {
         @Override
-        public Object serialize(Object input) {
+        public BigInteger serialize(Object input) {
             if (input instanceof BigInteger) {
                 return (BigInteger) input;
             } else if (input instanceof String) {
@@ -36,14 +34,14 @@ public class Scalars {
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public BigInteger parseValue(Object input) {
             return serialize(input);
         }
 
         @Override
-        public Object parseLiteral(Object input) {
+        public BigInteger parseLiteral(Object input) {
             if (input instanceof StringValue) {
-                return BigInteger.valueOf(Long.parseLong(((StringValue) input).getValue()));
+                return new BigInteger(((StringValue) input).getValue());
             } else if (input instanceof IntValue) {
                 return BigInteger.valueOf(((IntValue) input).getValue());
             }
@@ -53,11 +51,15 @@ public class Scalars {
 
     public static GraphQLScalarType GraphQLBigDecimal = new GraphQLScalarType("BigDecimal", "Built-in java.math.BigDecimal", new Coercing() {
         @Override
-        public Object serialize(Object input) {
+        public BigDecimal serialize(Object input) {
             if (input instanceof BigDecimal) {
                 return (BigDecimal) input;
             } else if (input instanceof String) {
                 return new BigDecimal((String) input);
+            } else if (input instanceof Float) {
+                return BigDecimal.valueOf((Float) input);
+            } else if (input instanceof Double) {
+                return BigDecimal.valueOf((Double) input);
             } else if (input instanceof Integer) {
                 return BigDecimal.valueOf((Integer) input);
             } else if (input instanceof Long) {
@@ -68,16 +70,16 @@ public class Scalars {
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public BigDecimal parseValue(Object input) {
             return serialize(input);
         }
 
         @Override
-        public Object parseLiteral(Object input) {
+        public BigDecimal parseLiteral(Object input) {
             if (input instanceof StringValue) {
-                return BigDecimal.valueOf(Long.parseLong(((StringValue) input).getValue()));
+                return new BigDecimal(((StringValue) input).getValue());
             } else if (input instanceof IntValue) {
-                return BigDecimal.valueOf(((IntValue) input).getValue());
+                return new BigDecimal(((IntValue) input).getValue());
             } else if (input instanceof FloatValue) {
                 return ((FloatValue) input).getValue();
             }
@@ -86,23 +88,24 @@ public class Scalars {
     });
 
     public static GraphQLScalarType GraphQLByte = new GraphQLScalarType("Byte", "Built-in Byte as Int", new Coercing() {
-        public Object serialize(Object input) {
+        @Override
+        public Byte serialize(Object input) {
             if (input instanceof String) {
                 return Byte.parseByte((String) input);
             } else if (input instanceof Byte) {
-                return input;
+                return (Byte) input;
             } else {
                 return null;
             }
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public Byte parseValue(Object input) {
             return serialize(input);
         }
 
         @Override
-        public Object parseLiteral(Object input) {
+        public Byte parseLiteral(Object input) {
             if (!(input instanceof IntValue)) return null;
             Integer value = ((IntValue) input).getValue();
             if (value.compareTo(BYTE_MIN) < 0 || value.compareTo(BYTE_MAX) > 0) {
@@ -112,51 +115,52 @@ public class Scalars {
         }
     });
 
-    public static GraphQLScalarType GraphQLChar = new GraphQLScalarType("Char", "Built-in Char as Int", new Coercing() {
-        public Object serialize(Object input) {
+    public static GraphQLScalarType GraphQLChar = new GraphQLScalarType("Char", "Built-in Char as Character", new Coercing() {
+        @Override
+        public Character serialize(Object input) {
             if (input instanceof String) {
-                return (char) Integer.parseInt((String) input);
+                return ((String) input).length() != 1 ?
+                        null : ((String) input).charAt(0);
             } else if (input instanceof Character) {
-                return input;
+                return (Character) input;
             } else {
                 return null;
             }
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public Character parseValue(Object input) {
             return serialize(input);
         }
 
         @Override
-        public Object parseLiteral(Object input) {
-            if (!(input instanceof IntValue)) return null;
-            Integer value = ((IntValue) input).getValue();
-            if (value.compareTo(CHAR_MIN) < 0 || value.compareTo(CHAR_MAX) > 0) {
-                throw new GraphQLException("Int literal is too big or too small for a char, would cause overflow");
-            }
-            return value.shortValue();
+        public Character parseLiteral(Object input) {
+            if (!(input instanceof StringValue)) return null;
+            String value = ((StringValue) input).getValue();
+            if (value == null || value.length() != 1) return null;
+            return value.charAt(0);
         }
     });
 
     public static GraphQLScalarType GraphQLShort = new GraphQLScalarType("Short", "Built-in Short as Int", new Coercing() {
-        public Object serialize(Object input) {
+        @Override
+        public Short serialize(Object input) {
             if (input instanceof String) {
                 return Short.parseShort((String) input);
-            } else if (input instanceof Character) {
-                return input;
+            } else if (input instanceof Short) {
+                return (Short) input;
             } else {
                 return null;
             }
         }
 
         @Override
-        public Object parseValue(Object input) {
+        public Short parseValue(Object input) {
             return serialize(input);
         }
 
         @Override
-        public Object parseLiteral(Object input) {
+        public Short parseLiteral(Object input) {
             if (!(input instanceof IntValue)) return null;
             Integer value = ((IntValue) input).getValue();
             if (value.compareTo(SHORT_MIN) < 0 || value.compareTo(SHORT_MAX) > 0) {
