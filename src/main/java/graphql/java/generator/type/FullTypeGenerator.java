@@ -8,6 +8,7 @@ import graphql.java.generator.type.strategies.TypeStrategies;
 import graphql.schema.GraphQLEnumType;
 import graphql.schema.GraphQLEnumValueDefinition;
 import graphql.schema.GraphQLFieldDefinition;
+import graphql.schema.GraphQLInputObjectField;
 import graphql.schema.GraphQLInputObjectType;
 import graphql.schema.GraphQLInputType;
 import graphql.schema.GraphQLInterfaceType;
@@ -34,11 +35,15 @@ public class FullTypeGenerator extends TypeGenerator {
             return enumType;
         }
         
-        String typeName = getGraphQLTypeNameOrIdentityCode(object);
+        List<GraphQLFieldDefinition> fields = getOutputFieldDefinitions(object);
+        if (fields == null || fields.isEmpty()) {
+            return null;
+        }
         
+        String typeName = getGraphQLTypeNameOrIdentityCode(object);
         GraphQLObjectType.Builder builder = newObject()
                 .name(typeName)
-                .fields(getOutputFieldDefinitions(object))
+                .fields(fields)
                 .description(getTypeDescription(object));
         
         GraphQLInterfaceType[] interfaces = getInterfaces(object);
@@ -49,8 +54,11 @@ public class FullTypeGenerator extends TypeGenerator {
     }
     
     protected GraphQLInterfaceType generateInterfaceType(Object object) {
-        String name = getGraphQLTypeNameOrIdentityCode(object);
         List<GraphQLFieldDefinition> fieldDefinitions = getOutputFieldDefinitions(object);
+        if (fieldDefinitions == null || fieldDefinitions.isEmpty()) {
+            return null;
+        }
+        String name = getGraphQLTypeNameOrIdentityCode(object);
         TypeResolver typeResolver = getTypeResolver(object);
         String description = getTypeDescription(object);
         if (name == null || fieldDefinitions == null || typeResolver == null) {
@@ -72,11 +80,15 @@ public class FullTypeGenerator extends TypeGenerator {
             return enumType;
         }
         
+        List<GraphQLInputObjectField> fields = getInputFieldDefinitions(object);
+        if (fields == null || fields.isEmpty()) {
+            return null;
+        }
         String typeName = getGraphQLTypeNameOrIdentityCode(object);
         
         GraphQLInputObjectType.Builder builder = new GraphQLInputObjectType.Builder();
         builder.name(typeName);
-        builder.fields(getInputFieldDefinitions(object));
+        builder.fields(fields);
         builder.description(getTypeDescription(object));
         return builder.build();
     }

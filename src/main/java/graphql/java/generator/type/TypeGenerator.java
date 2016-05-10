@@ -139,7 +139,7 @@ public abstract class TypeGenerator
         typesBeingBuilt.add(typeName);
         try {
             GraphQLType type = generateType(object, typeKind);
-            if (getTypeRepository() != null) {
+            if (getTypeRepository() != null && type != null) {
                 getTypeRepository().registerType(typeName, type, typeKind);
             }
             return type;

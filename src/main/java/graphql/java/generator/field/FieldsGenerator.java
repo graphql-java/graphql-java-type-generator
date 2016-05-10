@@ -42,11 +42,12 @@ public class FieldsGenerator
     @Override
     public List<GraphQLFieldDefinition> getOutputFields(Object object) {
         List<GraphQLFieldDefinition> fieldDefs = new ArrayList<GraphQLFieldDefinition>();
-        Set<String> fieldNames = new HashSet<String>();
         List<Object> fieldObjects = getFieldRepresentativeObjects(object);
         if (fieldObjects == null) {
             return fieldDefs;
         }
+
+        Set<String> fieldNames = new HashSet<String>();
         for (Object field : fieldObjects) {
             GraphQLFieldDefinition.Builder fieldBuilder =
                     getOutputFieldDefinition(field);
@@ -69,11 +70,12 @@ public class FieldsGenerator
     @Override
     public List<GraphQLInputObjectField> getInputFields(Object object) {
         List<GraphQLInputObjectField> fieldDefs = new ArrayList<GraphQLInputObjectField>();
-        Set<String> fieldNames = new HashSet<String>();
         List<Object> fieldObjects = getFieldRepresentativeObjects(object);
         if (fieldObjects == null) {
             return fieldDefs;
         }
+
+        Set<String> fieldNames = new HashSet<String>();
         for (Object field : fieldObjects) {
             GraphQLInputObjectField.Builder fieldBuilder =
                     getInputFieldDefinition(field);

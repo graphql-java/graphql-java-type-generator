@@ -54,7 +54,6 @@ public class TypeGeneratorParameterizedTest {
             add(new Object[] {InterfaceImpl.class, "InterfaceImpl", 2, true});
             add(new Object[] {InterfaceParent.class, "InterfaceParent", 1, true});
             add(new Object[] {InterfaceChild.class, "InterfaceChild", 2, true});
-            add(new Object[] {EmptyClass.class, "EmptyClass", 0, true});
             add(new Object[] {ClassWithLists.class, "ClassWithLists", 3, true});
             add(new Object[] {RecursiveClass.class, "RecursiveClass", 2, false});
             add(new Object[] {RootFieldClass.class, "RootFieldClass", 3, false});
@@ -83,6 +82,7 @@ public class TypeGeneratorParameterizedTest {
     @Test
     public void testBasicsOutput() {
         logger.debug("testBasicsOutput {} {}", clazz, expectedName);
+        basicsOutput();
     }
     
     public void basicsOutput() {
