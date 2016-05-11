@@ -21,11 +21,11 @@ The best entry point to this library is BuildContext's .getOutputType(obj), .get
 Direct access is given if, for example, only fields are needed.
 
 #FAQ
-Recursive object creation? Yes.
-Java Generics? Yes, when type erasure has not happened.
-Enums? Yup
-Unions? Not yet... java doesn't really have those natively.
-Lists? Yes, and lists of lists
-Scalars? We additionally handle BigInteger and BigDecimal.
+* Recursive object creation? Yes.
+* Java Generics? Yes, as long as type erasure has not happened.
+* Enums? Yup
+* Unions? Not yet... java doesn't really have those natively.
+* Lists? Yes, and lists of lists
+* Scalars? We additionally handle BigInteger and BigDecimal, byte, short, and char
 
 Let us know what else you need.
