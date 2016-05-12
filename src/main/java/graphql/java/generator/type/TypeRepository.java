@@ -23,8 +23,8 @@ public interface TypeRepository {
     public GraphQLInputType registerType(String typeName,
             GraphQLInputType graphQlInputType);
 
-    public Map<String, GraphQLType> getGeneratedOutputTypes();
-    public Map<String, GraphQLType> getGeneratedInputTypes();
+    public Map<String, GraphQLOutputType> getGeneratedOutputTypes();
+    public Map<String, GraphQLInputType> getGeneratedInputTypes();
     public GraphQLType getGeneratedType(String typeName, TypeKind typeKind);
     
     /**

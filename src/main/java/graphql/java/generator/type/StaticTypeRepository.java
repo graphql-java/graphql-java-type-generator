@@ -14,10 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class StaticTypeRepository implements TypeRepository {
-    private static Map<String, GraphQLType> generatedOutputTypes =
-            new ConcurrentHashMap<String, GraphQLType>();
-    private static Map<String, GraphQLType> generatedInputTypes =
-            new ConcurrentHashMap<String, GraphQLType>();
+    private static Map<String, GraphQLOutputType> generatedOutputTypes =
+            new ConcurrentHashMap<String, GraphQLOutputType>();
+    private static Map<String, GraphQLInputType> generatedInputTypes =
+            new ConcurrentHashMap<String, GraphQLInputType>();
     
     @Override
     public GraphQLType registerType(String typeName, GraphQLType graphQlType, TypeKind typeKind) {
@@ -44,8 +44,8 @@ public class StaticTypeRepository implements TypeRepository {
                 typeName, graphQlInputType, generatedInputTypes);
     }
     
-    private GraphQLType syncRegisterType(String typeName,
-            GraphQLType graphQlType, Map<String, GraphQLType> map) {
+    private <T extends GraphQLType> T syncRegisterType(String typeName,
+            T graphQlType, Map<String, T> map) {
         synchronized (map) {
             if (!map.containsKey(typeName)) {
                 map.put(typeName, graphQlType);
@@ -56,10 +56,10 @@ public class StaticTypeRepository implements TypeRepository {
 
     }
 
-    public Map<String, GraphQLType> getGeneratedOutputTypes() {
+    public Map<String, GraphQLOutputType> getGeneratedOutputTypes() {
         return generatedOutputTypes;
     }
-    public Map<String, GraphQLType> getGeneratedInputTypes() {
+    public Map<String, GraphQLInputType> getGeneratedInputTypes() {
         return generatedInputTypes;
     }
     
@@ -70,9 +70,9 @@ public class StaticTypeRepository implements TypeRepository {
         //anyone working on the old types doesn't want to have
         //their generated*Types .clear()ed out from under them. 
         generatedOutputTypes =
-                new ConcurrentHashMap<String, GraphQLType>();
+                new ConcurrentHashMap<String, GraphQLOutputType>();
         generatedInputTypes =
-                new ConcurrentHashMap<String, GraphQLType>();
+                new ConcurrentHashMap<String, GraphQLInputType>();
     }
 
     @Override
