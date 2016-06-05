@@ -1,7 +1,6 @@
 package graphql.java.generator.type;
 
 import graphql.Scalars;
-import graphql.java.generator.BuildContext;
 import graphql.java.generator.DefaultBuildContext;
 import graphql.schema.GraphQLScalarType;
 import org.junit.Assert;

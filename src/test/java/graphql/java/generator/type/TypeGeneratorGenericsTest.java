@@ -2,7 +2,6 @@ package graphql.java.generator.type;
 
 import graphql.ExecutionResult;
 import graphql.GraphQL;
-import graphql.java.generator.BuildContext;
 import graphql.java.generator.ClassWithListOfGenerics;
 import graphql.java.generator.ClassWithListOfGenericsWithBounds;
 import graphql.java.generator.DefaultBuildContext;

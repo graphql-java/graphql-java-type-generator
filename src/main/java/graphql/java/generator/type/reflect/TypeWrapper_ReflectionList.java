@@ -13,11 +13,15 @@ public class TypeWrapper_ReflectionList
         extends UnsharableBuildContextStorer
         implements TypeWrapperStrategy {
     protected boolean canWrapList(final TypeSpecContainer originalObject) {
-        if (originalObject.getGenericType() == null) return false;
-        
         Object object = originalObject.getRepresentativeObject();
         Class<?> typeClazz = ReflectionUtils.extractClassFromSupportedObject(object);
         if (typeClazz == null) return false;
+        
+        //handle raw arrays
+        if (typeClazz.isArray()) return true;
+        
+        //handle List<?> where ? is a class or type, but not raw generics
+        if (originalObject.getGenericType() == null) return false;
         if (!List.class.isAssignableFrom(typeClazz)) return false;
         
         Type listGenericType = originalObject.getGenericType().getActualTypeArguments()[0];
@@ -39,7 +43,17 @@ public class TypeWrapper_ReflectionList
     public TypeSpecContainer getInteriorObjectToGenerate(TypeSpecContainer originalObject) {
         if (!canWrapList(originalObject)) return null;
         
-        Type interiorType = originalObject.getGenericType().getActualTypeArguments()[0];
+        Object object = originalObject.getRepresentativeObject();
+        Class<?> typeClazz = ReflectionUtils.extractClassFromSupportedObject(object);
+        if (typeClazz == null) return null;
+        
+        Type interiorType;
+        if (typeClazz.isArray()) {
+            interiorType = typeClazz.getComponentType();
+        }
+        else {
+            interiorType = originalObject.getGenericType().getActualTypeArguments()[0];
+        }
         
         ParameterizedType interiorGenericType = null;
         if (interiorType instanceof ParameterizedType) {
