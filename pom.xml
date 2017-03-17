@@ -6,7 +6,7 @@
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-java-type-generator</artifactId>
     <packaging>jar</packaging>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <name>GraphQL Java Type Generator</name>
     <url>https://github.com/danielkwinsor/graphql-java-type-generator</url>
     
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.graphql-java</groupId>
             <artifactId>graphql-java</artifactId>
-            <version>2.0.0</version>
+            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.paranamer</groupId>
