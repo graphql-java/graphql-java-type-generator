@@ -54,8 +54,8 @@ public class TypeGeneratorScalarsTest {
             add(new Object[] {int.class, Scalars.GraphQLInt});
             add(new Object[] {Long.class, Scalars.GraphQLLong});
             add(new Object[] {long.class, Scalars.GraphQLLong});
-            add(new Object[] {BigInteger.class, graphql.java.generator.Scalars.GraphQLBigInteger});
-            add(new Object[] {BigDecimal.class, graphql.java.generator.Scalars.GraphQLBigDecimal});
+            add(new Object[] {BigInteger.class, graphql.Scalars.GraphQLBigInteger});
+            add(new Object[] {BigDecimal.class, graphql.Scalars.GraphQLBigDecimal});
         }};
         return list;
     }
