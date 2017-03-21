@@ -1,6 +1,6 @@
 package graphql.java.generator.type;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
@@ -26,11 +26,10 @@ import graphql.schema.TypeResolver;
 /**
  * Given any object, decide how you wish the GraphQL type to be generated.
  * This class defines the implementation contract, and further TypeGenerators
- * must be built off of this, using {@link #getType(Object, ParameterizedType, TypeKind)}
+ * must be built off of this, using {@link #getType(Object, Type, TypeKind)}
  * Use {@link WrappingTypeGenerator} to create types from {@code List<?>}s, otherwise
- * this generator will be happy to create an object based on List.class, which
+ * this generator will be happy to create an object based on the interface List.class, which
  * is not what you want.
- * Not yet certified with arrays.
  * @author dwinsor
  *
  */
@@ -86,7 +85,7 @@ public abstract class TypeGenerator
     
     @Override
     public GraphQLType getParameterizedType(Object object,
-            ParameterizedType genericType, TypeKind typeKind) {
+            Type genericType, TypeKind typeKind) {
         return getType(object, genericType, typeKind);
     }
     
@@ -98,7 +97,7 @@ public abstract class TypeGenerator
      * @return
      */
     protected final GraphQLType getType(Object object,
-            ParameterizedType genericType, TypeKind typeKind) {
+            Type genericType, TypeKind typeKind) {
         logger.debug("{} object is [{}]", typeKind, object);
         
         //short circuit if it's a primitive type or some other user defined default

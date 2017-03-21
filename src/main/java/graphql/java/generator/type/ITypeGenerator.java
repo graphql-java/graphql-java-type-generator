@@ -1,6 +1,6 @@
 package graphql.java.generator.type;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.type.strategies.TypeStrategies;
@@ -35,6 +35,6 @@ public interface ITypeGenerator {
      */
     GraphQLInterfaceType getInterfaceType(Object object);
 
-    GraphQLType getParameterizedType(Object object, ParameterizedType type, TypeKind typeKind);
+    GraphQLType getParameterizedType(Object object, Type type, TypeKind typeKind);
     
 }

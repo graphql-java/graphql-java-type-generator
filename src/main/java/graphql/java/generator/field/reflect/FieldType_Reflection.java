@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.field.strategies.FieldTypeStrategy;
@@ -39,12 +40,12 @@ public class FieldType_Reflection
             Class<?> typeClazz, Type genericType,
             String name, TypeKind typeKind) {
 
-        ParameterizedType pType = null;
+        Type gType = null;
         //attempt GraphQLList from types
-        if (genericType instanceof ParameterizedType) {
-            pType = (ParameterizedType) genericType;
+        if (genericType instanceof ParameterizedType || genericType instanceof WildcardType) {
+            gType = genericType;
         }
 
-        return getContext().getParameterizedType(typeClazz, pType, typeKind);
+        return getContext().getParameterizedType(typeClazz, gType, typeKind);
     }
 }

@@ -1,6 +1,6 @@
 package graphql.java.generator;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -88,7 +88,7 @@ public class BuildContext implements ITypeGenerator, BuildContextAware {
     }
     
     @Override
-    public GraphQLType getParameterizedType(Object object, ParameterizedType type, TypeKind typeKind) {
+    public GraphQLType getParameterizedType(Object object, Type type, TypeKind typeKind) {
         return getTypeGeneratorStrategy().getParameterizedType(object, type, typeKind);
     }
 

@@ -1,6 +1,7 @@
 package graphql.java.generator.type;
 
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 import graphql.introspection.Introspection.TypeKind;
 import graphql.java.generator.BuildContext;
 import graphql.java.generator.type.strategies.TypeStrategies;
@@ -34,7 +35,7 @@ public class WrappingTypeGenerator
     
     @Override
     public GraphQLType getParameterizedType(Object object,
-            ParameterizedType genericType, TypeKind typeKind) {
+            Type genericType, TypeKind typeKind) {
         TypeSpecContainer originalObject = new TypeSpecContainer(
                 object, genericType, typeKind);
         TypeSpecContainer interiorObject = getInteriorObjectToGenerate(originalObject);

@@ -23,7 +23,6 @@ public class ArgumentExtractingDataFetcher
         Object[] extractedArgs = new Object[originalArgNames.length];
         for (int index = 0; index < originalArgNames.length; ++index) {
             extractedArgs[index] = environment.getArgument(originalArgNames[index]);
-            System.out.println("arg" + index + " " + extractedArgs[index].getClass());
         }
         getNextFetcher().setArgValues(extractedArgs);
         getNextFetcher().setArgNames(originalArgNames);

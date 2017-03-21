@@ -2,6 +2,8 @@ package graphql.java.generator.type.reflect;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.List;
 import graphql.java.generator.UnsharableBuildContextStorer;
 import graphql.java.generator.type.TypeSpecContainer;
@@ -24,9 +26,11 @@ public class TypeWrapper_ReflectionList
         if (originalObject.getGenericType() == null) return false;
         if (!List.class.isAssignableFrom(typeClazz)) return false;
         
-        Type listGenericType = originalObject.getGenericType().getActualTypeArguments()[0];
+        Type listGenericType = ReflectionUtils.extractInteriorType(originalObject.getGenericType());
         if (listGenericType instanceof Class<?>) return true;
         if (listGenericType instanceof ParameterizedType) return true;
+        if (listGenericType instanceof WildcardType) return true;
+        if (listGenericType instanceof TypeVariable) return true;//TODO check if it will happen
         
         return false;
     }
@@ -44,6 +48,7 @@ public class TypeWrapper_ReflectionList
         if (!canWrapList(originalObject)) return null;
         
         Object object = originalObject.getRepresentativeObject();
+        
         Class<?> typeClazz = ReflectionUtils.extractClassFromSupportedObject(object);
         if (typeClazz == null) return null;
         
@@ -52,12 +57,15 @@ public class TypeWrapper_ReflectionList
             interiorType = typeClazz.getComponentType();
         }
         else {
-            interiorType = originalObject.getGenericType().getActualTypeArguments()[0];
+            interiorType = ReflectionUtils.extractInteriorType(originalObject.getGenericType());
         }
         
-        ParameterizedType interiorGenericType = null;
+        Type interiorGenericType = null;
         if (interiorType instanceof ParameterizedType) {
             interiorGenericType = (ParameterizedType) interiorType;
+        }
+        else if (interiorType instanceof WildcardType) {
+            interiorGenericType = (WildcardType) interiorType;
         }
         
         return new TypeSpecContainer(
