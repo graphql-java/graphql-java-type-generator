@@ -2,13 +2,17 @@ package graphql.java.generator.type;
 
 import graphql.ExecutionResult;
 import graphql.GraphQL;
+import graphql.Scalars;
 import graphql.java.generator.ClassWithListOfGenerics;
 import graphql.java.generator.ClassWithListOfGenericsWithBounds;
 import graphql.java.generator.DefaultBuildContext;
+import graphql.java.generator.DefaultTypes;
+import graphql.java.generator.WildcardGenericsClass;
 import graphql.schema.GraphQLFieldDefinition;
 import graphql.schema.GraphQLList;
 import graphql.schema.GraphQLObjectType;
 import graphql.schema.GraphQLOutputType;
+import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.GraphQLType;
 
@@ -99,5 +103,58 @@ public class TypeGeneratorGenericsTest {
         Assert.assertThat(listType, instanceOf(GraphQLList.class));
         GraphQLType wrappedType = ((GraphQLList) listType).getWrappedType();
         Assert.assertThat(wrappedType, instanceOf(GraphQLObjectType.class));
+    }
+    
+    @Test
+    public void testWildcard() {
+        logger.debug("testWildcard");
+        Object objectType = generator.getOutputType(WildcardGenericsClass.class);
+        Assert.assertThat(objectType, instanceOf(GraphQLObjectType.class));
+        Assert.assertThat(objectType, not(instanceOf(GraphQLList.class)));
+        
+        //uncomment this to print out more data
+//        GraphQLObjectType queryType = newObject()
+//                .name("testQuery")
+//                .field(newFieldDefinition()
+//                        .type((GraphQLOutputType) objectType)
+//                        .name("testObj")
+//                        .staticValue(new WildcardGenericsClass())
+//                        .build())
+//                .build();
+//        GraphQLSchema testSchema = GraphQLSchema.newSchema()
+//                .query(queryType)
+//                .build();
+//
+//        ExecutionResult queryResult = new GraphQL(testSchema).execute(TypeGeneratorTest.querySchema);
+//        assertThat(queryResult.getErrors(), is(empty()));
+//        Map<String, Object> resultMap = (Map<String, Object>) queryResult.getData();
+//        if (logger.isDebugEnabled()) {
+//            logger.debug("testWildcard resultMap {}", TypeGeneratorTest.prettyPrint(resultMap));
+//        }
+
+        GraphQLFieldDefinition field = ((GraphQLObjectType) objectType)
+                .getFieldDefinition("extendsInts");
+        Assert.assertThat(field, notNullValue());
+        GraphQLOutputType listType = field.getType();
+        Assert.assertThat(listType, instanceOf(GraphQLList.class));
+        GraphQLType wrappedType = ((GraphQLList) listType).getWrappedType();
+        Assert.assertThat(wrappedType, instanceOf(GraphQLScalarType.class));
+        Assert.assertThat((GraphQLScalarType)wrappedType, is(equalTo(Scalars.GraphQLInt)));
+        
+        field = ((GraphQLObjectType) objectType) .getFieldDefinition("superInts");
+        Assert.assertThat(field, notNullValue());
+        listType = field.getType();
+        Assert.assertThat(listType, instanceOf(GraphQLList.class));
+        wrappedType = ((GraphQLList) listType).getWrappedType();
+        Assert.assertThat(wrappedType, instanceOf(GraphQLObjectType.class));
+        Assert.assertThat((GraphQLObjectType)wrappedType, is(equalTo(DefaultTypes.getDefaultObjectType(Object.class))));
+        
+        field = ((GraphQLObjectType) objectType) .getFieldDefinition("noBounds");
+        Assert.assertThat(field, notNullValue());
+        listType = field.getType();
+        Assert.assertThat(listType, instanceOf(GraphQLList.class));
+        wrappedType = ((GraphQLList) listType).getWrappedType();
+        Assert.assertThat(wrappedType, instanceOf(GraphQLObjectType.class));
+        Assert.assertThat((GraphQLObjectType)wrappedType, is(equalTo(DefaultTypes.getDefaultObjectType(Object.class))));
     }
 }

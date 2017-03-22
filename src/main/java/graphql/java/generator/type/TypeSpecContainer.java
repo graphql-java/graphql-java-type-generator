@@ -1,6 +1,7 @@
 package graphql.java.generator.type;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 import graphql.introspection.Introspection.TypeKind;
 
@@ -12,7 +13,7 @@ import graphql.introspection.Introspection.TypeKind;
  */
 public class TypeSpecContainer {
     private Object representativeObject;
-    private ParameterizedType genericType;
+    private Type genericType;
     private TypeKind typeKind;
     
     /**
@@ -20,7 +21,7 @@ public class TypeSpecContainer {
      * @param genericType
      * @param typeKind
      */
-    public TypeSpecContainer(Object representativeObject, ParameterizedType genericType, TypeKind typeKind) {
+    public TypeSpecContainer(Object representativeObject, Type genericType, TypeKind typeKind) {
         this.representativeObject = representativeObject;
         this.genericType = genericType;
         this.typeKind = typeKind;
@@ -34,17 +35,19 @@ public class TypeSpecContainer {
     /**
      * A Type object representing the Generic arguments,
      * if known from the signature of a method or field. Can be null.
+     * Expected to be a ParameterizedType or WildcardType
      * @return
      */
-    public ParameterizedType getGenericType() {
+    public Type getGenericType() {
         return genericType;
     }
     /**
      * A Type object representing the Generic arguments,
      * if known from the signature of a method or field. Can be null.
+     * Expected to be a ParameterizedType or WildcardType
      * @param genericType
      */
-    public void setGenericType(ParameterizedType genericType) {
+    public void setGenericType(Type genericType) {
         this.genericType = genericType;
     }
     /**
