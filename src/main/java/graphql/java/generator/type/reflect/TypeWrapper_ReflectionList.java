@@ -67,6 +67,9 @@ public class TypeWrapper_ReflectionList
         else if (interiorType instanceof WildcardType) {
             interiorGenericType = (WildcardType) interiorType;
         }
+        else if (interiorType instanceof TypeVariable) {
+            interiorGenericType = (TypeVariable<?>) interiorType;
+        }
         
         return new TypeSpecContainer(
                 interiorType,
