@@ -25,8 +25,9 @@ public class ArgumentType_Reflection
         Object object = container.getRepresentativeObject();
         if (object == null) return null;
         
-        //TODO TypeVariable
-        if (object instanceof ParameterizedType || object instanceof WildcardType) {
+        if (object instanceof ParameterizedType
+                || object instanceof WildcardType
+                || object instanceof TypeVariable) {
             return (GraphQLInputType) getContext().getParameterizedType(
                     object,
                     (Type) object,
