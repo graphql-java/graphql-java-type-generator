@@ -1,6 +1,6 @@
 # graphql-java-type-generator
 
-##About
+## About
 This library will autogenerate GraphQL types for usage in com.graphql-java:graphql-java
 
 The generation of types can be controlled using different strategies.
@@ -11,7 +11,7 @@ The default strategy is augmentable to customize any aspect at all.
 
 In fact, there is a customizable strategy for everything from the name of a type, to which DataFetcher a field uses, down to which input arguments are available.
 
-##Usage
+## Usage
 Since everything about type generation is configurable, types are generated based upon a BuildContext that specifies the various strategies, parameters, and type repositories.
 
 A DefaultBuildContext is provided, or another one can be made.
@@ -20,7 +20,7 @@ The best entry point to this library is BuildContext's .getOutputType(obj), .get
 
 Direct access is given if, for example, only fields are needed.
 
-#FAQ
+# FAQ
 * Recursive object creation? Yes.
 * Java Generics? Yes, as long as type erasure has not happened.
 * Enums? Yup
