@@ -1,5 +1,7 @@
 # graphql-java-type-generator
 
+# THIS PROJECT IS NOT LONGER MAINTAINED AND IN READ ONLY MODE
+
 ## About
 This library will autogenerate GraphQL types for usage in com.graphql-java:graphql-java
 
